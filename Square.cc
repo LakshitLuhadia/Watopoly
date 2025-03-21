@@ -1,6 +1,6 @@
-# include <string>
-# include "Square.h"
-# include "Player.h"
+#include <string>
+#include "Square.h"
+#include "Player.h"
 
 // Constructor for Square
 Square::Square(std::string name, int index, bool isProperty) : 

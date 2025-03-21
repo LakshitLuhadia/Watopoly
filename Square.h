@@ -1,7 +1,7 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 #include <string>
-# include "Player.h"
+#include "Player.h"
 
 // Square class (abstract)
 class Square {
