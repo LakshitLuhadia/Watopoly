@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 // Dice Ctor
-Dice::Dice() : {}
+Dice::Dice() : dice1(0), dice2(0) {}
 
 // Roll function for Dice
 void Dice::roll() {
