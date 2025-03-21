@@ -1,6 +1,5 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <iostream>
 #include <string>
 #include <vector>
 #include "Property.h"
@@ -14,7 +13,7 @@ class Player {
     bool isBankrupt;        // If player is bankrupt (negative money)
     int numDoubleRolls;     // Number of consecutive double rolls
     int numRimCups;         // Number of Rim Cups player owns
-    vector <Property*> properties;
+    vector <Property*> properties; // Vector of Player's properties
 
     public:
         // Ctor for Player
