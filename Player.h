@@ -2,6 +2,7 @@
 #define PLAYER_H
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Property.h"
 
 // Player Class
