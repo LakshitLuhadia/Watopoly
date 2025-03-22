@@ -7,8 +7,21 @@
 #include "Game.h"
 #include "Player.h"
 
+
+
+Game processLoadedFile(const std::ifstream& filename) {
+    std::ifstream loadfile(filename);
+    if (loadfile.fail()) {
+        std::cerr << "Cannot open the loaded file" << std::endl;
+        return 1;
+    }
+    Game g;
+    g.loadFile(loadfile); // Call the loadFile function in the Game class
+    return g;
+}
+
 // Function to set up the game
-setupGame() {
+Game setupGame() {
     Game g;
     Board b;
     std::vector<char> characters = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
@@ -45,11 +58,13 @@ setupGame() {
         }
     }
     std::cout << "Setting things up and starting the game" << std::endl;
-    g.setupPropertires(); // set up the properties
-    g.setupNonProperties(); // set up the non-properties
+    g.setupPropertires(); // set up the properties vector
+    g.setupNonProperties(); // set up the non-properties vector
     g.setupBoard(); // set up the board
     g.setupPlayers(); // set up the players
     g.start(); // start the game
+
+    return g;
 }
 
 int main(int argc, char* argv[]) {
