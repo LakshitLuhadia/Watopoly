@@ -24,9 +24,9 @@ class Square {
         // Returns whether the square is a property
         bool getIsProperty() const;
 
-        // Pure virtual function
+        // Constant pure virtual function
         // Performs the action of the square
-        virtual void performAction(Player* player) = 0;
+        virtual void performAction(Player* player) const = 0;
 };
 
 #endif
