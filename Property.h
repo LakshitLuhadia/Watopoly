@@ -7,15 +7,15 @@
 
 // Property class (abstract)
 class Property: public Square {
-    int cost;                           // Cost of the property
-    int mortgageValue;                  // Mortgage value of the property
-    Player* owner;                      // Owner of the property
-    bool isMortgaged;                   // Is the property mortgaged?
-    bool isAcademic;                    // Is the property an academic property?
+    const int cost;                           // Cost of the property
+    int mortgageValue;                        // Mortgage value of the property
+    Player* owner;                            // Owner of the property
+    bool isMortgaged;                         // Is the property mortgaged?
+    const bool isAcademic;                    // Is the property an academic property?
 
     public:
         // Constructor for Property
-        Property(const std::string name, const int index, const bool isProperty, int cost, bool isAcademic);
+        Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic);
 
         // Destructor for Property
         virtual ~Property();

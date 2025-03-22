@@ -4,7 +4,7 @@
 using namespace std;
 
 // Constructor for Property
-Property::Property(const std::string name, const int index, const bool isProperty, int cost, bool isAcademic) :
+Property::Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic) :
 Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic} {
     mortgageValue = cost / 2;       // Mortgage value is half the cost
     owner = nullptr;                // No owner initially
@@ -57,9 +57,11 @@ void Property::setIsMortgaged(bool isMortgaged) {
 // Performs the action of the property
 void Property::performAction(Player* player) const {
     Player* owner = getOwner();
+    int cost = getCost();
     if (owner != nullptr) {
         if (owner != player) {
             player->subtractMoney(cost);
+            owner->addMoney(cost);
         }
     }
-} // Property::performAction
+} // Academic::performAction // Property::performAction

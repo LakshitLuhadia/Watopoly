@@ -3,7 +3,7 @@
 #include "Player.h"
 
 // Constructor for Square
-Square::Square(std::string name, int index, bool isProperty) : 
+Square::Square(const std::string name, const int index, const bool isProperty) : 
 name{name}, index{index}, isProperty{isProperty} {}
 
 // Destructor for Square

@@ -11,7 +11,7 @@ class Square {
 
     public:
         // Constructor for Square
-        Square(std::string name, int index, bool isProperty);
+        Square(const std::string name, const int index, const bool isProperty);
 
         // Destructor for Square
         virtual ~Square();
@@ -30,4 +30,3 @@ class Square {
 };
 
 #endif
-
