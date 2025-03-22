@@ -5,9 +5,9 @@
 
 // Square class (abstract)
 class Square {
-    const std::string name;       // Name of the square
+    const std::string name;            // Name of the square
     const int index;                   // Index of the square
-    const bool isProperty;              // Is the square a property? 
+    const bool isProperty;             // Is the square a property? 
 
     public:
         // Constructor for Square
