@@ -17,7 +17,7 @@ class Player {
 
     public:
         // Ctor for Player
-        Player(string name; int money);
+        Player(string name, int money);
 
         // Dtor for Player
         ~Player();
