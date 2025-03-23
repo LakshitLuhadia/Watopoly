@@ -4,8 +4,8 @@
 using namespace std;
 
 // Constructor for Property
-Property::Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic) :
-Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic} {
+Property::Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
+Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic}, isResidence{isResidence}, isGym{isGym} {
     mortgageValue = cost / 2;       // Mortgage value is half the cost
     owner = nullptr;                // No owner initially
     isMortgaged = false;            // Not mortgaged initially
@@ -38,6 +38,16 @@ bool Property::getIsMortgaged() const {
 bool Property::getIsAcademic() const {
     return isAcademic;
 } // Property::getIsAcademic
+
+// Returns whether the property is a residence
+bool Property::getIsResidence() const {
+    return isResidence;
+} // Property::getIsResidence
+
+// Returns whether the property is a gym
+bool Property::getIsGym() const {
+    return isGym;
+} // Property::getIsGym
 
 // Sets the owner of the property
 void Property::setOwner(Player* owner) {

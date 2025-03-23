@@ -17,7 +17,7 @@ class Academic: public Property {
 
     public:
         // Constructor for Academic
-        Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const std::string block, const int improvementCost, const vector <int> tution);
+        Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym, const std::string block, const int improvementCost, const vector <int> tution);
 
         // Destructor for Academic
         ~Academic();

@@ -5,8 +5,8 @@
 using namespace std;
 
 // Constructor for Gym
-Gym::Gym(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic) :
-Property{name, index, true, 150, false} {}
+Gym::Gym(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
+Property{name, index, true, 150, false, false, true} {}
 
 // Destructor for Gym
 Gym::~Gym() {}

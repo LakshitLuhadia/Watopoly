@@ -13,10 +13,12 @@ class Property: public Square {
     Player* owner;                            // Owner of the property
     bool isMortgaged;                         // Is the property mortgaged?
     const bool isAcademic;                    // Is the property an academic property?
+    const bool isResidence;                   // Is the property a residence?
+    const bool isGym;                         // Is the property a gym?
 
     public:
         // Constructor for Property
-        Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic);
+        Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym);
 
         // Destructor for Property
         virtual ~Property();
@@ -32,6 +34,10 @@ class Property: public Square {
         bool getIsMortgaged() const;
         // Returns whether the property is an academic property
         bool getIsAcademic() const;
+        // Returns whether the property is a residence
+        bool getIsResidence() const;
+        // Returns whether the property is a gym
+        bool getIsGym() const;
 
         // Setters
         // Sets the owner of the property
