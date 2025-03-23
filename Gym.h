@@ -8,8 +8,8 @@
 
 // Gym class
 class Gym: public Property {
-    int usageFee = 0;                    // Usage fee of the gym
-    bool isMonopoly = false;             // Is the property part of a monopoly?
+    static int usageFee;                    // Usage fee of the gym
+    static bool isMonopoly;             // Is the property part of a monopoly?
 
     public:
         // Constructor for Gym
@@ -20,13 +20,13 @@ class Gym: public Property {
 
         // Getters
         // Returns the usage fee of the gym
-        int getusageFee() const;
+        static int getusageFee();
         // Returns whether the property is part of a monopoly
-        bool getIsMonopoly() const;
+        static bool getIsMonopoly();
 
         // Setters
         // Sets whether the property is part of a monopoly
-        void setIsMonopoly(bool isMonopoly);
+        static void setIsMonopoly(bool isMonopoly);
 
         // Performs the action of the gym
         void performAction(Player* player) const override;
