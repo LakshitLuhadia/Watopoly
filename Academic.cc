@@ -48,6 +48,11 @@ bool Academic::getIsImprovable() {
     return isImprovable;
 } // Academic::getIsImprovable
 
+// Returns whether the property is sellable
+bool Academic::getIsSellable() {
+    return isSellable;
+} // Academic::getIsSellable
+
 // Sets the number of improvements on the property
 void Academic::setNumImprovements(int newNumImprovements) {
     numImprovements = newNumImprovements;
@@ -63,16 +68,21 @@ void Academic::setIsImprovable(bool newIsImprovable) {
     isImprovable = newIsImprovable;
 } // Academic::setIsImprovable
 
+// Sets whether the property is sellable
+void Academic::setIsSellable(bool newIsSellable) {
+    isSellable = newIsSellable;
+} // Academic::setIsSellable
+
 // Implement the add improvement method
 void Academic::addimprove() {
     Player* owner = getOwner();
     if (isMonopoly) {
         if (isImprovable) {
             if (numImprovements > 0) {
-                isSellable = true;  
+                setIsSellable(true);  
             }
             if (numImprovements == 5) {
-                isImprovable = false;
+                setIsImprovable(false);
             } else {
                 numImprovements++;
                 owner->subtractMoney(improvementCost);
@@ -88,10 +98,10 @@ void Academic::sellimprove() {
     if (isMonopoly) {
         if (isImprovable) {
             if (numImprovements < 5) {
-                isImprovable = true;
+                setIsImprovable(true);
             }
             if (numImprovements == 0) {
-                isImprovable = true;
+                setIsSellable(false);
             } else {
                 numImprovements--;
                 owner->addMoney(improvementCost / 2);

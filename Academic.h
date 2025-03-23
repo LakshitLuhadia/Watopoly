@@ -37,6 +37,8 @@ class Academic: public Property {
         static bool getIsMonopoly();
         // Returns whether the property is improvable
         static bool getIsImprovable();
+        // Returns whether the property is sellable
+        static bool getIsSellable();
 
         // Setters
         // Sets the number of improvements on the property
@@ -45,6 +47,8 @@ class Academic: public Property {
         static void setIsMonopoly(bool isMonopoly);
         // Sets whether the property is improvable
         static void setIsImprovable(bool isImprovable);
+        // Sets whether the property is sellable
+        static void setIsSellable(bool isSellable);
 
         // Implement the improvement method
         // Make Improvements
