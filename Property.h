@@ -4,6 +4,7 @@
 #include <string>
 #include "Player.h"
 #include "Square.h"
+#include "Bank.h"
 
 // Property class (abstract)
 class Property: public Square {

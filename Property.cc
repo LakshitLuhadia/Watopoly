@@ -63,5 +63,5 @@ void Property::performAction(Player* player) const {
             player->subtractMoney(cost);
             owner->addMoney(cost);
         }
-    }
+    } 
 } // Property::performAction

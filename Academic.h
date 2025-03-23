@@ -8,7 +8,7 @@ using std::vector;
 
 // Academic class
 class Academic: public Property {
-    const std::string block;                 // Block of the property
+    const std::string block;                  // Block of the property
     const int improvementCost;                // Cost of improvements
     const vector <int> tution{};              // Tuition fees for the property
     int numImprovements;                      // Number of improvements on the property
