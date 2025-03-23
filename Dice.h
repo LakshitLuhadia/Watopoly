@@ -18,7 +18,6 @@ class Dice {
 
         // Returns true if dice1 and dice2 are equal else false
         bool isEqual();
-}
+};
 
 #endif
-
