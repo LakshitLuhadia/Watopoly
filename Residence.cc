@@ -5,8 +5,8 @@
 using namespace std;
 
 // Constructor for Residence
-Residence::Residence(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic) :
-Property{name, index, true, 200, false} {}
+Residence::Residence(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
+Property{name, index, true, 200, false, true, false} {}
 
 // Destructor for Residence
 Residence::~Residence() {}  
