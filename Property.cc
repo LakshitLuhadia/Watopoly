@@ -64,4 +64,4 @@ void Property::performAction(Player* player) const {
             owner->addMoney(cost);
         }
     }
-} // Academic::performAction // Property::performAction
+} // Property::performAction
