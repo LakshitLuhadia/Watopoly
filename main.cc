@@ -1,22 +1,107 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <memory>
 #include <vector>
 #include "Board.h"
 #include "Game.h"
 #include "Player.h"
+#include "Property.h"
+#include "Square.h"
 
-
-
+processInGameCommands() {
+    Game g;
+    std::string command;
+    while (std::cin >> command) {
+        if (command == "roll") {
+            g.roll();
+        } else if (command == "next") {
+            g.next();
+        } else if (command == "trade") {
+            std::string player;
+            std::string give;
+            std::string receive;
+            std::cin >> player >> give >> receive;
+            g.trade(player, give, receive);
+        } else if (command == "improve") {
+            std::string property;
+            std::string action;
+            std::cin >> property >> action;
+            g.improve(property, action);
+        } else if (command == "mortgage") {
+            std::string property;
+            std::cin >> property;
+            g.mortgage(property);
+        } else if (command == "unmortgage") {
+            std::string property;
+            std::cin >> property;
+            g.unmortgage(property);
+        } else if (command == "bankrupt") {
+            g.bankrupt();
+        } else if (command == "assets") {
+            g.assets();
+        } else if (command == "all") {
+            g.all();
+        } else if (command == "save") {
+            std::string filename;
+            std::cin >> filename;
+            g.save(filename);
+        } else {
+            std::cerr << "Invalid command. Please enter a valid command." << std::endl;
+            cin.clear();
+            cin.ignore();
+        }
+    }
+}
+            
 Game processLoadedFile(const std::ifstream& filename) {
     std::ifstream loadfile(filename);
     if (loadfile.fail()) {
         std::cerr << "Cannot open the loaded file" << std::endl;
-        return 1;
     }
     Game g;
-    g.loadFile(loadfile); // Call the loadFile function in the Game class
+    Player* p;
+    Property* prop;
+    loadfile >> numPlayers;
+    g.setNumPlayers(numPlayers);
+    for (int i = 0; i < numPlayers; ++i) {
+        std::string name;
+        char character;
+        int TimCups;
+        int money;
+        int position;
+        loadfile >> name >> character >> TimCups >> money >> position;
+        if (position == 30) {
+            std::cerr << "Player cannot start on square 30 (Go to DC Tims Line)." << std::endl;
+        }
+        if (position == 10) {
+            int inTimsLine;
+            loadfile >> inTimsLine;
+            if (inTimsLine == 1) {
+                int numRollsInTimsLine;
+                loadfile >> numRollsInTimsLine;
+                if (numRollsInTimsLine < 0 || numRollsInTimsLine > 2) {
+                    std::cerr << "Invalid number of rolls in Tims Line. Please enter a number between 0 and 2." << std::endl;
+                } else {
+                    p->setNumRollsInTimsLine(numRollsInTimsLine);
+                }
+            }
+        }
+        g.addPlayer(Player* name);
+        g.setPlayerCharacter(i, character);
+        g.setPlayerTimCups(i, TimCups);
+        g.setPlayerMoney(i, money);
+        g.setPlayerPosition(i, position);
+    }
+    std::string buildingName;
+    while (loadfile >> buildingName) {
+        std::string owner;
+        int numImprovements;
+        loadfile >> owner >> numImprovements;
+        g.setBuildingOwner(buildingName, owner);
+        g.setBuildingImprovements(buildingName, numImprovements);
+    }
     return g;
 }
 
@@ -32,7 +117,6 @@ Game setupGame() {
         std::cerr << "Invalid number of players. Please enter an integer value between 2 and 6" << std::endl;
         std::cin.clear();
         std::cin.ignore();
-        return 1;
     }
     g.setNumPlayers(numPlayers); // set the number of players
     for (int i = 0; i < numPlayers; ++i) {
@@ -76,25 +160,23 @@ int main(int argc, char* argv[]) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
-        } else if (input_arg == "-load file") { // if the input argument is -load file, set the filename to the input filename
-            filename = argv[i + 1];
-            loadMode = true; // set the flag to true
+        } else if (input_arg == "-load") { // if the input argument is -load file, set the filename to the input filename
+            if (i + 1 >= argc) { // if the filename is not provided, print an appropriate error message
+                std::cerr << "No file to load. Starting a new game" << std::endl;
+                loadMode = false;
+            } else {
+                filename = argv[i + 1];
+                loadMode = true; // set the flag to true
+            }
         } else { // else, print an appropriate error message
             std::cerr << "Invalid command line argument" << std::endl;
-            return 1;
         }
-    }
-    
-    if (testingMode) {
-        std::cout << "Testing mode is on" << std::endl;
-        inTestMode();
     }
 
     if (loadMode) {
         std::cout << "Using loaded game file" << std::endl;
         if (filename.empty() || filename == "") { // if the filename is empty, print an appropriate error message
             std::cerr << "No file to load" << std::endl;
-            return 1;
         } else {
             std::ifstream loadFile{filename}; // open the file
             if (loadfile.fail()) { // if the file cannot be opened, print an appropriate error message
@@ -104,9 +186,8 @@ int main(int argc, char* argv[]) {
                 processLoadedFile(loadFile); // process the loaded file
             }
         }
+    } else {
+        Game g = setupGame(); // set up the game
+        g.processInGameCommands(); // process the in-game commands
     }
-
-    gameSetup(); // set up the game
-    processInGameCommands(); // process the in-game commands
-    return 0;
 }
