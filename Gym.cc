@@ -2,7 +2,6 @@
 #include <string>
 #include "Gym.h"
 #include "Player.h"
-#include "Dice.h"
 using namespace std;
 
 // Constructor for Gym

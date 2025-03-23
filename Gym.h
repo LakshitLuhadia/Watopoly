@@ -4,6 +4,7 @@
 #include <string>
 #include "Property.h"
 #include "Player.h"
+#include "Dice.h"
 using std::vector; 
 
 // Gym class
