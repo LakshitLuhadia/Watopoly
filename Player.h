@@ -17,7 +17,7 @@ class Player {
 
     public:
         // Ctor for Player
-        Player(string name; int money);
+        Player(string name, int money);
 
         // Dtor for Player
         ~Player();
@@ -48,7 +48,6 @@ class Player {
 
         // Removes property from Player's list of properties
         void removeProperty(Property* property);
-}
+};
 
 #endif
-

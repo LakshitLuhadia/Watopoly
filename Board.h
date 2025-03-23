@@ -12,6 +12,6 @@
 class Board {
     vector<Square*> squares; // Vector of Squares
     vector<Player*> players; // Vector of Players
-}
+};
 
 #endif
