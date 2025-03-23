@@ -10,7 +10,7 @@
 #include "Property.h"
 #include "Square.h"
 
-processInGameCommands() {
+void processInGameCommands() {
     Game g;
     std::string command;
     while (std::cin >> command) {
@@ -49,20 +49,21 @@ processInGameCommands() {
             g.save(filename);
         } else {
             std::cerr << "Invalid command. Please enter a valid command." << std::endl;
-            cin.clear();
-            cin.ignore();
+            std::cin.clear();
+            std::cin.ignore();
         }
     }
 }
             
 Game processLoadedFile(const std::ifstream& filename) {
-    std::ifstream loadfile(filename);
+    std::ifstream loadfile{filename};
     if (loadfile.fail()) {
         std::cerr << "Cannot open the loaded file" << std::endl;
     }
     Game g;
     Player* p;
     Property* prop;
+    int numPlayers;
     loadfile >> numPlayers;
     g.setNumPlayers(numPlayers);
     for (int i = 0; i < numPlayers; ++i) {
@@ -72,6 +73,8 @@ Game processLoadedFile(const std::ifstream& filename) {
         int money;
         int position;
         loadfile >> name >> character >> TimCups >> money >> position;
+        g.addPlayer(name);
+        g.setPlayerCharacter(i, character);
         if (position == 30) {
             std::cerr << "Player cannot start on square 30 (Go to DC Tims Line)." << std::endl;
         }
@@ -84,12 +87,10 @@ Game processLoadedFile(const std::ifstream& filename) {
                 if (numRollsInTimsLine < 0 || numRollsInTimsLine > 2) {
                     std::cerr << "Invalid number of rolls in Tims Line. Please enter a number between 0 and 2." << std::endl;
                 } else {
-                    p->setNumRollsInTimsLine(numRollsInTimsLine);
+                    g.setNumRollsInTimsLine(numRollsInTimsLine);
                 }
             }
         }
-        g.addPlayer(Player* name);
-        g.setPlayerCharacter(i, character);
         g.setPlayerTimCups(i, TimCups);
         g.setPlayerMoney(i, money);
         g.setPlayerPosition(i, position);
@@ -123,11 +124,11 @@ Game setupGame() {
         std::string name;
         std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
         std::cin >> name;
-        g.addPlayer(Player* name); // add the player
+        g.addPlayer(name); // add the player
         bool validCharacter = false;
         while (!validCharacter) { // check if the character is valid
             std::cout << "Please enter " << name << "'s character: " << std::endl;
-            std::string character;
+            char character;
             std::cin >> character;
             if (isCharacter(character, characters)) {
                 g.setPlayerCharacter(i, character); // set the player's character
@@ -146,7 +147,6 @@ Game setupGame() {
     g.setupNonProperties(); // set up the non-properties vector
     g.setupBoard(); // set up the board
     g.setupPlayers(); // set up the players
-    g.start(); // start the game
 
     return g;
 }
@@ -160,6 +160,7 @@ int main(int argc, char* argv[]) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
+            g.setTestingMode(testingMode);
         } else if (input_arg == "-load") { // if the input argument is -load file, set the filename to the input filename
             if (i + 1 >= argc) { // if the filename is not provided, print an appropriate error message
                 std::cerr << "No file to load. Starting a new game" << std::endl;
@@ -179,7 +180,7 @@ int main(int argc, char* argv[]) {
             std::cerr << "No file to load" << std::endl;
         } else {
             std::ifstream loadFile{filename}; // open the file
-            if (loadfile.fail()) { // if the file cannot be opened, print an appropriate error message
+            if (loadFile.fail()) { // if the file cannot be opened, print an appropriate error message
                 std::cerr << "Cannot open the loaded file" << std::endl;
                 return 1;
             } else {
@@ -188,6 +189,6 @@ int main(int argc, char* argv[]) {
         }
     } else {
         Game g = setupGame(); // set up the game
-        g.processInGameCommands(); // process the in-game commands
+        processInGameCommands(); // process the in-game commands
     }
 }
