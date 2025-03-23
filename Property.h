@@ -9,9 +9,9 @@
 // Property class (abstract)
 class Property: public Square {
     const int cost;                           // Cost of the property
-    int mortgageValue;                        // Mortgage value of the property
-    Player* owner;                            // Owner of the property
-    bool isMortgaged;                         // Is the property mortgaged?
+    static int mortgageValue;                        // Mortgage value of the property
+    static Player* owner;                            // Owner of the property
+    static bool isMortgaged;                         // Is the property mortgaged?
     const bool isAcademic;                    // Is the property an academic property?
     const bool isResidence;                   // Is the property a residence?
     const bool isGym;                         // Is the property a gym?
@@ -27,11 +27,11 @@ class Property: public Square {
         // Returns the cost of the property
         int getCost() const;
         // Returns the mortgage value of the property
-        int getMortgageValue() const;
+        static int getMortgageValue();
         // Returns the owner of the property
-        Player* getOwner() const;
+        static Player* getOwner();
         // Returns whether the property is mortgaged
-        bool getIsMortgaged() const;
+        static bool getIsMortgaged();
         // Returns whether the property is an academic property
         bool getIsAcademic() const;
         // Returns whether the property is a residence
@@ -41,11 +41,11 @@ class Property: public Square {
 
         // Setters
         // Sets the owner of the property
-        void setOwner(Player* owner);
+        static void setOwner(Player* owner);
         // Sets the mortgage value of the property
-        void setMortgageValue(int mortgageValue);
+        static void setMortgageValue(int mortgageValue);
         // Sets whether the property is mortgaged
-        void setIsMortgaged(bool isMortgaged);
+        static void setIsMortgaged(bool isMortgaged);
 
         // Performs the action of the property
         virtual void performAction(Player* player) const override;

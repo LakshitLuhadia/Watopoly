@@ -20,17 +20,17 @@ int Property::getCost() const {
 }   
 
 // Returns the mortgage value of the property
-int Property::getMortgageValue() const {
+int Property::getMortgageValue() {
     return mortgageValue;
 } // Property::getMortgageValue
 
 // Returns the owner of the property
-Player* Property::getOwner() const {
+Player* Property::getOwner() {
     return owner;
 } // Property::getOwner
 
 // Returns whether the property is mortgaged
-bool Property::getIsMortgaged() const {
+bool Property::getIsMortgaged() {
     return isMortgaged;
 } // Property::getIsMortgaged
 
@@ -50,18 +50,18 @@ bool Property::getIsGym() const {
 } // Property::getIsGym
 
 // Sets the owner of the property
-void Property::setOwner(Player* owner) {
-    this->owner = owner;
+void Property::setOwner(Player* newOwner) {
+    owner = newOwner;
 } // Property::setOwner
 
 // Sets the mortgage value of the property 
-void Property::setMortgageValue(int mortgageValue) {
-    this->mortgageValue = mortgageValue;
+void Property::setMortgageValue(int newMortgageValue) {
+    mortgageValue = newMortgageValue;
 } // Property::setMortgageValue
 
 // Sets whether the property is mortgaged
-void Property::setIsMortgaged(bool isMortgaged) {
-    this->isMortgaged = isMortgaged;
+void Property::setIsMortgaged(bool newIsMortgaged) {
+    isMortgaged = newIsMortgaged;
 } // Property::setIsMortgaged
 
 // Performs the action of the property

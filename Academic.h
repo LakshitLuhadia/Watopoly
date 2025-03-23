@@ -4,6 +4,7 @@
 #include <string>
 #include "Property.h"
 #include "Player.h"
+#include "Administration.h"
 using std::vector; 
 
 // Academic class
@@ -11,9 +12,10 @@ class Academic: public Property {
     const std::string block;                  // Block of the property
     const int improvementCost;                // Cost of improvements
     const vector <int> tution{};              // Tuition fees for the property
-    int numImprovements;                      // Number of improvements on the property
-    bool isMonopoly;                          // Is the property part of a monopoly?
-    bool isImprovable;                        // Is the property improvable?
+    static int numImprovements;                      // Number of improvements on the property
+    static bool isMonopoly;                          // Is the property part of a monopoly?
+    static bool isImprovable;                        // Is the property improvable?
+    static bool isSellable;                           // Is the property sellable?
 
     public:
         // Constructor for Academic
@@ -30,19 +32,26 @@ class Academic: public Property {
         // Returns the tuition fees of the property
         int getTuition(int level) const;
         // Returns the number of improvements on the property
-        int getNumImprovements() const;
+        static int getNumImprovements();
         // Returns whether the property is part of a monopoly
-        bool getIsMonopoly() const;
+        static bool getIsMonopoly();
         // Returns whether the property is improvable
-        bool getIsImprovable() const;
+        static bool getIsImprovable();
 
         // Setters
         // Sets the number of improvements on the property
-        void setNumImprovements(int numImprovements);
+        static void setNumImprovements(int numImprovements);
         // Sets whether the property is part of a monopoly
-        void setIsMonopoly(bool isMonopoly);
+        static void setIsMonopoly(bool isMonopoly);
         // Sets whether the property is improvable
-        void setIsImprovable(bool isImprovable);
+        static void setIsImprovable(bool isImprovable);
+
+        // Implement the improvement method
+        // Make Improvements
+        void addimprove();
+        // Sell Improvements
+        void sellimprove();
+
 
         // Performs the action of the property
         void performAction(Player* player) const override;
