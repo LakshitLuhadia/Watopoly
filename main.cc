@@ -142,7 +142,7 @@ Game setupGame() {
         }
     }
     std::cout << "Setting things up and starting the game" << std::endl;
-    g.setupPropertires(); // set up the properties vector
+    g.setupProperties(); // set up the properties vector
     g.setupNonProperties(); // set up the non-properties vector
     g.setupBoard(); // set up the board
     g.setupPlayers(); // set up the players
