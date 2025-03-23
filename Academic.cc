@@ -6,8 +6,8 @@ using namespace std;
 using std::vector;
 
 // Constructor for Academic
-Academic::Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const int improvementCost, const vector <int> tution) :
-Property{name, index, isProperty, cost, isAcademic}, improvementCost{improvementCost}, tution{tution} {
+Academic::Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const std::string block, const int improvementCost, const vector <int> tution) :
+Property{name, index, isProperty, cost, isAcademic}, block{block}, improvementCost{improvementCost}, tution{tution} {
     numImprovements = 0;            // No improvements initially
     isMonopoly = false;             // Not part of a monopoly initially
     isImprovable = true;            // Improvable initially
@@ -15,6 +15,11 @@ Property{name, index, isProperty, cost, isAcademic}, improvementCost{improvement
 
 // Destructor for Academic
 Academic::~Academic() {}
+
+// Returns the block of the property
+std::string Academic::getBlock() const {
+    return block;
+} // Academic::getBlock
 
 // Returns the improvement cost of the property
 int Academic::getImprovementCost() const {

@@ -7,7 +7,6 @@
 
 // Residence class
 class Residence : public Property {
-    const int cost = 200;                  // Cost of the residence
     const int rent = 25;                   // Rent of the residence
 
     public: 

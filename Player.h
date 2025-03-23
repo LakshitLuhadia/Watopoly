@@ -48,7 +48,6 @@ class Player {
 
         // Removes property from Player's list of properties
         void removeProperty(Property* property);
-}
+};
 
 #endif
-
