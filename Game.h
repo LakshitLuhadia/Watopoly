@@ -12,6 +12,7 @@
 class Game: public Subject {
     bool testingMode = false; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
+    Dice *dice; // the dice
     Board *board; // the board
 
     public:
@@ -30,11 +31,11 @@ class Game: public Subject {
         void save(std::string filename);
         void setNumPlayers(int numPlayers);
         void setNumRollsInTimsLine(int numRollsInTimsLine);
-        void setPlayerTimCups(int i, int TimCups);
-        void setPlayerMoney(int i, int money);
-        void setPlayerPosition(int i, int position);
+        void setPlayerTimCups(int pos, int TimCups);
+        void setPlayerMoney(int pos, int money);
+        void setPlayerPosition(int pos, int position);
         void addPlayer(std::string name);
-        void setPlayerCharacter(int i, char character);
+        void setPlayerCharacter(int pos, char character);
         void setupBoard();
         void setupPlayers();
         void setBuildingOwner(std::string buildingName, std::string owner);
