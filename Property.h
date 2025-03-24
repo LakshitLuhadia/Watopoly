@@ -20,9 +20,6 @@ class Property: public Square {
         // Constructor for Property
         Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym);
 
-        // Destructor for Property
-        virtual ~Property();
-
         // Getters
         // Returns the cost of the property
         int getCost() const;

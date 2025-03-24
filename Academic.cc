@@ -14,9 +14,6 @@ Property{name, index, isProperty, cost, isAcademic, isResidence, isGym}, block{b
     isSellable = true;              // Sellable initially
 }
 
-// Destructor for Academic
-Academic::~Academic() {}
-
 // Returns the block of the property
 std::string Academic::getBlock() const {
     return block;

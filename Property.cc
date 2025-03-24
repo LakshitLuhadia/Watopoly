@@ -11,9 +11,6 @@ Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic}, isResidence
     isMortgaged = false;            // Not mortgaged initially
 }
 
-// Destructor for Property
-Property::~Property() {}
-
 // Returns the cost of the property
 int Property::getCost() const {
     return cost;

@@ -13,9 +13,6 @@ class Square {
         // Constructor for Square
         Square(const std::string name, const int index, const bool isProperty);
 
-        // Destructor for Square
-        virtual ~Square();
-
         // Getters
         // Returns the name of the square
         std::string getName() const;
