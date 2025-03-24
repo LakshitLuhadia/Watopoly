@@ -12,14 +12,14 @@
 class Game: public Subject {
     bool testingMode = false; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
-    std::vector<Player*> players; // a vector of players
-    std::vector<Property*> properties; // a vector of properties
+    Board *board; // the board
 
     public:
+        // Ctor for Game
         Game();
-        ~Game();
-        void roll();
-        void next();
+        ~Game(); // This might not even be necessary
+        void roll(); // rolls the dice
+        void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
         void improve(std::string property, std::string action);
         void mortgage(std::string property);
@@ -35,8 +35,6 @@ class Game: public Subject {
         void setPlayerPosition(int i, int position);
         void addPlayer(std::string name);
         void setPlayerCharacter(int i, char character);
-        void setupProperties();
-        void setupNonProperties();
         void setupBoard();
         void setupPlayers();
         void setBuildingOwner(std::string buildingName, std::string owner);

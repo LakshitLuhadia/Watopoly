@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Property.h"
 #include "Square.h"
+#include "Dice.h"
 
 void processInGameCommands() {
     Game g;
@@ -143,8 +144,6 @@ Game setupGame() {
         }
     }
     std::cout << "Setting things up and starting the game" << std::endl;
-    g.setupProperties(); // set up the properties vector
-    g.setupNonProperties(); // set up the non-properties vector
     g.setupBoard(); // set up the board
     g.setupPlayers(); // set up the players
 
