@@ -8,9 +8,6 @@ using namespace std;
 Residence::Residence(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
 Property{name, index, true, 200, false, true, false} {}
 
-// Destructor for Residence
-Residence::~Residence() {}  
-
 // Returns the rent of the residence
 int Residence::getRent() const {
     return rent;

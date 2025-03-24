@@ -3,9 +3,6 @@
 // Constructor for Administration
 int Administration::money = 0; // Administration::Administration
 
-// Destructor for Administration
-Administration::~Administration() {} // Administration::~Administration
-
 // Returns the total money in the administration
 int Administration::getMoney() {
     return money;

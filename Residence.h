@@ -13,9 +13,6 @@ class Residence : public Property {
         // Constructor for Residence
         Residence(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym);
 
-        // Destructor for Residence
-        ~Residence();
-
         // Getters
         // Returns the rent of the residence
         int getRent() const;

@@ -9,9 +9,6 @@ class Administration {
         // Ctor for Administration
         Administration();
 
-        // Dtor for Administration
-        ~Administration();
-
         // Getters
         // Returns the total money in the administration
         static int getMoney();
