@@ -12,7 +12,7 @@ Property{name, index, isProperty, cost, isAcademic, isResidence, isGym}, block{b
     isMonopoly = false;             // Not part of a monopoly initially
     isImprovable = true;            // Improvable initially
     isSellable = true;              // Sellable initially
-}
+} // Academic::Academic
 
 // Returns the block of the property
 std::string Academic::getBlock() const {
@@ -83,7 +83,6 @@ void Academic::addimprove() {
             } else {
                 numImprovements++;
                 owner->subtractMoney(improvementCost);
-                Administration::addMoney(improvementCost);
             }
         }
     }
@@ -102,7 +101,6 @@ void Academic::sellimprove() {
             } else {
                 numImprovements--;
                 owner->addMoney(improvementCost / 2);
-                Administration::subtractMoney(improvementCost / 2);
             }
         }
     }

@@ -4,7 +4,6 @@
 #include <string>
 #include "Player.h"
 #include "Square.h"
-#include "Administration.h"
 
 // Property class (abstract)
 class Property: public Square {
@@ -46,6 +45,6 @@ class Property: public Square {
 
         // Performs the action of the property
         virtual void performAction(Player* player) const override;
-};
+}; 
 
 #endif

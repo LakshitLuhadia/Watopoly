@@ -1,10 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Subject.h"
-#include "Player.h"
-#include "Property.h"
-#include "Board.h"
+#include "Game.h"
 
 Game::Game(): testingMode{false}, numPlayers{0} {} // Board is yet to be initialized
 
@@ -26,8 +23,7 @@ void Game::trade(std::string player, std::string give, std::string receive) {
 }
 
 void Game::improve(std::string property, std::string action) {
-    // Improve a property
-    // This function will use setNumImprovements function from Property class
+    
 }
 
 void Game::mortgage(std::string property) {
@@ -86,9 +82,9 @@ void Game::setPlayerPosition(int i, int position) {
 }
 
 void Game::addPlayer(std::string name) {
-    // Add a player
-    // This function will use addPlayer function from Board class
-}   
+    Board *board = this->board;
+    board->addPlayer(name);
+} // Game::addPlayer
 
 void Game::setPlayerCharacter(int i, char character) {
     // Set the character of the player
@@ -105,10 +101,22 @@ void Game::setupPlayers() {
     // This function will use setupPlayers function from Board class
 }
 
+/*
+ * This function iterates through the squares on the game board to find
+ * the building with the specified name. If the building is a property,
+ * it updates the owner of the property to the specified owner.
+ */
 void Game::setBuildingOwner(std::string buildingName, std::string owner) {
-    // Set the owner of a building
-    // This function will use setOwner function from Property class
-}
+    Board *board = this->board;
+    for (int i = 0; i < board->getSquares().size(); i++) {
+        if (board->getSquares()[i]->getName() == buildingName) {
+            if (board->getSquares()[i]->getIsProperty()) {
+                Property *property = dynamic_cast<Property*>(board->getSquares()[i]); // Downcast to Property
+                property->setOwner(owner);
+            }
+        }
+    }
+} // Game::setBuildingOwner
 
 void Game::setBuildingImprovements(std::string buildingName, int numImprovements) {
     // Set the number of improvements of a building
@@ -117,10 +125,10 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
 
 void Game::setTestingMode(bool testingMode) {
     this->testingMode = testingMode;
-}
+} // Game::setTestingMode
 
 void Game::notifyObservers() {
     // Notify the observers
     // This function will use notify function from Subject class
-}
+} // Game::notifyObservers
 

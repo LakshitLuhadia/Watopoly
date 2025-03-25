@@ -7,6 +7,12 @@
 #include "Subject.h"
 #include "Player.h"
 #include "Property.h"
+#include "Dice.h"
+#include "Academic.h"
+#include "Residence.h"
+#include "Gym.h"
+#include "Square.h"
+#include "Nonproperty.h"
 #include "Board.h"
 
 class Game: public Subject {

@@ -9,12 +9,12 @@ Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic}, isResidence
     mortgageValue = cost / 2;       // Mortgage value is half the cost
     owner = nullptr;                // No owner initially
     isMortgaged = false;            // Not mortgaged initially
-}
+} // Property::Property
 
 // Returns the cost of the property
 int Property::getCost() const {
     return cost;
-}   
+} // Property::getCost
 
 // Returns the mortgage value of the property
 int Property::getMortgageValue() {
