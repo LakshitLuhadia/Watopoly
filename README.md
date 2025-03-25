@@ -81,6 +81,6 @@ ________________________________________________________________________________
 ---
 
 ## Team Members
-1. Yashilla Barnwal
+1. Yashila Barnwal
 2. Lakshit Luhadia
 3. Dhruv Kumar
