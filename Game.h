@@ -16,7 +16,7 @@
 #include "Board.h"
 
 class Game: public Subject {
-    bool testingMode = false; // a flag to check if testing mode is on
+    static bool testingMode = false; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
     Dice *dice; // the dice
     Board *board; // the board
@@ -24,8 +24,7 @@ class Game: public Subject {
     public:
         // Ctor for Game
         Game();
-        ~Game(); // This might not even be necessary
-        void roll(); // rolls the dice
+        void roll(int die1 = -1, int die2 = -1); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
         void improve(std::string property, std::string action);
@@ -48,6 +47,8 @@ class Game: public Subject {
         void setBuildingImprovements(std::string buildingName, int numImprovements);
         void setTestingMode(bool testingMode);
         void notifyObservers();
+        // Functions added after UML:
+
 };
 
 #endif

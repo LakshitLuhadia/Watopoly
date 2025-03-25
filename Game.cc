@@ -1,11 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Game.h"
+#include "Subject.h"
+#include "Player.h"
+#include "Property.h"
+#include "Dice.h"
+#include "Academic.h"
+#include "Residence.h"
+#include "Gym.h"
+#include "Square.h"
+#include "Nonproperty.h"
+#include "Board.h"
 
 Game::Game(): testingMode{false}, numPlayers{0} {} // Board is yet to be initialized
-
-Game::~Game() {}
 
 void Game::roll() {
     Dice::roll()

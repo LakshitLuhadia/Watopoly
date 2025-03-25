@@ -16,7 +16,19 @@ void processInGameCommands() {
     std::string command;
     while (std::cin >> command) {
         if (command == "roll") {
-            g.roll();
+            if (g.testingMode) {
+                int die1;
+                int die2;
+                std::cin >> die1 >> die2;
+                if (die1 < 0 || die2 < 0) {
+                    std::cerr << "Invalid dice roll. Please enter a non-negative number." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore();
+                }
+                g.roll(die1, die2);
+            } else {
+                g.roll();
+            }
         } else if (command == "next") {
             g.next();
         } else if (command == "trade") {
@@ -64,6 +76,7 @@ Game processLoadedFile(const std::ifstream& filename) {
     Game g;
     Player* p;
     Property* prop;
+    Board *board;
     int numPlayers;
     loadfile >> numPlayers;
     g.setNumPlayers(numPlayers);
@@ -74,7 +87,7 @@ Game processLoadedFile(const std::ifstream& filename) {
         int money;
         int position;
         loadfile >> name >> character >> TimCups >> money >> position;
-        g.addPlayer(name);
+        board->addPlayer(name);
         g.setPlayerCharacter(i, character);
         if (position == 30) {
             std::cerr << "Player cannot start on square 30 (Go to DC Tims Line)." << std::endl;
@@ -125,7 +138,7 @@ Game setupGame() {
         std::string name;
         std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
         std::cin >> name;
-        g.addPlayer(name); // add the player
+        board->addPlayer(name); // add the player
         bool validCharacter = false;
         while (!validCharacter) { // check if the character is valid
             std::cout << "Please enter " << name << "'s character: " << std::endl;
