@@ -19,7 +19,7 @@ In Watopoly, players take turns moving around the board, buying and improving on
 
 ## Board Layout
 
-```C++
+```cpp
 ____________________________________________________________________________________________________
 |Goose   |        |NEEDLES |        |        |V1      |        |        |CIF     |        |GO TO   |
 |Nesting |--------|HALL    |--------|--------|        |--------|--------|        |--------|TIMS    |
