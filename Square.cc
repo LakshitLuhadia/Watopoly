@@ -6,9 +6,6 @@
 Square::Square(const std::string name, const int index, const bool isProperty) : 
 name{name}, index{index}, isProperty{isProperty} {}
 
-// Destructor for Square
-Square::~Square() {}
-
 // Returns the name of the square
 std::string Square::getName() const {
     return name;

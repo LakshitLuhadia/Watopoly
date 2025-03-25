@@ -19,7 +19,7 @@ In Watopoly, players take turns moving around the board, buying and improving on
 
 ## Board Layout
 
-```C++
+```cpp
 ____________________________________________________________________________________________________
 |Goose   |        |NEEDLES |        |        |V1      |        |        |CIF     |        |GO TO   |
 |Nesting |--------|HALL    |--------|--------|        |--------|--------|        |--------|TIMS    |
@@ -81,6 +81,6 @@ ________________________________________________________________________________
 ---
 
 ## Team Members
-1. Yashilla Barnwal
+1. Yashila Barnwal
 2. Lakshit Luhadia
 3. Dhruv Kumar

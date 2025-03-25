@@ -11,9 +11,6 @@ Property{name, index, true, 150, false, false, true} {
     isMonopoly = false;
 }
 
-// Destructor for Gym
-Gym::~Gym() {}
-
 // Returns the usage fee of the gym
 int Gym::getusageFee() {
     return usageFee;

@@ -15,9 +15,6 @@ class Gym: public Property {
         // Constructor for Gym
         Gym(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym);
 
-        // Destructor for Gym
-        ~Gym();
-
         // Getters
         // Returns the usage fee of the gym
         static int getusageFee();
