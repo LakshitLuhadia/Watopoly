@@ -88,21 +88,25 @@ void Game::setNumPlayers(int numPlayers) {
 void Game::setNumRollsInTimsLine(int numRollsInTimsLine) {
     // Set the number of rolls in Tims Line
     // This function will use setNumRollsInTimsLine function from Player class
+    board->getCurrentPlayer->setTurnsInTimsLine(numRollsInTimsLine);
 }
 
 void Game::setPlayerTimCups(int i, int TimCups) {
     // Set the number of Tim Cups
     // This function will use setTimCups function from Player class
+    board->getPlayer(i)->setNumRimCups(TimCups);
 }
 
 void Game::setPlayerMoney(int i, int money) {
     // Set the money of the player
     // This function will use setMoney function from Player class
+    board->getPlayer(i)->setMoney(money);
 }
 
 void Game::setPlayerPosition(int i, int position) {
     // Set the position of the player
     // This function will use setPosition function from Player class
+    board->getPlayer(i)->setPosition(position);
 }
 
 void Game::addPlayer(std::string name) {
@@ -113,6 +117,7 @@ void Game::addPlayer(std::string name) {
 void Game::setPlayerCharacter(int i, char character) {
     // Set the character of the player
     // This function will use setCharacter function from Player class
+    board->getPlayer(i)->setCharacter(character);
 }
 
 void Game::setupBoard() {
