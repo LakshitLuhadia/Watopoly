@@ -48,3 +48,4 @@ class Property: public Square {
 }; 
 
 #endif
+
