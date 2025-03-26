@@ -65,7 +65,7 @@ class Player {
         // Adds amount to Player's money
         void addMoney(int amount);
         // Subtracts amount from Player's money
-        void subtractMoney(int amount);
+        // Subtracts amount from Player's money
         // Adds property to Player's list of properties
         void addProperty(std::shared_ptr<Property> property);
         // Removes property from Player's list of properties
