@@ -6,14 +6,39 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 ## Table of Contents
 
 - [Overview](#overview)
+- [Design](#design)
 - [Board Layout](#board-layout)
+- [Game Logic](#game-logic)
+- [Command Interpreter](#command-interpreter)
+- [Player Management](#player-management)
+- [Auctions](#auctions)
+- [Saving and Loading](#saving-and-loading)
+- [User Interface (UI)](#user-interface-(ui))
 - [Team Members](#team-members)
+- [Appendix](#appendix)
 
 
 ---
 
 ## Overview
+
+### Introduction to Watopoly
 In Watopoly, players take turns moving around the board, buying and improving on-campus buildings (which function as properties), and paying tuition (rent) to other players. The game features 40 squares, representing various locations on the University of Waterloo campus. The goal of the game is to be the last player remaining who has not gone bankrupt.
+
+### Game Objectives
+
+### Core Mechanics
+
+---
+## Design
+
+### System Architecture
+
+### Class Diagram
+
+### Design Patterns Utilized
+
+### Data Structures
 
 ---
 
@@ -79,8 +104,25 @@ ________________________________________________________________________________
 ```
 
 ---
+## Game Logic
 
+---
+## Command Interpreter
+
+---
+## Auctions
+
+---
+## Saving and Loading
+
+---
+## User Interface (UI)
+
+---
 ## Team Members
 1. Yashila Barnwal
 2. Lakshit Luhadia
 3. Dhruv Kumar
+
+---
+## Appendix
