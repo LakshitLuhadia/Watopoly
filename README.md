@@ -7,8 +7,8 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 
 - [1. Overview](#1.-overview)
   - [1.1 Introduction to Watopoly](#1-.-1-introduction-to-watopoly)
-  - [Game Objectives](#game-objectives)
-  - [Core Mechanics](#core-mechanics)
+  - [1.2 Game Objectives](#1-.-2-game-objectives)
+  - [1.3 Core Mechanics](#1-.-3-core-mechanics)
 - [Design](#design)
   - [System Architecture](#system-architecture)
   - [Class Diagram](#class-diagrams)
@@ -27,14 +27,14 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 
 ---
 
-## Overview
+## 1. Overview
 
-### Introduction to Watopoly
+### 1.1 Introduction to Watopoly
 In Watopoly, players take turns moving around the board, buying and improving on-campus buildings (which function as properties), and paying tuition (rent) to other players. The game features 40 squares, representing various locations on the University of Waterloo campus. The goal of the game is to be the last player remaining who has not gone bankrupt.
 
-### Game Objectives
+### 1.2 Game Objectives
 
-### Core Mechanics
+### 1.3 Core Mechanics
 
 ---
 ## Design
