@@ -51,12 +51,17 @@ void Game::bankrupt() {
 void Game::assets() {
     // Display assets
     // This function will use getProperties function from Player class
+    board->getCurrentPlayer()->getProperties();
 }
 
 void Game::all() {
     // Display asssets of all players
     // This function will use getProperties function from Player class
     // This function will also use getPlayer function from Board class
+    for (int i = 0; i < numPlayers; i++) {
+        std::cout << board->getPlayer(i)->getName() << " has: " << std::endl; 
+        board->getPlayer(i)->getProperties();
+    }
 }
 
 void Game::save(std::string filename) {
