@@ -119,7 +119,10 @@ void Player::addProperty(shared_ptr<Property> property) {
 void Player::removeProperty(shared_ptr<Property> property) {
     if (property->getIsAcademic()) {
         shared_ptr<Academic> academicProperty = dynamic_pointer_cast<Academic>(property);
-        academicProperty->sellimprove();
+        int improvements = academicProperty->getNumImprovements();
+        for (int i = 0; i < improvements; ++i) {
+            academicProperty->sellimprove();
+        }
         if (academicProperty->getIsMonopoly()) {
             academicProperty->setIsMonopoly(false);
         }
@@ -141,7 +144,10 @@ void Player::removeProperty(shared_ptr<Property> property) {
 void Player::auction(shared_ptr<Property> property, shared_ptr<Player> player) {
     if (property->getIsAcademic()) {
         shared_ptr<Academic> academicProperty = dynamic_pointer_cast<Academic>(property);
-        academicProperty->sellimprove();
+        int improvements = academicProperty->getNumImprovements();
+        for (int i = 0; i < improvements; ++i) {
+            academicProperty->sellimprove();
+        }
         if (academicProperty->getIsMonopoly()) {
             academicProperty->setIsMonopoly(false);
         }
