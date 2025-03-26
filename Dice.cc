@@ -5,10 +5,15 @@
 Dice::Dice(bool testing) {
     dice1 = 0;
     dice2 = 0;
+    testing = false;
 }
 
 // Roll function for Dice
-void Dice::roll() {
+void Dice::roll(int d1 = -1, int d2 = -1) {
+    if (testing && d1 > -1 && d2 > -1) {
+        dice1 = d1;
+        dice2 = d2;
+    }
     dice1 = rand() % 6 + 1;
     dice2 = rand() % 6 + 1;
 }
