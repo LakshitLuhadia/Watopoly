@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <memory>
 #include "Subject.h"
 #include "Player.h"
 #include "Property.h"
@@ -16,9 +18,8 @@
 #include "Board.h"
 
 class Game: public Subject {
-    static bool testingMode = false; // a flag to check if testing mode is on
+    static bool testingMode; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
-    Dice *dice; // the dice
     Board *board; // the board
 
     public:

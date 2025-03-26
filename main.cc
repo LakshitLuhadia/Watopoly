@@ -36,7 +36,26 @@ void processInGameCommands() {
             std::string give;
             std::string receive;
             std::cin >> player >> give >> receive;
-            g.trade(player, give, receive);
+            bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);
+            bool receiveIsInt = std::all_of(receive.begin(), receive.end(), ::isdigit);
+    
+            if (giveIsInt && receiveIsInt) {
+                std::cout << "reject" << std::endl;
+            } else {
+                std::cout << "Does "<< player << " want to trade " << give << " for " << receive << "? (y/n):" << std::endl;
+                std::string response;
+                std::cin >> response;
+                if (response == "y" || response == "Y") {
+                    std::cout << "accept" << std::endl;
+                    g.trade(player, give, receive);
+                } else if (response == "n" || response == "N") {
+                    std::cout << "reject" << std::endl;
+                } else {
+                    std::cerr << "Invalid response. Please enter a valid response." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore();
+                }
+            }
         } else if (command == "improve") {
             std::string property;
             std::string action;

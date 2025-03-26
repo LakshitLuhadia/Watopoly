@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <memory>
 #include "Subject.h"
 #include "Player.h"
 #include "Property.h"
@@ -12,21 +14,31 @@
 #include "Nonproperty.h"
 #include "Board.h"
 
-Game::Game(): testingMode{false}, numPlayers{0} {} // Board is yet to be initialized
+Game::Game(): testingMode{false}, numPlayers{0}, board{std::make_shared<Board>()} {} // Board is yet to be initialized
 
 void Game::roll() {
-    Dice::roll()
+    Dice::roll();
+    notifyObservers();
 }
 
 void Game::next() {
     // Move to the next player
     board->nextPlayer();
+    notifyObservers();
 }
 
 void Game::trade(std::string player, std::string give, std::string receive) {
     // Trade properties between players
     // This function will use addProperty and removeProperty functions from Player class
     // It will also use setOwner function from Property class
+    bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);
+    bool receiveIsInt = std::all_of(receive.begin(), receive.end(), ::isdigit);
+
+    if (giveIsInt && receiveIsInt) {
+        std::cout << "reject" << std::endl;
+    } else {
+        board->trade(player, give, receive);
+    }
 }
 
 void Game::improve(std::string property, std::string action) {
