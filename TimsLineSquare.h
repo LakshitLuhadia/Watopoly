@@ -7,6 +7,8 @@
 class TimsLineSquare : public NonProperty {
     int bailCost; // Bail Cost of TimsLine
     public:
+        // ctor
+        TimsLineSquare();
         // Performs the action of the property
         void performAction(std::shared_ptr<Player> player) const override;
 };
