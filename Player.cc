@@ -95,7 +95,16 @@ vector<shared_ptr<Property>> Player::getProperties() const {
 }
 // Move Player to distance
 void Player::move(int distance) {
+    bool giveOSAP = false;
+    int tempPos = position;
     position += distance;
+    if (position > 40) {
+        giveOSAP = true;
+    }
+    position = position%40;
+    if (!((tempPos == 31 || tempPos == 33) && position == 11) && giveOSAP) {
+        money += 200; // for OSAP fee
+    }
 }
 // Adds amount to Player's money
 void Player::addMoney(int amount) {
