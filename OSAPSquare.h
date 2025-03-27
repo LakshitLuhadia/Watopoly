@@ -3,12 +3,14 @@
 #include "Nonproperty.h"
 #include <vector>
 #include <memory>
+#include <string>
+
 
 class OSAPSquare : public NonProperty {
     int collectAmount;
     public:
         // ctor
-        OSAPSquare();
+        OSAPSquare(const std::string name, const int index, const bool isProperty);
         // Performs the action of the property
         void performAction(std::shared_ptr<Player> player) const override;
 };
