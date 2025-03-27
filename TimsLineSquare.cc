@@ -1,5 +1,6 @@
 #include "TimsLineSquare.h"
 #include "Player.h"
+#include <memory>
 using namespace std;
 
 // ctor
