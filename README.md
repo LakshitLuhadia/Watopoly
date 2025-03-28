@@ -6,7 +6,7 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 ## Table of Contents
 
 - [1. Overview](#1-overview)
-  - [1.1 Introduction to Watopoly](#1-1-introduction-to-watopoly)
+  - [1.1 Introduction to Watopoly](#1-.-1-introduction-to-watopoly)
   - [1.2 Game Objectives](#1-2-game-objectives)
   - [1.3 Core Mechanics](#1-3-core-mechanics)
 - [2. Design](#2-design)
