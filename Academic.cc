@@ -6,8 +6,8 @@ using namespace std;
 using std::vector;
 
 // Constructor for Academic
-Academic::Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym, const std::string block, const int improvementCost, const vector <int> tution) :
-Property{name, index, isProperty, cost, isAcademic, isResidence, isGym}, block{block}, improvementCost{improvementCost}, tution{tution} {
+Academic::Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym, const std::string block, const int improvementCost, const vector <int> tuition) :
+Property{name, index, isProperty, cost, isAcademic, isResidence, isGym}, block{block}, improvementCost{improvementCost}, tuition{tuition} {
     numImprovements = 0;            // No improvements initially
     isMonopoly = false;             // Not part of a monopoly initially
     isImprovable = true;            // Improvable initially
@@ -26,8 +26,8 @@ int Academic::getImprovementCost() const {
 
 // Returns the tuition fees of the property
 int Academic::getTuition(int level) const {
-    vector <int> tution = this->tution;
-    return tution[level];
+    vector <int> tuition = this->tuition;
+    return tuition[level];
 } // Academic::getTuition
 
 // Returns the number of improvements on the property
@@ -111,9 +111,21 @@ void Academic::performAction(Player* player) const {
     Player* owner = getOwner();
     if (owner != nullptr) {
         if (owner != player) {
-            int tuition = getTuition(numImprovements);
-            player->subtractMoney(tuition);
-            owner->addMoney(tuition);
+            if (isMonopoly) {
+                if (numImprovements == 0) {
+                    int tuition = getTuition(numImprovements) * 2;
+                    player->subtractMoney(tuition);
+                    owner->addMoney(tuition);
+                } else {
+                    int tuition = getTuition(numImprovements);
+                    player->subtractMoney(tuition);
+                    owner->addMoney(tuition);
+                }
+            } else {
+                int tuition = getTuition(numImprovements);
+                player->subtractMoney(tuition);
+                owner->addMoney(tuition);
+            }
         }
-    }
+    } 
 } // Academic::performAction
