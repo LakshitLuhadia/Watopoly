@@ -11,13 +11,13 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
   - [1.3 Core Mechanics](#13-core-mechanics)
     - [1.3.1 Board and Movement](#131-board-and-movement)
     - [1.3.2 Properties and Ownership](#132-properties-and-ownership)
-    - [1.3.3 Financial Transactions](#133-financial-transcations)
+    - [1.3.3 Financial Transactions](#133-financial-transactions)
     - [1.3.4 Special Squares](#134-special-squares)
     - [1.3.5 Player Interactions](#135-player-interactions)
     - [1.3.6 Game Progression](#136-game-progression)
     - [1.3.7 Additional Mechanics](#137-additional-mechanics)
 - [2. Design](#2-design)
-  - [2.1 Class Diagram](#21-class-diagrams)
+  - [2.1 Class Diagram](#21-class-diagram)
   - [2.2 Design Patterns Utilized](#22-design-patterns-utilized)
   - [2.3 Data Structures](#23-data-structures)
 - [3. Board Layout](#3-board-layout)
@@ -26,7 +26,7 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 - [6. Player Management](#6-player-management)
 - [7. Auctions](#7-auctions)
 - [8. Saving and Loading](#8-saving-and-loading)
-- [9. User Interface (UI)](#9-user-interface-(ui))
+- [9. User Interface](#9-user-interface)
 - [10. Team Members](#10-team-members)
 - [11. Appendix](#11-appendix)
   - [11.1 Code Snippets](#111-code-snippets)
@@ -221,7 +221,7 @@ ________________________________________________________________________________
 ## 8. Saving and Loading
 
 ---
-## 9. User Interface (UI)
+## 9. User Interface
 
 ---
 ## 10. Team Members
