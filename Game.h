@@ -20,12 +20,12 @@
 class Game: public Subject {
     static bool testingMode; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
-    Board *board; // the board
+    std::shared_ptr<Board> board; // the board
 
     public:
         // Ctor for Game
         Game();
-        void roll(int die1 = -1, int die2 = -1); // rolls the dice
+        void roll(); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
         void improve(std::string property, std::string action);

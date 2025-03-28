@@ -13,6 +13,7 @@
 #include "Square.h"
 #include "Nonproperty.h"
 #include "Board.h"
+#include "Game.h"
 
 Game::Game(): testingMode{false}, numPlayers{0}, board{std::make_shared<Board>()} {} // Board is yet to be initialized
 
@@ -39,6 +40,7 @@ void Game::trade(std::string player, std::string give, std::string receive) {
     } else {
         board->trade(player, give, receive);
     }
+    notifyObservers();
 }
 
 void Game::improve(std::string property, std::string action) {
@@ -64,6 +66,7 @@ void Game::assets() {
     // Display assets
     // This function will use getProperties function from Player class
     board->getCurrentPlayer()->getProperties();
+    notifyObservers();
 }
 
 void Game::all() {
@@ -74,6 +77,7 @@ void Game::all() {
         std::cout << board->getPlayer(i)->getName() << " has: " << std::endl; 
         board->getPlayer(i)->getProperties();
     }
+    notifyObservers();
 }
 
 void Game::save(std::string filename) {
@@ -136,11 +140,11 @@ void Game::setupPlayers() {
  * it updates the owner of the property to the specified owner.
  */
 void Game::setBuildingOwner(std::string buildingName, std::string owner) {
-    Board *board = this->board;
-    for (int i = 0; i < board->getSquares().size(); i++) {
-        if (board->getSquares()[i]->getName() == buildingName) {
-            if (board->getSquares()[i]->getIsProperty()) {
-                Property *property = dynamic_cast<Property*>(board->getSquares()[i]); // Downcast to Property
+   // Board *board = this->board; This line is not needed
+    for (int i = 0; i < 40; i++) {
+        if (board->getSquares(i)->getName() == buildingName) {
+            if (board->getSquares(i)->getIsProperty()) {
+                Property *property = dynamic_cast<Property*>(board->getSquares(i)); // Downcast to Property
                 property->setOwner(owner);
             }
         }
@@ -150,6 +154,19 @@ void Game::setBuildingOwner(std::string buildingName, std::string owner) {
 void Game::setBuildingImprovements(std::string buildingName, int numImprovements) {
     // Set the number of improvements of a building
     // This function will use setNumImprovements function from Property class
+    for (int i = 0; i < 40; i++) {
+        if (board->getSquares(i)->getName() == buildingName) {
+            if (board->getSquares(i)->getIsProperty()) {
+                Property *property = dynamic_cast<Property*>(board->getSquares(i)); // Downcast to Property
+                if (property) {
+                    Academic* academicBuilding = dynamic_cast<Academic*>(property);
+                    if (academicBuilding) {
+                        academicBuilding->setNumImprovements(numImprovements);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Game::setTestingMode(bool testingMode) {
