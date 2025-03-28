@@ -5,24 +5,25 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 
 ## Table of Contents
 
-- [1. Overview](#overview)
-  - [1.1 Introduction to Watopoly](##introduction-to-watopoly)
-  - [1.2 Game Objectives](##game-objectives)
-  - [1.3 Core Mechanics](##core-mechanics)
-- [Design](#design)
-  - [System Architecture](#system-architecture)
-  - [Class Diagram](#class-diagrams)
-  - [Design Patterns Utilized](#design-patterns-utilized)
-  - [Data Structures](#data-structures)
-- [Board Layout](#board-layout)
-- [Game Logic](#game-logic)
-- [Command Interpreter](#command-interpreter)
-- [Player Management](#player-management)
-- [Auctions](#auctions)
-- [Saving and Loading](#saving-and-loading)
-- [User Interface (UI)](#user-interface-(ui))
-- [Team Members](#team-members)
-- [Appendix](#appendix)
+- [1. Overview](#1-overview)
+  - [1.1 Introduction to Watopoly](#1-1-introduction-to-watopoly)
+  - [1.2 Game Objectives](#1-2-game-objectives)
+  - [1.3 Core Mechanics](#1-3-core-mechanics)
+- [2. Design](#2-design)
+  - [2.1 System Architecture](#2-1-system-architecture)
+  - [2.2 Class Diagram](#2-2-class-diagrams)
+  - [2.3 Design Patterns Utilized](#2-3-design-patterns-utilized)
+  - [2.4 Data Structures](#2-4-data-structures)
+- [3. Board Layout](#3-board-layout)
+- [4. Game Logic](#4-game-logic)
+- [5. Command Interpreter](#5-command-interpreter)
+- [6. Player Management](#6-player-management)
+- [7. Auctions](#7-auctions)
+- [8. Saving and Loading](#8-saving-and-loading)
+- [9. User Interface (UI)](#9-user-interface-(ui))
+- [10. Team Members](#10-team-members)
+- [11. Appendix](#11-appendix)
+  - [11.1 Code Snippets](#11-1-code-snippets)
 
 
 ---
@@ -37,19 +38,19 @@ In Watopoly, players take turns moving around the board, buying and improving on
 ### 1.3 Core Mechanics
 
 ---
-## Design
+## 2. Design
 
-### System Architecture
+### 2.1 System Architecture
 
-### Class Diagram
+### 2.2 Class Diagram
 
-### Design Patterns Utilized
+### 2.3 Design Patterns Utilized
 
-### Data Structures
+### 2.4 Data Structures
 
 ---
 
-## Board Layout
+## 3. Board Layout
 
 ```cpp
 ____________________________________________________________________________________________________
@@ -111,25 +112,30 @@ ________________________________________________________________________________
 ```
 
 ---
-## Game Logic
+## 4. Game Logic
 
 ---
-## Command Interpreter
+## 5. Command Interpreter
 
 ---
-## Auctions
+## 6. Player Management
 
 ---
-## Saving and Loading
+## 7. Auctions
 
 ---
-## User Interface (UI)
+## 8. Saving and Loading
 
 ---
-## Team Members
+## 9. User Interface (UI)
+
+---
+## 10. Team Members
 1. Yashila Barnwal
 2. Lakshit Luhadia
 3. Dhruv Kumar
 
 ---
-## Appendix
+## 11. Appendix
+
+### Code Snippets
