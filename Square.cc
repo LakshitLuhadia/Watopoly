@@ -20,5 +20,3 @@ int Square::getIndex() const {
 bool Square::getIsProperty() const {
     return isProperty;
 } // Square::getIsProperty
-
-
