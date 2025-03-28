@@ -11,16 +11,15 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
   - [1.3 Core Mechanics](#13-core-mechanics)
     - [1.3.1 Board and Movement](#131-board-and-movement)
     - [1.3.2 Properties and Ownership](#132-properties-and-ownership)
-    - [1.3.3 Financial and Transactions](#133-financial-and-transcations)
+    - [1.3.3 Financial Transactions](#133-financial-transcations)
     - [1.3.4 Special Squares](#134-special-squares)
     - [1.3.5 Player Interactions](#135-player-interactions)
     - [1.3.6 Game Progression](#136-game-progression)
     - [1.3.7 Additional Mechanics](#137-additional-mechanics)
 - [2. Design](#2-design)
-  - [2.1 System Architecture](#21-system-architecture)
-  - [2.2 Class Diagram](#22-class-diagrams)
-  - [2.3 Design Patterns Utilized](#23-design-patterns-utilized)
-  - [2.4 Data Structures](#24-data-structures)
+  - [2.1 Class Diagram](#21-class-diagrams)
+  - [2.2 Design Patterns Utilized](#22-design-patterns-utilized)
+  - [2.3 Data Structures](#23-data-structures)
 - [3. Board Layout](#3-board-layout)
 - [4. Game Logic](#4-game-logic)
 - [5. Command Interpreter](#5-command-interpreter)
@@ -94,13 +93,54 @@ The objective of the game Watopoly is to be the last player remaining who has no
 ---
 ## 2. Design
 
-### 2.1 System Architecture
+### 2.1 Class Diagram
 
-### 2.2 Class Diagram
+```mermaid
+classDiagram
+    class Subject {
+        <<abstract>>
+        - vector<Observer*> observers
+        + attach(Observer* observer)
+        + detach(Observer* observer)
+        + notifyObserver()
+        + virtual ~Subject() = 0
+    }
 
-### 2.3 Design Patterns Utilized
+    class Game {
+        - board: unique_ptr<Board>
+        - numPlayers: Integer
+        - testingMode: Boolean
+        + roll()
+        + next()
+        + trade(string player, string give, string receive)
+        + improve(string property, string action)
+        + mortgage(string property)
+        + unmortgage(string property)
+        + bankrupt()
+        + assets()
+        + all()
+        + save(string filename)
+        + setNumPlayers(int numPlayers)
+        + setNumRollsInTimsLine(int numRollsInTimsLine)
+        + setPlayerTimCups(int pos, int TimCups)
+        + setPlayerMoney(int pos, int money)
+        + setPlayerPosition(int pos, int position)
+        + setPlayerCharacter(int pos, char character)
+        + setupBoard()
+        + setBuildingOwner(string buildingName, string owner)
+        + setBuildingImprovements(string buildingName, int numImprovements)
+        + setTestingMode()
+        + end()
+        + getState()
+    }
 
-### 2.4 Data Structures
+    %% Relationships
+    Subject <|-- Game
+```
+
+### 2.2 Design Patterns Utilized
+
+### 2.3 Data Structures
 
 ---
 
