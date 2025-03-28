@@ -9,6 +9,13 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
   - [1.1 Introduction to Watopoly](#11-introduction-to-watopoly)
   - [1.2 Game Objectives](#12-game-objectives)
   - [1.3 Core Mechanics](#13-core-mechanics)
+    - [1.3.1 Board and Movement](#131-board-and-movement)
+    - [1.3.2 Properties and Ownership](#132-properties-and-ownership)
+    - [1.3.3 Financial and Transactions](#133-financial-and-transcations)
+    - [1.3.4 Special Squares](#134-special-squares)
+    - [1.3.5 Player Interactions](#135-player-interactions)
+    - [1.3.6 Game Progression](#136-game-progression)
+    - [1.3.7 Additional Mechanics](#137-additional-mechanics)
 - [2. Design](#2-design)
   - [2.1 System Architecture](#21-system-architecture)
   - [2.2 Class Diagram](#22-class-diagrams)
@@ -34,8 +41,55 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 In Watopoly, players take turns moving around the board, buying and improving on-campus buildings (which function as properties), and paying tuition (rent) to other players. The game features 40 squares, representing various locations on the University of Waterloo campus. The goal of the game is to be the last player remaining who has not gone bankrupt.
 
 ### 1.2 Game Objectives
+The objective of the game Watopoly is to be the last player remaining who has not dropped out of university (declared bankruptcy). Players take turns moving around a 40-square board, buying and improving on-campus buildings (properties), and paying tuition (rent) to other players. The game continues until only one player remains solvent, and that player is declared the winner.
 
 ### 1.3 Core Mechanics
+#### Board and Movement
+• The game is played on a 40-square board representing the University of Waterloo campus.
+
+• Players roll two dice to move around the board.
+
+• Landing on different squares triggers specific actions.
+
+#### 1.3.1 Properties and Ownership
+• Players can purchase unowned properties (academic buildings, gyms, and residences) they land on.
+
+• Academic buildings are grouped into monopolies.
+
+• Owning all properties in a monopoly allows for improvements (bathrooms and cafeterias).
+
+#### 1.3.2 Financial Transactions
+• Players pay tuition (rent) when landing on owned properties.
+
+• Collect OSAP (similar to "Passing Go") awards $200 to players.
+
+• Players can mortgage properties to raise funds.
+
+#### 1.3.3 Special Squares
+• DC Tims Line (similar to "Jail").
+
+• SLC and Needles Hall squares trigger random events.
+
+• Goose Nesting, Tuition, and Coop Fee squares have specific effects.
+
+#### 1.3.4 Player Interactions
+• Players can trade properties and money with each other.
+
+• Auctions occur when players choose not to buy properties or go bankrupt.
+
+#### 1.3.5 Game Progression
+• Players take turns moving, buying properties, and paying fees.
+
+• The game continues until all but one player have declared bankruptcy.
+
+#### 1.3.6 Additional Mechanics
+• Improvements increase property value and rent.
+
+• Roll Up the Rim cups can be collected to get out of DC Tims Line.
+
+• Players can mortgage and unmortgage properties.
+
+• Bankruptcy occurs when a player owes more than they can pay.
 
 ---
 ## 2. Design
