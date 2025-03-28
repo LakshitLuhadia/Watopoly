@@ -44,45 +44,45 @@ In Watopoly, players take turns moving around the board, buying and improving on
 The objective of the game Watopoly is to be the last player remaining who has not dropped out of university (declared bankruptcy). Players take turns moving around a 40-square board, buying and improving on-campus buildings (properties), and paying tuition (rent) to other players. The game continues until only one player remains solvent, and that player is declared the winner.
 
 ### 1.3 Core Mechanics
-#### Board and Movement
+#### 1.3.1 Board and Movement
 • The game is played on a 40-square board representing the University of Waterloo campus.
 
 • Players roll two dice to move around the board.
 
 • Landing on different squares triggers specific actions.
 
-#### 1.3.1 Properties and Ownership
+#### 1.3.2 Properties and Ownership
 • Players can purchase unowned properties (academic buildings, gyms, and residences) they land on.
 
 • Academic buildings are grouped into monopolies.
 
 • Owning all properties in a monopoly allows for improvements (bathrooms and cafeterias).
 
-#### 1.3.2 Financial Transactions
+#### 1.3.3 Financial Transactions
 • Players pay tuition (rent) when landing on owned properties.
 
 • Collect OSAP (similar to "Passing Go") awards $200 to players.
 
 • Players can mortgage properties to raise funds.
 
-#### 1.3.3 Special Squares
+#### 1.3.4 Special Squares
 • DC Tims Line (similar to "Jail").
 
 • SLC and Needles Hall squares trigger random events.
 
 • Goose Nesting, Tuition, and Coop Fee squares have specific effects.
 
-#### 1.3.4 Player Interactions
+#### 1.3.5 Player Interactions
 • Players can trade properties and money with each other.
 
 • Auctions occur when players choose not to buy properties or go bankrupt.
 
-#### 1.3.5 Game Progression
+#### 1.3.6 Game Progression
 • Players take turns moving, buying properties, and paying fees.
 
 • The game continues until all but one player have declared bankruptcy.
 
-#### 1.3.6 Additional Mechanics
+#### 1.3.7 Additional Mechanics
 • Improvements increase property value and rent.
 
 • Roll Up the Rim cups can be collected to get out of DC Tims Line.
