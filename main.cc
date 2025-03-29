@@ -21,7 +21,7 @@ void processInGameCommands() {
         std::string command;
         std::cin >> command;
         if (command == "roll") {
-            if (g.testingMode) {
+            if (g.getTestingMode()) {
                 int die1;
                 int die2;
                 std::cin >> die1 >> die2;
