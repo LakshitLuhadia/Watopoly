@@ -353,13 +353,13 @@ classDiagram
 #### Obsever Pattern
 This pattern is used to define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
 
-Components of the Observer Pattern in Watopoly:
+**Components** of the **Observer Pattern** in Watopoly:
 
-• Subject: It maintains a list of observers and provides methods to attach, detach, and notify observers. The Game class is responsible for updating the state of the game, such as player positions, ownership of properties, and other game-related data.
+• Subject: It maintains a list of observers and provides methods to attach, detach, and notify observers. The ```Game``` class is responsible for updating the state of the game, such as player positions, ownership of properties, and other game-related data.
 
-• Observers: The TextDisplay and GraphicalDisplay classes act as observers. They are notified whenever the state of the game changes, allowing them to update their displays accordingly. The TextDisplay class might update a text-based representation of the game board, while the GraphicalDisplay class updates a graphical representation.
+• Observers: The ```TextDisplay``` and ```GraphicalDisplay``` classes act as observers. They are notified whenever the state of the game changes, allowing them to update their displays accordingly. The ```TextDisplay``` class might update a text-based representation of the game board, while the ```GraphicalDisplay``` class updates a graphical representation.
 
-• Notification: When the game state changes (e.g., a player moves or buys a property), the Game class notifies its observers by calling their notify() methods. This ensures that both the text and graphical displays are updated to reflect the new state of the game.
+• Notification: When the game state changes (e.g., a player moves or buys a property), the ```Game``` class notifies its observers by calling their ```notify()``` methods. This ensures that both the text and graphical displays are updated to reflect the new state of the game.
 
 #### UML Class Diagram
 ```mermaid
