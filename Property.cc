@@ -22,7 +22,7 @@ int Property::getMortgageValue() {
 } // Property::getMortgageValue
 
 // Returns the owner of the property
-std::unique_ptr<Player>& Property::getOwner() {
+std::shared_ptr<Player>& Property::getOwner() {
     return owner;
 } // Property::getOwner
 
@@ -61,12 +61,12 @@ void Property::setIsMortgaged(bool newIsMortgaged) {
     isMortgaged = newIsMortgaged;
 } // Property::setIsMortgaged
 
-//void Property::performAction(std::shared_ptr<Player>& player) const {
+// Performs the action of the property
+void Property::performAction(std::shared_ptr<Player>& player) const {
     if (owner) {
         if (owner.get() != player.get()) {
             player->subtractMoney(cost);
             owner->addMoney(cost);
         }
     } 
-} // Property::performAction Performs the action of the property
-
+} // Property::performAction

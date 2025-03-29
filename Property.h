@@ -10,7 +10,7 @@
 class Property: public Square {
     const int cost;                           // Cost of the property
     static int mortgageValue;                 // Mortgage value of the property
-    static std::unique_ptr<Player> owner;     // Owner of the property
+    static std::shared_ptr<Player> owner;     // Owner of the property
     static bool isMortgaged;                  // Is the property mortgaged?
     const bool isAcademic;                    // Is the property an academic property?
     const bool isResidence;                   // Is the property a residence?
@@ -26,7 +26,7 @@ class Property: public Square {
         // Returns the mortgage value of the property
         static int getMortgageValue();
         // Returns the owner of the property
-        static std::unique_ptr<Player>& getOwner();
+        static std::shared_ptr<Player>& getOwner();
         // Returns whether the property is mortgaged
         static bool getIsMortgaged();
         // Returns whether the property is an academic property
