@@ -60,7 +60,13 @@ void processInGameCommands() {
             std::string property;
             std::string action;
             std::cin >> property >> action;
-            g.improve(property, action);
+            if (action != "buy" && action != "sell") {
+                std::cerr << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
+                std::cin.clear();
+                std::cin.ignore();
+            } else {
+                g.improve(property, action);
+            }
         } else if (command == "mortgage") {
             std::string property;
             std::cin >> property;
@@ -87,7 +93,7 @@ void processInGameCommands() {
     }
 }
             
-Game processLoadedFile(const std::ifstream& filename) {
+Game processLoadedFile(const std::string& filename) {
     std::ifstream loadfile{filename};
     if (loadfile.fail()) {
         std::cerr << "Cannot open the loaded file" << std::endl;
@@ -139,10 +145,15 @@ Game processLoadedFile(const std::ifstream& filename) {
     return g;
 }
 
+// Helper function to check if a character is valid
+bool isCharacter(char character, const std::vector<char>& characters) {
+    return std::find(characters.begin(), characters.end(), character) != characters.end();
+}
+
 // Function to set up the game
 Game setupGame() {
     Game g;
-    Board b;
+    std::unique_ptr<Board> b;
     std::vector<char> characters = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
     std::cout << "Welcome to the game of Watopoly!" << std::endl;
     std::cout << "Please enter the number of players(2-6): " << std::endl;
@@ -157,7 +168,7 @@ Game setupGame() {
         std::string name;
         std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
         std::cin >> name;
-        board->addPlayer(name); // add the player
+        b->addPlayer(name); // add the player
         bool validCharacter = false;
         while (!validCharacter) { // check if the character is valid
             std::cout << "Please enter " << name << "'s character: " << std::endl;
@@ -172,7 +183,7 @@ Game setupGame() {
                 std::cerr << "Valid characters are: G, B, D, P, S, $, L, T" << std::endl;
                 std::cin.clear();
                 std::cin.ignore();
-            } 
+            }
         }
     }
     std::cout << "Setting things up and starting the game" << std::endl;
@@ -191,6 +202,7 @@ int main(int argc, char* argv[]) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
+            Game g;
             g.setTestingMode(testingMode);
         } else if (input_arg == "-load") { // if the input argument is -load file, set the filename to the input filename
             if (i + 1 >= argc) { // if the filename is not provided, print an appropriate error message
@@ -215,7 +227,7 @@ int main(int argc, char* argv[]) {
                 std::cerr << "Cannot open the loaded file" << std::endl;
                 return 1;
             } else {
-                processLoadedFile(loadFile); // process the loaded file
+                processLoadedFile(filename); // process the loaded file
             }
         }
     } else {
