@@ -28,7 +28,7 @@ class Game: public Subject {
         void roll(); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
-        void improve(std::string property, std::string action);
+        void improve(const std::string& property, const std::string& action);
         void mortgage(std::string property);
         void unmortgage(std::string property);
         void bankrupt();

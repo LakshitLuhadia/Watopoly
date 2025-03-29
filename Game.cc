@@ -44,8 +44,77 @@ void Game::trade(std::string player, std::string give, std::string receive) {
     notifyObservers();
 }
 
-void Game::improve(std::string property, std::string action) {
-    
+void Game::improve(const std::string& property, const std::string& action) {
+    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
+
+    // Find the property by name
+    std::shared_ptr<Square> square = nullptr;
+    for (int i = 0; i < 40; ++i) {
+        if (board->getSquares(i)->getName() == property) {
+            square = board->getSquares(i);
+            break;
+        }
+    }
+
+    if (!square) {
+        std::cerr << "Error: Property not found." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
+
+    // Ensure the square is an academic building
+    Academic* academicBuilding = dynamic_cast<Academic*>(square.get());
+    if (!academicBuilding) {
+        std::cerr << "Error: Only academic buildings can be improved." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
+
+    // Ensure the current player owns the property
+    if (academicBuilding->getOwner() != currentPlayer) {
+        std::cerr << "Error: You do not own this property." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
+
+    // Handle the action
+    if (action == "buy") {
+        if (!academicBuilding->getIsImprovable()) {
+            std::cerr << "Error: Improvements cannot be bought for this property at this time." << std::endl;
+            std::cin.clear();
+            std::cin.ignore();
+            return;
+        }
+
+        // Add improvement
+        academicBuilding->addimprove();
+        std::cout << "Improvement bought for " << property 
+                  << ". Current improvements: " 
+                  << academicBuilding->getNumImprovements() << std::endl;
+
+    } else if (action == "sell") {
+        if (!academicBuilding->getIsSellable()) {
+            std::cerr << "Error: Improvements cannot be sold for this property at this time." << std::endl;
+            std::cin.clear();
+            std::cin.ignore();
+            return;
+        }
+
+        // Sell improvement
+        academicBuilding->sellimprove();
+        std::cout << "Improvement sold for " << property 
+                  << ". Current improvements: " 
+                  << academicBuilding->getNumImprovements() << std::endl;
+
+    } else {
+        std::cerr << "Error: Invalid action. Use 'buy' or 'sell'." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
 }
 
 void Game::mortgage(std::string property) {
@@ -191,7 +260,6 @@ void Game::setupPlayers() {
  * it updates the owner of the property to the specified owner.
  */
 void Game::setBuildingOwner(std::string buildingName, std::string owner) {
-   // Board *board = this->board; This line is not needed
     for (int i = 0; i < 40; i++) {
         if (board->getSquares(i)->getName() == buildingName) {
             if (board->getSquares(i)->getIsProperty()) {

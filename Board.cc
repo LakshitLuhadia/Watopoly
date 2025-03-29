@@ -8,11 +8,7 @@
 #include "Player.h"
 using namespace std;
 
-void Board::nextPlayer() {
-    // Move to the next player
-    currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
-}
-
+// This is a private function that gets a property by name
 std::shared_ptr<Property> Board::getPropertyByName(const std::string& name) const {
     // Get a property by name
     for (const auto& square : squares) {
@@ -23,6 +19,7 @@ std::shared_ptr<Property> Board::getPropertyByName(const std::string& name) cons
     return nullptr; // Return nullptr if the property is not found
 }
 
+// This is a private function that gets a player by name
 std::shared_ptr<Player> Board::getPlayerByName(const std::string& name) const {
     // Get a player by name
     for (auto player : players) {
@@ -31,6 +28,17 @@ std::shared_ptr<Player> Board::getPlayerByName(const std::string& name) const {
         }
     }
     return nullptr; // Return nullptr if the player is not found
+}
+
+void Board::nextPlayer() {
+    // Move to the next player
+    currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
+}
+
+void Board::addPlayer(std::string name) {
+    // Add a player
+    players.push_back(std::make_unique<Player>(name));
+    numPlayers++;
 }
 
 void Board::trade(std::string player, std::string give, std::string receive) {
@@ -77,9 +85,4 @@ std::shared_ptr<Player> Board::getPlayer(int i) const {
 std::shared_ptr<Square> Board::getSquares(int i) const {
     // Get a square by index
     return squares[i];
-}
-void Board::addPlayer(std::string name) {
-    // Add a player
-    players.push_back(std::make_unique<Player>(name));
-    numPlayers++;
 }
