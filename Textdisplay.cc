@@ -2,7 +2,7 @@
 using namespace std;
 
 // Constructor
-TextDisplay::TextDisplay(std::unique_ptr<Game> game) : 
+TextDisplay::TextDisplay(std::shared_ptr<Game> game) : 
 g{std::move(game)} {} // TextDisplay::TextDisplay
 
 // Override the notify function from Observer
