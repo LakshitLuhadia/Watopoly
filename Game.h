@@ -43,7 +43,6 @@ class Game: public Subject {
         void addPlayer(std::string name);
         void setPlayerCharacter(int pos, char character);
         void setupBoard();
-        void setupPlayers();
         void setBuildingOwner(std::string buildingName, std::string owner);
         void setBuildingImprovements(std::string buildingName, int numImprovements);
         void setTestingMode(bool testingMode);

@@ -13,8 +13,13 @@
 
 void processInGameCommands() {
     Game g;
-    std::string command;
-    while (std::cin >> command) {
+    std::shared_ptr<Board> b;
+    while (true) {
+        auto currentPlayer = b->getCurrentPlayer();
+        std::cout << currentPlayer->getName() << "'s turn." << std::endl;
+
+        std::string command;
+        std::cin >> command;
         if (command == "roll") {
             if (g.testingMode) {
                 int die1;
@@ -85,14 +90,22 @@ void processInGameCommands() {
             std::string filename;
             std::cin >> filename;
             g.save(filename);
+            std::cout << "Game saved to " << filename << std::endl;
+            std::cout << "Exiting the game" << std::endl;
+            break;
         } else {
             std::cerr << "Invalid command. Please enter a valid command." << std::endl;
             std::cin.clear();
             std::cin.ignore();
         }
+        if (b->getNumPlayers() == 1) {
+            auto winner = b->getCurrentPlayer();
+            std::cout << winner->getName() << " wins the game!" << std::endl;
+            break;
+        }
     }
 }
-            
+
 Game processLoadedFile(const std::string& filename) {
     std::ifstream loadfile{filename};
     if (loadfile.fail()) {
@@ -188,7 +201,6 @@ Game setupGame() {
     }
     std::cout << "Setting things up and starting the game" << std::endl;
     g.setupBoard(); // set up the board
-    g.setupPlayers(); // set up the players
 
     return g;
 }
@@ -227,7 +239,10 @@ int main(int argc, char* argv[]) {
                 std::cerr << "Cannot open the loaded file" << std::endl;
                 return 1;
             } else {
-                processLoadedFile(filename); // process the loaded file
+                Game g = processLoadedFile(filename); // process the loaded file
+                std::cout << "Loaded game file successfully" << std::endl;
+                std::cout << "Starting the game" << std::endl;
+                processInGameCommands(); // process the in-game commands
             }
         }
     } else {

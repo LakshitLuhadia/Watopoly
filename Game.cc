@@ -249,11 +249,6 @@ void Game::setupBoard() {
     // This function will use setupBoard function from Board class
 }
 
-void Game::setupPlayers() {
-    // Set up the players
-    // This function will use setupPlayers function from Board class
-}
-
 /*
  * This function iterates through the squares on the game board to find
  * the building with the specified name. If the building is a property,
