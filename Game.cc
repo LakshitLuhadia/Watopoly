@@ -50,8 +50,8 @@ void Game::improve(const std::string& property, const std::string& action) {
     // Find the property by name
     std::shared_ptr<Square> square = nullptr;
     for (int i = 0; i < 40; ++i) {
-        if (board->getSquares(i)->getName() == property) {
-            square = board->getSquares(i);
+        if (board->getSquare(i)->getName() == property) {
+            square = board->getSquare(i);
             break;
         }
     }
@@ -174,11 +174,11 @@ void Game::save(std::string filename) {
         }
         for (int i = 0; i < 40; i++) {
             // This is following the format: name owner numImprovements
-            if (board->getSquares(i)->getIsProperty() == false) {
+            if (board->getSquare(i)->getIsProperty() == false) {
                 // Do not save the non-property square
                 continue;
             } else {
-                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i));
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i));
                 if (property) {
                     savefile << property->getName() << " ";
                     if (property->getOwner() == nullptr) {
@@ -256,9 +256,9 @@ void Game::setupBoard() {
  */
 void Game::setBuildingOwner(std::string buildingName, std::string owner) {
     for (int i = 0; i < 40; i++) {
-        if (board->getSquares(i)->getName() == buildingName) {
-            if (board->getSquares(i)->getIsProperty()) {
-                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i)); // Downcast to Property
+        if (board->getSquare(i)->getName() == buildingName) {
+            if (board->getSquare(i)->getIsProperty()) {
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i)); // Downcast to Property
                 for (int j = 0; j < numPlayers; j++) {
                     if (board->getPlayer(j)->getName() == owner) {
                         property->setOwner(board->getPlayer(j)); // Set the owner of the property
@@ -274,9 +274,9 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
     // Set the number of improvements of a building
     // This function will use setNumImprovements function from Property class
     for (int i = 0; i < 40; i++) {
-        if (board->getSquares(i)->getName() == buildingName) {
-            if (board->getSquares(i)->getIsProperty()) {
-                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i)); // Downcast to Property
+        if (board->getSquare(i)->getName() == buildingName) {
+            if (board->getSquare(i)->getIsProperty()) {
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i)); // Downcast to Property
                 if (property) {
                     std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property); // Downcast to Academic
                     if (academicBuilding) {

@@ -24,7 +24,7 @@ class Board { // Note to everyone, we will be using smart pointers. No raw point
     void trade(std::string player, std::string give, std::string receive); // Trade properties between players
     std::shared_ptr<Player> getCurrentPlayer() const; // Get the current player
     std::shared_ptr<Player> getPlayer(int i) const; // Get a player by index
-    std::shared_ptr<Square> getSquares(int i) const; // Get a square by index
+    std::shared_ptr<Square> getSquare(int i) const; // Get a square by index
 };
 
 #endif

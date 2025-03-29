@@ -82,7 +82,7 @@ std::shared_ptr<Player> Board::getPlayer(int i) const {
     // Get a player by index
     return players[i];
 }
-std::shared_ptr<Square> Board::getSquares(int i) const {
+std::shared_ptr<Square> Board::getSquare(int i) const {
     // Get a square by index
     return squares[i];
 }
