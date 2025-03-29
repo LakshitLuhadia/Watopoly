@@ -291,3 +291,15 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
 void Game::setTestingMode(bool testingMode) {
     this->testingMode = testingMode;
 } // Game::setTestingMode
+
+bool Game::getTestingMode() const {
+    return testingMode;
+} // Game::getTestingMode
+
+int Game::getNumPlayers() const {
+    return numPlayers;
+} // Game::getNumPlayers
+
+std::shared_ptr<Board> Game::getBoard() const {
+    return board;
+} // Game::getBoard

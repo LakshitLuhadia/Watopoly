@@ -46,6 +46,9 @@ class Game: public Subject {
         void setBuildingOwner(std::string buildingName, std::string owner);
         void setBuildingImprovements(std::string buildingName, int numImprovements);
         void setTestingMode(bool testingMode);
+        bool getTestingMode() const;
+        int getNumPlayers() const;
+        std::shared_ptr<Board> getBoard() const;
 };
 
 #endif
