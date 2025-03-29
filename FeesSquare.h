@@ -12,7 +12,7 @@ class FeesSquare : public NonProperty {
         // ctor
         FeesSquare(const std::string name, const int index, const bool isProperty, int fees);
         // Performs the action of the property
-        void performAction(std::shared_ptr<Player> player) const override;
+        void performAction(std::shared_ptr<Player>& player) const override;
 };
 
 #endif

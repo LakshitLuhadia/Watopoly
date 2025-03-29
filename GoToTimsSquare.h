@@ -11,7 +11,7 @@ class GoToTimsSquare : public NonProperty {
         // ctor
         GoToTimsSquare(const std::string name, const int index, const bool isProperty, int timsLineIndex);
         // Performs the action of the property
-        void performAction(std::shared_ptr<Player> player) const override;
+        void performAction(std::shared_ptr<Player>& player) const override;
 };
 
 #endif
