@@ -1,4 +1,5 @@
 #include "Textdisplay.h"
+using namespace std;
 
 // Constructor
 TextDisplay::TextDisplay(std::unique_ptr<Game> game) : 
@@ -11,9 +12,9 @@ void TextDisplay::notify(Subject &whoNotified) {
 
 // Display the current state of the game
 void TextDisplay::display() const {
-    const Board& board = game->getBoard();
+    const Board& board = this->game->getBoard();
     const std::vector<Square*>& squares = board.getSquares();
-    const std::vector<Player*>& players = game->getPlayers();
+    const std::vector<Player*>& players = this->game->getPlayers();
 
     // Board layout dimensions (adjust based on actual board structure)
     const int rows = 10; // Example rows
@@ -42,7 +43,7 @@ void TextDisplay::display() const {
     // Print the grid
     for (const auto& row : grid) {
         for (const auto& cell : row) {
-            std::cout << std::left << std::setw(20) << cell; // Adjust width as needed
+            std::cout << std::left << std::setw(20) << cell; 
         }
         std::cout << std::endl;
 } // TextDisplay::display

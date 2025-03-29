@@ -2,6 +2,7 @@
 #define TEXTDISPLAY_H
 #include <iostream>
 #include "Game.h"
+#include "Board.h"
 #include "Observer.h"
 
 class TextDisplay : public Observer {

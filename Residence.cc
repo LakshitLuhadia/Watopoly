@@ -15,16 +15,12 @@ int Residence::getRent() const {
 } // Residence::getRent
 
 // Performs the action of the residence
-void Residence::performAction(Player* player) const {
-    // If the property is owned
-    Player* owner = getOwner();
-    if (owner != nullptr) {
-        if (owner != player) {
-            // Calculate the rent
+void Residence::performAction(std::shared_ptr<Player>& player) const {
+    if (getOwner()) {
+        if (getOwner().get() != player.get()) {
             int rent = getRent();
-            // Pay the rent
             player->subtractMoney(rent);
-            owner->addMoney(rent);
-        } 
+            getOwner()->addMoney(rent);
+        }
     } 
-}
+} // Residence::performAction

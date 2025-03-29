@@ -2,6 +2,7 @@
 #define SQUARE_H
 #include <string>
 #include "Player.h"
+#include <memory> 
 
 // Square class (abstract)
 class Square {
@@ -23,8 +24,7 @@ class Square {
 
         // Constant pure virtual function
         // Performs the action of the square
-        virtual void performAction(Player* player) const = 0;
+        virtual void performAction(std::shared_ptr<Player>& player) const = 0;
 };
 
 #endif
-

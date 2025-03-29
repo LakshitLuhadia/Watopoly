@@ -18,7 +18,7 @@ class Residence : public Property {
         int getRent() const;
 
         // Performs the action of the residence
-        void performAction(Player* player) const override;
+        void performAction(std::shared_ptr<Player>& player) const override;
 };
 
 #endif

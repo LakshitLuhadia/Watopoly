@@ -4,13 +4,14 @@
 #include <string>
 #include "Player.h"
 #include "Square.h"
+#include <memory> 
 
 // Property class (abstract)
 class Property: public Square {
     const int cost;                           // Cost of the property
-    static int mortgageValue;                        // Mortgage value of the property
-    static Player* owner;                            // Owner of the property
-    static bool isMortgaged;                         // Is the property mortgaged?
+    static int mortgageValue;                 // Mortgage value of the property
+    static std::unique_ptr<Player> owner;     // Owner of the property
+    static bool isMortgaged;                  // Is the property mortgaged?
     const bool isAcademic;                    // Is the property an academic property?
     const bool isResidence;                   // Is the property a residence?
     const bool isGym;                         // Is the property a gym?
@@ -25,7 +26,7 @@ class Property: public Square {
         // Returns the mortgage value of the property
         static int getMortgageValue();
         // Returns the owner of the property
-        static Player* getOwner();
+        static std::unique_ptr<Player>& getOwner();
         // Returns whether the property is mortgaged
         static bool getIsMortgaged();
         // Returns whether the property is an academic property
@@ -37,15 +38,14 @@ class Property: public Square {
 
         // Setters
         // Sets the owner of the property
-        static void setOwner(Player* owner);
+        static void setOwner(std::shared_ptr<Player> newOwner);
         // Sets the mortgage value of the property
         static void setMortgageValue(int mortgageValue);
         // Sets whether the property is mortgaged
         static void setIsMortgaged(bool isMortgaged);
 
         // Performs the action of the property
-        virtual void performAction(Player* player) const override;
+        virtual void performAction(std::shared_ptr<Player>& player) const override;
 }; 
 
 #endif
-

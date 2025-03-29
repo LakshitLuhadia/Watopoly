@@ -27,11 +27,9 @@ void Gym::setIsMonopoly(bool newIsMonopoly) {
 } // Gym::setIsMonopoly
 
 // Performs the action of the gym
-void Gym::performAction(Player* player) const {
-    // If the property is owned
-    Player* owner = getOwner();
-    if (owner != nullptr) {
-        if (owner != player) {
+void Gym::performAction(std::shared_ptr<Player>& player) const {
+    if (getOwner()) {
+        if (getOwner().get() != player.get()) {
             int roll = Dice::add();
             bool isMonopoly = getIsMonopoly();
             if (isMonopoly) {
@@ -40,8 +38,7 @@ void Gym::performAction(Player* player) const {
                 usageFee = roll * 4;
             }
             player->subtractMoney(usageFee);
-            owner->addMoney(usageFee);
+            getOwner()->addMoney(usageFee);
         }
     } 
 } // Gym::performAction
-
