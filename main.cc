@@ -98,7 +98,7 @@ void processInGameCommands() {
             std::cin.clear();
             std::cin.ignore();
         }
-        if (b->getNumPlayers() == 1) {
+        if (g.getNumPlayers() == 1) {
             auto winner = b->getCurrentPlayer();
             std::cout << winner->getName() << " wins the game!" << std::endl;
             break;
