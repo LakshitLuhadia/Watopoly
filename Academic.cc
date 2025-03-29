@@ -26,7 +26,6 @@ int Academic::getImprovementCost() const {
 
 // Returns the tuition fees of the property
 int Academic::getTuition(int level) const {
-    vector <int> tuition = this->tuition;
     return tuition[level];
 } // Academic::getTuition
 
@@ -72,17 +71,18 @@ void Academic::setIsSellable(bool newIsSellable) {
 
 // Implement the add improvement method
 void Academic::addimprove() {
-    Player* owner = getOwner();
-    if (isMonopoly) {
-        if (isImprovable) {
-            if (numImprovements > 0) {
-                setIsSellable(true);  
-            }
-            if (numImprovements == 5) {
-                setIsImprovable(false);
-            } else {
-                numImprovements++;
-                owner->subtractMoney(improvementCost);
+    if (getOwner()) {
+        if (isMonopoly) {
+            if (isImprovable) {
+                if (numImprovements > 0) {
+                    setIsSellable(true);  
+                }
+                if (numImprovements == 5) {
+                    setIsImprovable(false);
+                } else {
+                    numImprovements++;
+                    getOwner()->subtractMoney(improvementCost);
+                }
             }
         }
     }
@@ -90,41 +90,41 @@ void Academic::addimprove() {
 
 // Implement the sell improvement method
 void Academic::sellimprove() {
-    Player* owner = getOwner();
-    if (isMonopoly) {
-        if (isImprovable) {
-            if (numImprovements < 5) {
-                setIsImprovable(true);
-            }
-            if (numImprovements == 0) {
-                setIsSellable(false);
-            } else {
-                numImprovements--;
-                owner->addMoney(improvementCost / 2);
+    if (getOwner()) {
+        if (isMonopoly) {
+            if (isImprovable) {
+                if (numImprovements < 5) {
+                    setIsImprovable(true);
+                }
+                if (numImprovements == 0) {
+                    setIsSellable(false);
+                } else {
+                    numImprovements--;
+                    getOwner()->addMoney(improvementCost / 2);
+                }
             }
         }
     }
 } // Academic::sellimprove
 
 // Performs the action of the property
-void Academic::performAction(Player* player) const {
-    Player* owner = getOwner();
-    if (owner != nullptr) {
-        if (owner != player) {
+void Academic::performAction(std::shared_ptr<Player>& player) const {
+    if (getOwner()) {
+        if (getOwner().get() != player.get()) {
             if (isMonopoly) {
                 if (numImprovements == 0) {
                     int tuition = getTuition(numImprovements) * 2;
                     player->subtractMoney(tuition);
-                    owner->addMoney(tuition);
+                    getOwner()->addMoney(tuition);
                 } else {
                     int tuition = getTuition(numImprovements);
                     player->subtractMoney(tuition);
-                    owner->addMoney(tuition);
+                    getOwner()->addMoney(tuition);
                 }
             } else {
                 int tuition = getTuition(numImprovements);
                 player->subtractMoney(tuition);
-                owner->addMoney(tuition);
+                getOwner()->addMoney(tuition);
             }
         }
     } 

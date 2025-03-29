@@ -20,15 +20,15 @@
 class Game: public Subject {
     static bool testingMode; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
-    Board *board; // the board
+    std::shared_ptr<Board> board; // the board
 
     public:
         // Ctor for Game
         Game();
-        void roll(int die1 = -1, int die2 = -1); // rolls the dice
+        void roll(); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
-        void improve(std::string property, std::string action);
+        void improve(const std::string& property, const std::string& action);
         void mortgage(std::string property);
         void unmortgage(std::string property);
         void bankrupt();
@@ -47,9 +47,6 @@ class Game: public Subject {
         void setBuildingOwner(std::string buildingName, std::string owner);
         void setBuildingImprovements(std::string buildingName, int numImprovements);
         void setTestingMode(bool testingMode);
-        void notifyObservers();
-        // Functions added after UML:
-
 };
 
 #endif

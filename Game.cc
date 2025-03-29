@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <fstream>
 #include "Subject.h"
 #include "Player.h"
 #include "Property.h"
@@ -13,6 +14,7 @@
 #include "Square.h"
 #include "Nonproperty.h"
 #include "Board.h"
+#include "Game.h"
 
 Game::Game(): testingMode{false}, numPlayers{0}, board{std::make_shared<Board>()} {} // Board is yet to be initialized
 
@@ -39,10 +41,80 @@ void Game::trade(std::string player, std::string give, std::string receive) {
     } else {
         board->trade(player, give, receive);
     }
+    notifyObservers();
 }
 
-void Game::improve(std::string property, std::string action) {
-    
+void Game::improve(const std::string& property, const std::string& action) {
+    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
+
+    // Find the property by name
+    std::shared_ptr<Square> square = nullptr;
+    for (int i = 0; i < 40; ++i) {
+        if (board->getSquares(i)->getName() == property) {
+            square = board->getSquares(i);
+            break;
+        }
+    }
+
+    if (!square) {
+        std::cerr << "Error: Property not found." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
+
+    // Ensure the square is an academic building
+    Academic* academicBuilding = dynamic_cast<Academic*>(square.get());
+    if (!academicBuilding) {
+        std::cerr << "Error: Only academic buildings can be improved." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
+
+    // Ensure the current player owns the property
+    if (academicBuilding->getOwner() != currentPlayer) {
+        std::cerr << "Error: You do not own this property." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
+
+    // Handle the action
+    if (action == "buy") {
+        if (!academicBuilding->getIsImprovable()) {
+            std::cerr << "Error: Improvements cannot be bought for this property at this time." << std::endl;
+            std::cin.clear();
+            std::cin.ignore();
+            return;
+        }
+
+        // Add improvement
+        academicBuilding->addimprove();
+        std::cout << "Improvement bought for " << property 
+                  << ". Current improvements: " 
+                  << academicBuilding->getNumImprovements() << std::endl;
+
+    } else if (action == "sell") {
+        if (!academicBuilding->getIsSellable()) {
+            std::cerr << "Error: Improvements cannot be sold for this property at this time." << std::endl;
+            std::cin.clear();
+            std::cin.ignore();
+            return;
+        }
+
+        // Sell improvement
+        academicBuilding->sellimprove();
+        std::cout << "Improvement sold for " << property 
+                  << ". Current improvements: " 
+                  << academicBuilding->getNumImprovements() << std::endl;
+
+    } else {
+        std::cerr << "Error: Invalid action. Use 'buy' or 'sell'." << std::endl;
+        std::cin.clear();
+        std::cin.ignore();
+        return;
+    }
 }
 
 void Game::mortgage(std::string property) {
@@ -64,6 +136,7 @@ void Game::assets() {
     // Display assets
     // This function will use getProperties function from Player class
     board->getCurrentPlayer()->getProperties();
+    notifyObservers();
 }
 
 void Game::all() {
@@ -74,11 +147,63 @@ void Game::all() {
         std::cout << board->getPlayer(i)->getName() << " has: " << std::endl; 
         board->getPlayer(i)->getProperties();
     }
+    notifyObservers();
 }
 
 void Game::save(std::string filename) {
     // Save the game
-    // This function will use save function from Board class
+    std::ofstream savefile{filename};
+    if (savefile.fail()) {
+        std::cerr << "Cannot open the save file" << std::endl;
+    } else {
+        // Save the game state
+        // Save the number of players first
+        savefile << numPlayers << std::endl;
+        for (int i = 0; i < numPlayers; i++) {
+            std::shared_ptr<Player> p = board->getPlayer(i);
+            // This is following the format: name character numRimCups money position
+            savefile << p->getName() << " " << p->getCharacter() << " " << p->getNumRimCups() << " " 
+                     << p->getMoney() << " " << p->getPosition() << " ";
+            if (p->getPosition() == 10) {
+                if (p->getInTimsLine()) { // Check if the player is in Tims Line
+                    savefile << 1 << " " << p->getTurnsInTimsLine() << " " << std::endl;
+                } else {
+                    savefile << 0 << std::endl;
+                }
+            }
+        }
+        for (int i = 0; i < 40; i++) {
+            // This is following the format: name owner numImprovements
+            if (board->getSquares(i)->getIsProperty() == false) {
+                // Do not save the non-property square
+                continue;
+            } else {
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i));
+                if (property) {
+                    savefile << property->getName() << " ";
+                    if (property->getOwner() == nullptr) {
+                        savefile << "BANK" << " ";
+                    } else {
+                        savefile << property->getOwner() << " ";
+                    }
+
+                    if (property->getIsMortgaged()) {
+                        savefile << -1 << std::endl; // -1 for mortgaged
+                    } else if (property->getIsResidence() || property->getIsGym()) {
+                        savefile << 0 << std::endl; // No improvements for Residence and Gym
+                    } else {
+                        std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property); // Downcast to Academic
+                        if (!academicBuilding->getIsMonopoly()) {
+                            savefile << 0 << std::endl; // No improvements for non-monopoly
+                        } else {
+                            // Save the number of improvements for Academic buildings
+                            savefile << academicBuilding->getNumImprovements() << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Game::setNumPlayers(int numPlayers) {
@@ -88,7 +213,7 @@ void Game::setNumPlayers(int numPlayers) {
 void Game::setNumRollsInTimsLine(int numRollsInTimsLine) {
     // Set the number of rolls in Tims Line
     // This function will use setNumRollsInTimsLine function from Player class
-    board->getCurrentPlayer->setTurnsInTimsLine(numRollsInTimsLine);
+    board->getCurrentPlayer()->setTurnsInTimsLine(numRollsInTimsLine);
 }
 
 void Game::setPlayerTimCups(int i, int TimCups) {
@@ -110,7 +235,6 @@ void Game::setPlayerPosition(int i, int position) {
 }
 
 void Game::addPlayer(std::string name) {
-    Board *board = this->board;
     board->addPlayer(name);
 } // Game::addPlayer
 
@@ -136,12 +260,16 @@ void Game::setupPlayers() {
  * it updates the owner of the property to the specified owner.
  */
 void Game::setBuildingOwner(std::string buildingName, std::string owner) {
-    Board *board = this->board;
-    for (int i = 0; i < board->getSquares().size(); i++) {
-        if (board->getSquares()[i]->getName() == buildingName) {
-            if (board->getSquares()[i]->getIsProperty()) {
-                Property *property = dynamic_cast<Property*>(board->getSquares()[i]); // Downcast to Property
-                property->setOwner(owner);
+    for (int i = 0; i < 40; i++) {
+        if (board->getSquares(i)->getName() == buildingName) {
+            if (board->getSquares(i)->getIsProperty()) {
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i)); // Downcast to Property
+                for (int j = 0; j < numPlayers; j++) {
+                    if (board->getPlayer(j)->getName() == owner) {
+                        property->setOwner(board->getPlayer(j)); // Set the owner of the property
+                        break;
+                    }
+                }
             }
         }
     }
@@ -150,14 +278,21 @@ void Game::setBuildingOwner(std::string buildingName, std::string owner) {
 void Game::setBuildingImprovements(std::string buildingName, int numImprovements) {
     // Set the number of improvements of a building
     // This function will use setNumImprovements function from Property class
+    for (int i = 0; i < 40; i++) {
+        if (board->getSquares(i)->getName() == buildingName) {
+            if (board->getSquares(i)->getIsProperty()) {
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i)); // Downcast to Property
+                if (property) {
+                    std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property); // Downcast to Academic
+                    if (academicBuilding) {
+                        academicBuilding->setNumImprovements(numImprovements);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Game::setTestingMode(bool testingMode) {
     this->testingMode = testingMode;
 } // Game::setTestingMode
-
-void Game::notifyObservers() {
-    // Notify the observers
-    // This function will use notify function from Subject class
-} // Game::notifyObservers
-

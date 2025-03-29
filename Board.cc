@@ -5,26 +5,22 @@
 #include "Property.h"
 #include "Square.h"
 #include "Board.h"
-#include "Square.h"
 #include "Player.h"
 using namespace std;
 
-void Board::nextPlayer() {
-    // Move to the next player
-    currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
-}
-
+// This is a private function that gets a property by name
 std::shared_ptr<Property> Board::getPropertyByName(const std::string& name) const {
     // Get a property by name
     for (const auto& square : squares) {
         if (square->getName() == name && square->getIsProperty()) {
-            return dynamic_cast<make_shared<Property>>(square.get());
+            return std::dynamic_pointer_cast<Property>(square);
         }
     }
     return nullptr; // Return nullptr if the property is not found
 }
 
-std::unique_ptr<Player> Board::getPlayerByName(const std::string& name) const {
+// This is a private function that gets a player by name
+std::shared_ptr<Player> Board::getPlayerByName(const std::string& name) const {
     // Get a player by name
     for (auto player : players) {
         if (player->getName() == name) {
@@ -32,6 +28,17 @@ std::unique_ptr<Player> Board::getPlayerByName(const std::string& name) const {
         }
     }
     return nullptr; // Return nullptr if the player is not found
+}
+
+void Board::nextPlayer() {
+    // Move to the next player
+    currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
+}
+
+void Board::addPlayer(std::string name) {
+    // Add a player
+    players.push_back(std::make_unique<Player>(name));
+    numPlayers++;
 }
 
 void Board::trade(std::string player, std::string give, std::string receive) {
@@ -61,11 +68,21 @@ void Board::trade(std::string player, std::string give, std::string receive) {
 
         getPlayerByName(player)->addProperty(getPropertyByName(give));
         players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
+    } else {
+        std::cout << "reject" << std::endl;
     }
 }
 
-std::unique_ptr<Player> Board::getCurrentPlayer() const {
+std::shared_ptr<Player> Board::getCurrentPlayer() const {
     // Get the current player
     return players[currentPlayerIndex];
 }
-    
+
+std::shared_ptr<Player> Board::getPlayer(int i) const {
+    // Get a player by index
+    return players[i];
+}
+std::shared_ptr<Square> Board::getSquares(int i) const {
+    // Get a square by index
+    return squares[i];
+}

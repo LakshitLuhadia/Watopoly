@@ -8,7 +8,7 @@
 
 // Gym class
 class Gym: public Property {
-    static int usageFee;                    // Usage fee of the gym
+    static int usageFee;                // Usage fee of the gym
     static bool isMonopoly;             // Is the property part of a monopoly?
 
     public:
@@ -26,7 +26,7 @@ class Gym: public Property {
         static void setIsMonopoly(bool isMonopoly);
 
         // Performs the action of the gym
-        void performAction(Player* player) const override;
+        void performAction(std::shared_ptr<Player>& player) const override;
 };
 
 #endif

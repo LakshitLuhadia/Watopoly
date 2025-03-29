@@ -10,7 +10,7 @@ using std::vector;
 class Academic: public Property {
     const std::string block;                  // Block of the property
     const int improvementCost;                // Cost of improvements
-    const vector <int> tuition{};                    // Tuition fees for the property
+    const vector <int> tuition{};             // Tuition fees for the property
     static int numImprovements;               // Number of improvements on the property
     static bool isMonopoly;                   // Is the property part of a monopoly?
     static bool isImprovable;                 // Is the property improvable?
@@ -52,9 +52,8 @@ class Academic: public Property {
         // Sell Improvements
         void sellimprove();
 
-
         // Performs the action of the property
-        void performAction(Player* player) const override;
+        void performAction(std::shared_ptr<Player>& player) const override;
 };
 
 #endif
