@@ -12,9 +12,9 @@ void TextDisplay::notify(Subject &whoNotified) {
 
 // Display the current state of the game
 void TextDisplay::display() const {
-    const Board& board = this->game->getBoard();
+    const Board& board = g->getBoard();
     const std::vector<Square*>& squares = board.getSquares();
-    const std::vector<Player*>& players = this->game->getPlayers();
+    const std::vector<Player*>& players = g->getPlayers();
 
     // Board layout dimensions (adjust based on actual board structure)
     const int rows = 10; // Example rows
@@ -80,7 +80,7 @@ std::string TextDisplay::formatSquare(const Square* square) const {
             }
             break;
         }
-        default: // Non-ownable squares (e.g., "Go", "Go To Tims")
+        default: 
             str = square->getName();
             break;
     }
