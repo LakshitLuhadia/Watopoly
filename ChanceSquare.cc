@@ -1,6 +1,7 @@
 #include "ChanceSquare.h"
 #include "Player.h"
 #include "Square.h"
+#include "Board.h"
 #include <memory>
 #include <vector>
 #include <string>
@@ -8,11 +9,16 @@
 using namespace std;
 
 // ctor
-ChanceSquare::ChanceSquare(string name, const int index, const bool isProperty) : NonProperty{name, index, isProperty} {}
+ChanceSquare::ChanceSquare(string name, const int index, const bool isProperty) : NonProperty{name, index, isProperty}, totRimCups{0} {}
+
 
 // performAction for FeesSquare
-void ChanceSquare::performAction(shared_ptr<Player> player) const {
-    if (getName() == "SLC") {
+void ChanceSquare::performAction(shared_ptr<Player> player) {
+    int rimCupChance = rand() % 100 + 1;
+    if (rimCupChance == 1 && totRimCups < 4) {
+        player->setNumRimCups(player->getNumRimCups() + 1);
+        totRimCups++;
+    } else if (getName() == "SLC") {
         int roll = rand() % 24 + 1;
         if (roll >= 1 && roll <= 3) {
             player->move(-3);
