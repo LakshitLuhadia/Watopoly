@@ -47,9 +47,6 @@ class Game: public Subject {
         void setBuildingOwner(std::string buildingName, std::string owner);
         void setBuildingImprovements(std::string buildingName, int numImprovements);
         void setTestingMode(bool testingMode);
-        void notifyObservers();
-        // Functions added after UML:
-
 };
 
 #endif

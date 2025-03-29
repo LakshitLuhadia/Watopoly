@@ -196,7 +196,12 @@ void Game::setBuildingOwner(std::string buildingName, std::string owner) {
         if (board->getSquares(i)->getName() == buildingName) {
             if (board->getSquares(i)->getIsProperty()) {
                 std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquares(i)); // Downcast to Property
-                property->setOwner(owner);
+                for (int j = 0; j < numPlayers; j++) {
+                    if (board->getPlayer(j)->getName() == owner) {
+                        property->setOwner(board->getPlayer(j)); // Set the owner of the property
+                        break;
+                    }
+                }
             }
         }
     }
@@ -223,9 +228,3 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
 void Game::setTestingMode(bool testingMode) {
     this->testingMode = testingMode;
 } // Game::setTestingMode
-
-void Game::notifyObservers() {
-    // Notify the observers
-    // This function will use notify function from Subject class
-} // Game::notifyObservers
-
