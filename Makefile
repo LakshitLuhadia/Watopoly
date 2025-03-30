@@ -17,7 +17,6 @@
 # .PHONY: clean
 # clean:
 # 	rm  -f $(OBJECTS) $(DEPENDS) $(EXEC)
-
 CXX=g++
 CXXFLAGS=-std=c++2a -Wall -O2 -g -MMD -Werror=vla
 SOURCES=$(wildcard *.cc)
@@ -40,4 +39,3 @@ $(EXEC): $(OBJECTS)
 .PHONY: clean
 clean:
 	rm -f $(OBJECTS) $(DEPENDS) $(EXEC)
-

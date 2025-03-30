@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 
+Subject::~Subject() {}
+
 void Subject::attach(Observer *observer) {
     observers.emplace_back(observer); 
 }
