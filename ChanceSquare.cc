@@ -6,10 +6,13 @@
 #include <vector>
 #include <string>
 #include <stdlib.h>
+#include <ctime>
 using namespace std;
 
 // ctor
-ChanceSquare::ChanceSquare(string name, const int index, const bool isProperty) : NonProperty{name, index, isProperty}, totRimCups{0} {}
+ChanceSquare::ChanceSquare(string name, const int index, const bool isProperty) : NonProperty{name, index, isProperty}, totRimCups{0} {
+    srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
+}
 
 
 // performAction for FeesSquare
@@ -39,7 +42,7 @@ void ChanceSquare::performAction(shared_ptr<Player>& player) const {
         } else if (roll == 24) {
             int OSAPIndex = 1;
             player->setPosition(OSAPIndex);
-            // maybe add 200 depending on setPosition implementation in player
+            player->addMoney(200); // for OSAP fee
         }
     } else if (getName() == "NEEDLES HALL") {
         int roll = rand() % 18 + 1;
