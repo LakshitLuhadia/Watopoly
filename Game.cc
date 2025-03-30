@@ -22,7 +22,7 @@ void Game::roll(int die1, int die2) {
     Dice dice(testingMode);
     auto currentPlayer = board->getCurrentPlayer();
     if (currentPlayer->getNumDoubleRolls() >= 3) {
-        std::cerr << "Error: You rolled doubles three times in a row. Moving to DC Tims Line." << std::endl;
+        std::cout << "You rolled doubles three times in a row. Moving to DC Tims Line." << std::endl;
         currentPlayer->setPosition(10); // Move to DC Tims Line
         currentPlayer->setInTimsLine(true);
         currentPlayer->setNumDoubleRolls(0);
@@ -58,19 +58,20 @@ void Game::roll(int die1, int die2) {
     currentPlayer->move(move);
     int newPosition = currentPlayer->getPosition();
     std::shared_ptr<Square> square = board->getSquare(newPosition);
+    std::cout << square->getName() << std::endl;
     if (square->getIsProperty()) {
         std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(square);
         if (property->getOwner() == nullptr) {
             // Property is unowned
             int cost = property->getCost();
-            std::cout << "Property is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
+            std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
             std::string response;
             std::cin >> response;
             if (response == "y" || response == "Y") {
                 currentPlayer->addProperty(property);
                 currentPlayer->subtractMoney(cost);
                 property->setOwner(currentPlayer);
-                std::cout << property << " bought " << "by " << currentPlayer << "." << std::endl;
+                std::cout << square->getName() << " bought " << "by " << currentPlayer->getName() << "." << std::endl;
             } else if (response == "n" || response == "N") {
                 std::cout << "Property not bought." << std::endl;
                 std::cout << "Starting Auction" << std::endl;
@@ -78,6 +79,7 @@ void Game::roll(int die1, int die2) {
             }
         } else {
             // Property is owned
+            std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner() << ". You have to pay rent." << std::endl;
             square->performAction(currentPlayer);
         }
     } else {
@@ -322,7 +324,11 @@ void Game::bankrupt() {
 void Game::assets() {
     // Display assets
     // This function will use getProperties function from Player class
-    board->getCurrentPlayer()->getProperties();
+    std::vector<std::shared_ptr<Property>> properties = board->getCurrentPlayer()->getProperties();
+    std::cout << "You have the following properties: " << std::endl;
+    for (auto property : properties) {
+        std::cout << property->getName() << std::endl;
+    }
     notifyObservers();
 }
 
