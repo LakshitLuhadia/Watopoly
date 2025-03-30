@@ -25,6 +25,7 @@ class Game: public Subject {
     std::shared_ptr<Board> board; // the board
     int numPlayers = 0; // the number of players
     std::shared_ptr<TextDisplay> td; // the text display
+    void auction(std::shared_ptr<Property> property); // auction function
 
     public:
         // Ctor for Game

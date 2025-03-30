@@ -138,7 +138,7 @@ void Game::roll(int die1, int die2) {
                 } else if (response == "n" || response == "N") {
                     std::cout << "Property not bought." << std::endl;
                     std::cout << "Starting Auction" << std::endl;
-                    currentPlayer->auction(property, currentPlayer);
+                    auction(property);
                 }
             } else {
                 // Property is owned
@@ -567,3 +567,114 @@ int Game::getNumPlayers() const {
 std::shared_ptr<Board> Game::getBoard() const {
     return board;
 } // Game::getBoard
+
+void Game::auction(std::shared_ptr<Property> property) {
+    auto currentPlayer = board->getCurrentPlayer();
+    std::cout << "Starting auction for " << property->getName() << "." << std::endl;
+
+    // Find the starting index of the current player
+    int startIndex = 0;
+    for (int i = 0; i < numPlayers; ++i) {
+        if (board->getPlayer(i) == currentPlayer) {
+            startIndex = i;
+            break;
+        }
+    }
+
+    // Get all non-bankrupt players in order starting from current player
+    std::vector<std::shared_ptr<Player>> participants;
+    for (int i = 0; i < numPlayers; ++i) {
+        int idx = (startIndex + i) % numPlayers;
+        auto player = board->getPlayer(idx);
+        if (!player->getIsBankrupt()) {
+            participants.push_back(player);
+            std::cout << "Participant: " << player->getName() << std::endl;
+        }
+    }
+
+    if (participants.empty()) {
+        std::cout << "No participants. Property remains unowned." << std::endl;
+        return;
+    }
+
+    int currentBid = 0; // Start bidding at $0
+    std::shared_ptr<Player> highestBidder = nullptr;
+
+    // Track players who have passed
+    std::vector<bool> passed(participants.size(), false);
+    int activeBidders = participants.size();
+
+    size_t currentIndex = 0; // Index of the current bidder
+
+    while (activeBidders > 1) {
+        auto player = participants[currentIndex];
+        if (passed[currentIndex]) { // Skip passed players
+            currentIndex = (currentIndex + 1) % participants.size();
+            continue;
+        }
+
+        int minBid = currentBid + 1; // Minimum allowed bid
+
+        std::cout << player->getName() << "'s turn. Current bid: $" 
+                  << currentBid << "\n"
+                  << "Enter bid (minimum $" << minBid << ") or 'pass': ";
+
+        std::string input;
+        std::cin >> input;
+
+        if (input == "pass") {
+            passed[currentIndex] = true;
+            activeBidders--;
+            std::cout << player->getName() << " passes." << std::endl;
+
+            // Move to next player
+            currentIndex = (currentIndex + 1) % participants.size();
+            continue;
+        }
+
+        // Validate numeric input
+        bool validNumber = !input.empty() && 
+            std::all_of(input.begin(), input.end(), ::isdigit);
+
+        if (!validNumber) {
+            std::cerr << "Invalid input! Numbers only." << std::endl;
+            continue; // Retry same player
+        }
+
+        int bid = std::stoi(input);
+
+        if (bid < minBid) {
+            std::cerr << "Bid must be at least $" << minBid << "!" << std::endl;
+            continue; // Retry same player
+        }
+
+        if (bid > player->getMoney()) {
+            std::cerr << player->getName() << " can't afford this bid!" << std::endl;
+            continue; // Retry same player
+        }
+
+        // Accept valid bid
+        currentBid = bid;
+        highestBidder = player;
+
+        std::cout << "New highest bid: $" << bid 
+                  << " by " << player->getName() << "." << std::endl;
+
+        // Move to next player
+        currentIndex = (currentIndex + 1) % participants.size();
+    }
+
+    if (highestBidder) {
+        highestBidder->subtractMoney(currentBid);
+        property->setOwner(highestBidder);
+        highestBidder->addProperty(property);
+        std::cout << highestBidder->getName() 
+                  << " wins " << property->getName() 
+                  << " for $" << currentBid << "." << std::endl;
+    } else {
+        std::cout << "Auction ended with no bids." 
+                  << property->getName() 
+                  << " remains unowned." 
+                  << std::endl;
+    }
+}
