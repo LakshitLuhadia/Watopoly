@@ -16,15 +16,20 @@
 #include "Square.h"
 #include "Nonproperty.h"
 #include "Board.h"
+#include "Textdisplay.h"
+
+class TextDisplay; // Forward declaration of TextDisplay class
 
 class Game: public Subject {
     bool testingMode; // a flag to check if testing mode is on
     std::shared_ptr<Board> board; // the board
     int numPlayers = 0; // the number of players
+    std::shared_ptr<TextDisplay> td; // the text display
 
     public:
         // Ctor for Game
         Game(int numPlayers = 0);
+        void notifyObservers(); // notify all observers
         void roll(int die1 = 0, int die2 = 0); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);

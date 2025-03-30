@@ -6,11 +6,10 @@
 #include "Observer.h"
 
 class TextDisplay : public Observer {
-    std::shared_ptr<Game> game; // Unique pointer to the Game object
 
 public:
     // Constructor
-    TextDisplay(std::shared_ptr<Game> game);
+    TextDisplay();
 
     void sideImprovements(std::string &line, int arr[2], std::shared_ptr<Board> board);
 
@@ -21,10 +20,9 @@ public:
     void notify() override;
 
     // Display the current state of the game
-    void display();
+    void display(std::shared_ptr<Board> board, const std::vector<std::shared_ptr<Player>>& players);
 
-    // Format a square for display
-    //std::string formatSquare(const Square* square) const;
+    
 };
 
 #endif

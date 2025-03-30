@@ -6,12 +6,11 @@
 using namespace std;
 
 // Constructor
-TextDisplay::TextDisplay(std::shared_ptr<Game> game) : 
-game{move(game)} {} // TextDisplay::TextDisplay
+TextDisplay::TextDisplay() {} // TextDisplay::TextDisplay
 
 // Override the notify function from Observer
 void TextDisplay::notify() {
-    display();
+    cout << "TextDisplay: Game state has changed." << endl;
 } // TextDisplay::notify
 
 void TextDisplay::sideImprovements(string &line, int arr[2], shared_ptr<Board> board) {
@@ -38,13 +37,13 @@ void TextDisplay::sidePlayers(string &line, int arr[2], vector<shared_ptr<Player
     }
 }
 
-void TextDisplay::display() {
-    shared_ptr<Board> board = game->getBoard();
+void TextDisplay::display(std::shared_ptr<Board> board, const std::vector<std::shared_ptr<Player>>& players) {
+    //shared_ptr<Board> board = game->getBoard();
     shared_ptr<Square> square;
-    vector<shared_ptr<Player>> players;
-    for (int i = 0; i < game->getNumPlayers(); ++i) {
-        players.push_back(board->getPlayer(i));  
-    }
+    //vector<shared_ptr<Player>> players;
+    // for (int i = 0; i < game->getNumPlayers(); ++i) {
+    //     players.push_back(board->getPlayer(i));  
+    // }
     ifstream board_file("board.txt");
     string line;
     int counter = 1;
@@ -146,7 +145,7 @@ void TextDisplay::display() {
             }
         }
         counter++;
-        cout << line;
+        cout << line << endl;
     }
 }
 

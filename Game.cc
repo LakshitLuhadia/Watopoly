@@ -15,8 +15,27 @@
 #include "Nonproperty.h"
 #include "Board.h"
 #include "Game.h"
+#include "Textdisplay.h"
 
-Game::Game(int numPlayers): testingMode{false}, board{std::make_shared<Board>(numPlayers)}, numPlayers{numPlayers} {}
+Game::Game(int numPlayers): testingMode{false}, board{std::make_shared<Board>(numPlayers)}, numPlayers{numPlayers} {
+    auto td = std::make_shared<TextDisplay>(); // Create a TextDisplay object
+    attach(td); // Attach TextDisplay as an observer
+}
+
+void Game::notifyObservers() {
+    // Prepare the data needed by observers
+    std::vector<std::shared_ptr<Player>> players;
+    for (int i = 0; i < numPlayers; ++i) {
+        players.push_back(board->getPlayer(i));
+    }
+    // Notify all observers
+    for (const auto& observer : observers) { // Accessing observers directly is not allowed
+        auto textDisplay = std::dynamic_pointer_cast<TextDisplay>(observer);
+        if (textDisplay) {
+            textDisplay->display(board, players); // Pass the board and players to TextDisplay
+        }
+    }
+}
 
 void Game::roll(int die1, int die2) {
     Dice dice(testingMode);

@@ -2,15 +2,18 @@
 #define SUBJECT_H
 #include <vector>
 #include <string>
+#include <memory>
+#include "Observer.h"
 
 class Observer;
 
 class Subject {
-    std::vector<Observer*> observers;
+    protected:
+        std::vector<std::shared_ptr<Observer>> observers;
 
     public:
-        void attach(Observer *observer);
-        void detach(Observer *observer);
+        void attach(std::shared_ptr<Observer> observer);
+        void detach(std::shared_ptr<Observer> observer);
         void notifyObservers();
         virtual ~Subject() = 0;
 };

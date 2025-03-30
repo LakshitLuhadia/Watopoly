@@ -5,11 +5,11 @@
 
 Subject::~Subject() {}
 
-void Subject::attach(Observer *observer) {
+void Subject::attach(std::shared_ptr<Observer> observer) {
     observers.emplace_back(observer); 
 }
 
-void Subject::detach(Observer *observer) {
+void Subject::detach(std::shared_ptr<Observer> observer) {
     for (auto it = observers.begin(); it != observers.end();) {
       if (*it == observer) {
         it = observers.erase(it);
