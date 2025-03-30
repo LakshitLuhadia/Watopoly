@@ -12,9 +12,9 @@ public:
     // Constructor
     TextDisplay(std::shared_ptr<Game> game);
 
-    void sideImprovements(string &line, int arr[2], shared_ptr<Board> board);
+    void sideImprovements(std::string &line, int arr[2], std::shared_ptr<Board> board);
 
-    void sidePlayers(string &line, int arr[2], vector<shared_ptr<Player>> players);
+    void sidePlayers(std::string &line, int arr[2], std::vector<std::shared_ptr<Player>> players);
 
 
     // Override the notify function from Observer
