@@ -277,48 +277,48 @@ void Game::unmortgage(std::string property) {
     std::cout << "Property " << property << " has been unmortgaged." << std::endl;
 }
 
-int Game::attemptToRaiseFunds(std::shared_ptr<Player> player, int debtAmount) {
-    int raisedFunds = player->getMoney();
-    auto properties = player->getProperties();
-
-    for (auto property : properties) {
-        if (property->getIsAcademic()) {
-            std::shared_ptr<Academic> academic = std::dynamic_pointer_cast<Academic>(property);
-            int numImprovements = academic->getNumImprovements();
-            for (int i = 0; i < numImprovements; ++i) {
-                if (raisedFunds >= debtAmount) {
-                    break;
-                }
-                academic->sellimprove();
-                raisedFunds += academic->getImprovementCost();
-            }
-        }
-    }
-
-    properties = player->getProperties(); // Get updated properties after selling improvements
-    for (auto property : properties) {
-        if (!property->getIsMortgaged()) {
-            int mortgageValue = property->getMortgageValue();
-            if (raisedFunds >= debtAmount) {
-                break;
-            }
-            mortgage(property->getName());
-            raisedFunds += mortgageValue;
-        }
-    }
-
-    int totalFunds = player->getMoney();
-
-    std::cout << "Total funds after liquidation: $" << totalFunds << std::endl;
-    std::cout << "Debt amount: $" << debtAmount << std::endl;
-
-    return totalFunds;
-}
 
 void Game::bankrupt() {
     // Declare bankruptcy
-    // This function will use bankrupt function from Player class
-    // This is not an important function   bool bankrupt = board->getCurrentPlayer()->getIsBankrupt();
+    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
+
+    bool bankrupt = currentPlayer->getIsBankrupt();
+
+    if (bankrupt) {
+        int numplayers = getNumPlayers();
+        if (numplayers == 2) {
+            std::cout << "Game Over! " << currentPlayer->getName() << " is bankrupt!" << std::endl;
+            std::cout << "The other player wins!" << std::endl;
+        } else {
+            int index = currentPlayer->getPosition();
+            std::shared_ptr<Square> square = board->getSquare(index);
+            if (std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(square)) {
+                std::shared_ptr<Player> owner = property->getOwner();
+                if (owner != currentPlayer) {
+                    std::vector<std::shared_ptr<Property>> properties = currentPlayer->getProperties();
+                    for (auto& property : properties) {
+                        property->setOwner(owner);
+                        if (std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property)) {
+                            while (academicBuilding->getNumImprovements() > 0) {
+                                academicBuilding->sellimprove();
+                            }
+                        }
+                        currentPlayer->removeProperty(properties.back());
+                        properties.pop_back();
+                    }
+                }
+            } else {
+                
+                std::vector<std::shared_ptr<Property>> properties = currentPlayer->getProperties();
+                for (auto& property : properties) {
+                    std::string propertyName = property->getName();
+                    unmortgage(propertyName);
+                    property->setOwner(nullptr);
+                    currentPlayer->auction(property, currentPlayer);
+                }
+            }
+        }
+    }
 }
 
 void Game::assets() {

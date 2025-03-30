@@ -48,7 +48,6 @@ class Game: public Subject {
         void setTestingMode(bool testingMode);
         bool getTestingMode() const;
         int getNumPlayers() const;
-        int attemptToRaiseFunds(std::shared_ptr<Player> player, int debtAmount);
         std::shared_ptr<Board> getBoard() const;
 };
 
