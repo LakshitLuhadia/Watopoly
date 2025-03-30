@@ -1,8 +1,9 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 #include <string>
-#include "Player.h"
 #include <memory> 
+
+class Player; // Forward declaration of Player class
 
 // Square class (abstract)
 class Square {

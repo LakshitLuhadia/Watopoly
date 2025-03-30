@@ -172,6 +172,6 @@ void Player::auction(shared_ptr<Property> property, shared_ptr<Player> player) {
     if (it != properties.end()) {
         properties.erase(it);
     }
-    property->setOwner(player);
+    property->setOwner(player); // Set the owner of the property
 }
 

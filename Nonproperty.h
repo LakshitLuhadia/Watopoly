@@ -10,7 +10,7 @@ class NonProperty: public Square {
         NonProperty(const std::string name, const int index, const bool isProperty);
         
         // Performs the action of the NonProperty
-        virtual void performAction(std::shared_ptr<Player>& player) const = 0;
+        void performAction(std::shared_ptr<Player>& player) const override;
 };
 
 #endif

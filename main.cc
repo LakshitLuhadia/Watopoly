@@ -116,9 +116,9 @@ Game processLoadedFile(const std::string& filename) {
         std::cerr << "Cannot open the loaded file" << std::endl;
     }
     Game g;
-    Player* p;
-    Property* prop;
-    Board *board;
+    // Player* p;
+    // Property* prop;
+    std::shared_ptr<Board> board;
     int numPlayers;
     loadfile >> numPlayers;
     g.setNumPlayers(numPlayers);
@@ -175,7 +175,7 @@ Game setupGame() {
     std::cout << "Welcome to the game of Watopoly!" << std::endl;
     std::cout << "Please enter the number of players(2-6): " << std::endl;
     int numPlayers;
-    if (!std::cin >> numPlayers || (!numPlayers >= 2 && !numPlayers <= 6)) { // if the number of players is not between 2 and 6, print an appropriate error message
+    if (!(std::cin >> numPlayers) || (!(numPlayers >= 2) && !(numPlayers <= 6))) { // if the number of players is not between 2 and 6, print an appropriate error message
         std::cerr << "Invalid number of players. Please enter an integer value between 2 and 6" << std::endl;
         std::cin.clear();
         std::cin.ignore();

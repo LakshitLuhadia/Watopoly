@@ -1,6 +1,5 @@
 #include <string>
 #include "Square.h"
-#include "Player.h"
 
 // Constructor for Square
 Square::Square(const std::string name, const int index, const bool isProperty) : 

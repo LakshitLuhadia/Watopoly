@@ -1,10 +1,12 @@
 #include <iostream>
 #include <string>
 #include "Property.h"
+#include "Square.h"
+#include "Player.h"
 using namespace std;
 
 // Constructor for Property
-Property::Property(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
+Property::Property(const std::string& name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
 Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic}, isResidence{isResidence}, isGym{isGym} {
     mortgageValue = cost / 2;       // Mortgage value is half the cost
     owner = nullptr;                // No owner initially
@@ -22,7 +24,7 @@ int Property::getMortgageValue() {
 } // Property::getMortgageValue
 
 // Returns the owner of the property
-std::shared_ptr<Player>& Property::getOwner() {
+std::shared_ptr<Player> Property::getOwner() {
     return owner;
 } // Property::getOwner
 

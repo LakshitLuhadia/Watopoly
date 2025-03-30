@@ -23,7 +23,7 @@ class Board { // Note to everyone, we will be using smart pointers. No raw point
   
     // Constructor
     // Default constructor
-    Board(int numPlayers) : numPlayers(numPlayers) {}
+    Board(int numPlayers);
 
     // Custom constructor
     

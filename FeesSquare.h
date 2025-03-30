@@ -1,6 +1,7 @@
 #ifndef FEESSQUARE_H
 #define FEESSQUARE_H
 #include "Nonproperty.h"
+#include "Player.h"
 #include <vector>
 #include <memory>
 #include <string>

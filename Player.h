@@ -5,6 +5,8 @@
 #include <memory>
 #include "Property.h"
 
+class Property; // Forward declaration of Property class
+
 // Player Class
 class Player {
     const std::string name; // Player name

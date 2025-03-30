@@ -25,7 +25,7 @@ Board::Board(int numPlayers) : numPlayers(numPlayers) {
     squares.push_back(std::make_shared<Academic>("RCH", 11, true, 140, true, false, false, "Eng", 100, vector<int>{10, 50, 150, 450, 625, 750}));
     squares.push_back(std::make_shared<Gym>("PAC", 12, true, 150, false, false, true));
     squares.push_back(std::make_shared<Academic>("DWE", 13, true, 140, true, false, false, "Eng", 100, vector<int>{10, 50, 150, 450, 625, 750}));
-    squares.push_back(std::make_shared<Academic>("CPH", 14, true, 160, true, false, false, "Eng", "100", vector<int>{12, 60, 180, 500, 700, 900}));
+    squares.push_back(std::make_shared<Academic>("CPH", 14, true, 160, true, false, false, "Eng", 100, vector<int>{12, 60, 180, 500, 700, 900}));
     squares.push_back(std::make_shared<Residence>("UWP", 15, true, 200, false, true, false));
     squares.push_back(std::make_shared<Academic>("LHI", 16, true, 180, true, false, false, "Health", 100, vector<int>{14, 70, 200, 550, 750, 950}));
     squares.push_back(std::make_shared<ChanceSquare>("SLC", 17, false));
@@ -41,20 +41,20 @@ Board::Board(int numPlayers) : numPlayers(numPlayers) {
     squares.push_back(std::make_shared<Academic>("B1", 27, true, 260, true, false, false, "Sci1", 150, vector<int>{22, 110, 330, 800, 975, 1150}));
     squares.push_back(std::make_shared<Gym>("CIF", 28, true, 150, false, false, true));
     squares.push_back(std::make_shared<Academic>("B2", 29, true, 280, true, false, false, "Sci1", 150, vector<int>{24, 120, 360, 850, 1025, 1200}));
-    squares.push_back(std::make_shared<GoToTimSquare>("GO TO TIMS", 30, false));
-    squares.push_back(std::make_shared<Academic>("EIT", 31, true, 300, true, false, "Sci2", 200, vector<int>{26, 130, 390, 900, 1100, 1275}));
-    squares.push_back(std::make_shared<Academic>("ESC", 32, true, 300, true, false, "Sci2", 200, vector<int>{26, 130, 390, 900, 1100, 1275}));  
+    squares.push_back(std::make_shared<GoToTimsSquare>("GO TO TIMS", 30, false, 11));
+    squares.push_back(std::make_shared<Academic>("EIT", 31, true, 300, true, false, false, "Sci2", 200, vector<int>{26, 130, 390, 900, 1100, 1275}));
+    squares.push_back(std::make_shared<Academic>("ESC", 32, true, 300, true, false, false, "Sci2", 200, vector<int>{26, 130, 390, 900, 1100, 1275}));  
     squares.push_back(std::make_shared<ChanceSquare>("SLC", 33, false));
-    squares.push_back(std::make_shared<Academic>("C2", 34, true, 320, true, false, "Sci2", 200, vector<int>{28, 150, 450, 1000, 1200, 1400}));
+    squares.push_back(std::make_shared<Academic>("C2", 34, true, 320, true, false, false, "Sci2", 200, vector<int>{28, 150, 450, 1000, 1200, 1400}));
     squares.push_back(std::make_shared<Residence>("REV", 35, true, 200, false, true, false));
     squares.push_back(std::make_shared<ChanceSquare>("NEEDLES HALL", 36, false));
-    squares.push_back(std::make_shared<Academic>("MC", 37, true, 350, true, false, "Math", 200, vector<int>{35, 175, 500, 1100, 1300, 1500}));
+    squares.push_back(std::make_shared<Academic>("MC", 37, true, 350, true, false, false, "Math", 200, vector<int>{35, 175, 500, 1100, 1300, 1500}));
     squares.push_back(std::make_shared<FeesSquare>("COOP FEE", 38, false, 150));
-    squares.push_back(std::make_shared<Academic>("DC", 39, true, 400, true, false, "Math", 200, vector<int>{50, 200, 600, 1400, 1700, 2000}));
+    squares.push_back(std::make_shared<Academic>("DC", 39, true, 400, true, false, false, "Math", 200, vector<int>{50, 200, 600, 1400, 1700, 2000}));
 
     // Initialize the players
     for (int i = 0; i < numPlayers; i++) {
-        players.push_back(std::make_shared<Player>("Player" + 1500));
+        players.push_back(std::make_shared<Player>("Player", 1500));
     }
 
 }
@@ -90,7 +90,8 @@ void Board::nextPlayer() {
 
 void Board::addPlayer(std::string name) {
     // Add a player
-    players.push_back(std::make_unique<Player>(name));
+    shared_ptr<Player> p = getPlayerByName(name);
+    players.push_back(std::shared_ptr<Player>(p));
     numPlayers++;
 }
 
