@@ -194,7 +194,7 @@ void Game::unmortgage(std::string property) {
 void Game::bankrupt() {
     // Declare bankruptcy
     // This function will use bankrupt function from Player class
-    bool bankrupt = board->getCurrentPlayer()->getIsBankrupt();
+    // This is not an important function   bool bankrupt = board->getCurrentPlayer()->getIsBankrupt();
 }
 
 void Game::assets() {

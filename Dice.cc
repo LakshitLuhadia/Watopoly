@@ -9,7 +9,7 @@ Dice::Dice(bool testing) {
 }
 
 // Roll function for Dice
-void Dice::roll(int d1 = -1, int d2 = -1) {
+void Dice::roll(int d1, int d2) {
     if (testing && d1 > -1 && d2 > -1) {
         dice1 = d1;
         dice2 = d2;
