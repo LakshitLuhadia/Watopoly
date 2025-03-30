@@ -16,7 +16,8 @@
 #include "FeesSquare.h"
 #include "OSAPSquare.h"
 #include "ChanceSquare.h"
-#include "GoToTimSquare.h"
+#include "GoToTimsSquare.h"
+
 class Board { // Note to everyone, we will be using smart pointers. No raw pointers.
   private:
   

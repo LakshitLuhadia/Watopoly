@@ -16,10 +16,72 @@
 #include "Board.h"
 #include "Game.h"
 
-Game::Game(): testingMode{false}, numPlayers{0}, board{std::make_shared<Board>()} {} // Board is yet to be initialized
+Game::Game(): testingMode{false}, numPlayers{0}, board{std::make_shared<Board>()} {}
 
-void Game::roll() {
-    Dice::roll();
+void Game::roll(int die1, int die2) {
+    Dice dice(testingMode);
+    auto currentPlayer = board->getCurrentPlayer();
+    if (currentPlayer->getNumDoubleRolls() >= 3) {
+        std::cerr << "Error: You rolled doubles three times in a row. Moving to DC Tims Line." << std::endl;
+        currentPlayer->setPosition(10); // Move to DC Tims Line
+        currentPlayer->setInTimsLine(true);
+        currentPlayer->setNumDoubleRolls(0);
+        return;
+    } 
+    if (currentPlayer->getInTimsLine()) {
+        std::cout << "You are in Tims Line. You have " << currentPlayer->getTurnsInTimsLine() << " turns left." << std::endl;
+        currentPlayer->setTurnsInTimsLine(currentPlayer->getTurnsInTimsLine() + 1);
+        if (currentPlayer->getTurnsInTimsLine() >= 3) {
+            currentPlayer->setInTimsLine(false);
+            currentPlayer->setTurnsInTimsLine(0);
+            std::cout << "You are out of Tims Line." << std::endl;
+        }
+    }
+    if (testingMode) {
+        if (die1 < 0 || die2 < 0) {
+            std::cerr << "Error: Invalid dice values in testing mode." << std::endl;
+            return;
+        }
+        dice.roll(die1, die2); // Roll with specified values
+    } else {
+        dice.roll(); // Roll randomly
+    }
+
+    if (dice.isEqual()) {
+        currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
+    } else {
+        currentPlayer->setNumDoubleRolls(0);
+    }
+    int move = dice.add();
+    currentPlayer->move(move);
+    int newPosition = currentPlayer->getPosition();
+    std::shared_ptr<Square> square = board->getSquare(newPosition);
+    if (square->getIsProperty()) {
+        std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(square);
+        if (property->getOwner() == nullptr) {
+            // Property is unowned
+            int cost = property->getCost();
+            std::cout << "Property is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
+            std::string response;
+            std::cin >> response;
+            if (response == "y" || response == "Y") {
+                currentPlayer->addProperty(property);
+                currentPlayer->subtractMoney(cost);
+                property->setOwner(currentPlayer);
+                std::cout << property << " bought " << "by " << currentPlayer << "." << std::endl;
+            } else if (response == "n" || response == "N") {
+                std::cout << "Property not bought." << std::endl;
+                std::cout << "Starting Auction" << std::endl;
+                currentPlayer->auction(property, currentPlayer);
+            }
+        } else {
+            // Property is owned
+            square->performAction(currentPlayer);
+        }
+    } else {
+        // Non-property square actions
+        square->performAction(currentPlayer);
+    }
     notifyObservers();
 }
 

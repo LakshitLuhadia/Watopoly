@@ -25,12 +25,16 @@ void processInGameCommands() {
                 int die1;
                 int die2;
                 std::cin >> die1 >> die2;
-                if (die1 < 0 || die2 < 0) {
-                    std::cerr << "Invalid dice roll. Please enter a non-negative number." << std::endl;
-                    std::cin.clear();
-                    std::cin.ignore();
+                if (!std::cin.fail()) {
+                    if (die1 < 0 || die2 < 0) {
+                        std::cerr << "Invalid dice roll. Please enter a non-negative number." << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore();
+                    }
+                    g.roll(die1, die2);
+                } else {
+                    g.roll();
                 }
-                g.roll(die1, die2);
             } else {
                 g.roll();
             }
@@ -100,7 +104,7 @@ void processInGameCommands() {
         }
         if (g.getNumPlayers() == 1) {
             auto winner = b->getCurrentPlayer();
-            std::cout << winner->getName() << " wins the game!" << std::endl;
+            std::cout << "Congratulations! " << winner->getName() << " wins the game." << std::endl;
             break;
         }
     }
