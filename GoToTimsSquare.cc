@@ -10,7 +10,8 @@ GoToTimsSquare::GoToTimsSquare(const string name, const int index, const bool is
 
 // performAction for FeesSquare
 void GoToTimsSquare::performAction(shared_ptr<Player>& player) const {
-    player->move(timsLineIndex);
+    cout << "You have been sent to Tims Line!" << endl;
+    player->setPosition(timsLineIndex);
     player->setInTimsLine(true);
 }
 

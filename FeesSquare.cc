@@ -9,6 +9,7 @@ FeesSquare::FeesSquare(const string name, const int index, const bool isProperty
 
 // performAction for FeesSquare
 void FeesSquare::performAction(shared_ptr<Player>& player) const {
+    cout << "You have to pay " << fees << "!" << endl;
     player->subtractMoney(fees);
 }
 
