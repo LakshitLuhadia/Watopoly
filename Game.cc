@@ -182,11 +182,95 @@ void Game::improve(const std::string& property, const std::string& action) {
 void Game::mortgage(std::string property) {
     // Mortgage a property
     // This function will use setMortgaged and the related functions from Property class
+    // Validate property exists
+    std::shared_ptr<Square> square = nullptr;
+    for (int i = 0; i < 40; ++i) {
+        if (board->getSquare(i)->getName() == property) {
+            square = board->getSquare(i);
+            break;
+        }
+    }
+
+    if (!square) {
+        std::cerr << "Error: Property not found." << std::endl;
+        return;
+    }
+
+    // Check ownership
+    std::shared_ptr<Property> propertySquare = std::dynamic_pointer_cast<Property>(square);
+    if (!propertySquare || propertySquare->getOwner() != board->getCurrentPlayer()) {
+        std::cerr << "Error: You don't own this property." << std::endl;
+        return;
+    }
+
+    // Check improvements
+    if (std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(propertySquare)) {
+        if (academicBuilding->getNumImprovements() > 0) {
+            std::cerr << "Error: You cannot mortgage a property with improvements." << std::endl;
+            return;
+        }
+    }
+    
+
+    // Check mortgage status
+    if (propertySquare->getIsMortgaged()) {
+        std::cerr << "Error: Property is already mortgaged." << std::endl;
+        return;
+    }
+
+    // Execute mortgage
+    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
+    currentPlayer->addMoney(propertySquare->getMortgageValue());
+    propertySquare->setIsMortgaged(true);
+
+    std::cout << "Property " << property << " has been mortgaged." << std::endl;
+
 }
     
 void Game::unmortgage(std::string property) {
     // Unmortgage a property
     // This function will use setMortgaged and the related functions from Property class
+    std::shared_ptr<Square> square = nullptr;
+    for (int i = 0; i < 40; ++i) {
+        if (board->getSquare(i)->getName() == property) {
+            square = board->getSquare(i);
+            break;
+        }
+    }
+
+    if (!square) {
+        std::cerr << "Error: Property not found." << std::endl;
+        return;
+    }
+
+    // Check ownership
+    std::shared_ptr<Property> propertySquare = std::dynamic_pointer_cast<Property>(square);
+    if (!propertySquare || propertySquare->getOwner() != board->getCurrentPlayer()) {
+        std::cerr << "Error: You don't own this property." << std::endl;
+        return;
+    }
+
+    // Check mortgage status
+    if (!propertySquare->getIsMortgaged()) {
+        std::cerr << "Error: Property is not mortgaged." << std::endl;
+        return;
+    }
+
+    // Calculate cost
+    int cost = propertySquare->getCost() * 0.6; // 0.6% of the cost
+
+    // Check if player has enough money
+    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
+    if (currentPlayer->getMoney() < cost) {
+        std::cerr << "Error: You don't have enough money to unmortgage this property." << std::endl;
+        return;
+    }
+
+    // Execute unmortgage
+    currentPlayer->subtractMoney(cost);
+    propertySquare->setIsMortgaged(false);
+    
+    std::cout << "Property " << property << " has been unmortgaged." << std::endl;
 }
 
 void Game::bankrupt() {
