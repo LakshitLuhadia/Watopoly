@@ -275,6 +275,45 @@ void Game::unmortgage(std::string property) {
     std::cout << "Property " << property << " has been unmortgaged." << std::endl;
 }
 
+int Game::attemptToRaiseFunds(std::shared_ptr<Player> player, int debtAmount) {
+    int potentialFunds = player->getMoney();
+    int raisedFunds = 0;
+    auto properties = player->getProperties();
+
+    for (auto property : properties) {
+        if (property->getIsAcademic()) {
+            std::shared_ptr<Academic> academic = std::dynamic_pointer_cast<Academic>(property);
+            int numImprovements = academic->getNumImprovements();
+            for (int i = 0; i < numImprovements; ++i) {
+                if (raisedFunds >= debtAmount) {
+                    break;
+                }
+                academic->sellimprove();
+                raisedFunds += academic->getImprovementCost();
+            }
+        }
+    }
+
+    properties = player->getProperties(); // Get updated properties after selling improvements
+    for (auto property : properties) {
+        if (!property->getIsMortgaged()) {
+            int mortgageValue = property->getMortgageValue();
+            if (raisedFunds >= debtAmount) {
+                break;
+            }
+            mortgage(property->getName());
+            raisedFunds += mortgageValue;
+        }
+    }
+
+    int totalFunds = player->getMoney();
+
+    std::cout << "Total funds after liquidation: $" << totalFunds << std::endl;
+    std::cout << "Debt amount: $" << debtAmount << std::endl;
+
+    return totalFunds;
+}
+
 void Game::bankrupt() {
     // Declare bankruptcy
     // This function will use bankrupt function from Player class
