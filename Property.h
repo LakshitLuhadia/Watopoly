@@ -45,7 +45,7 @@ class Property: public Square {
         static void setIsMortgaged(bool isMortgaged);
 
         // Performs the action of the property
-        virtual void performAction(std::shared_ptr<Player>& player) const override;
+        virtual void performAction(std::shared_ptr<Player>& player) const = 0; // Abstract method
 }; 
 
 #endif
