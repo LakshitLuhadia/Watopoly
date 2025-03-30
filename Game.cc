@@ -276,8 +276,7 @@ void Game::unmortgage(std::string property) {
 }
 
 int Game::attemptToRaiseFunds(std::shared_ptr<Player> player, int debtAmount) {
-    int potentialFunds = player->getMoney();
-    int raisedFunds = 0;
+    int raisedFunds = player->getMoney();
     auto properties = player->getProperties();
 
     for (auto property : properties) {
