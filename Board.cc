@@ -57,9 +57,7 @@ Board::Board(int numPlayers) : numPlayers(numPlayers) {
     //     players.push_back(std::make_shared<Player>("Player", 1500));
     // }
 
-
 }
-
 
 
 // This is a private function that gets a property by name
@@ -86,6 +84,7 @@ std::shared_ptr<Player> Board::getPlayerByName(const std::string& name) const {
 
 void Board::nextPlayer() {
     // Move to the next player
+    numPlayers = players.size();
     currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
 }
 
