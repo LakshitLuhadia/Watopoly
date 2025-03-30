@@ -29,7 +29,7 @@ void Game::notifyObservers() {
         players.push_back(board->getPlayer(i));
     }
     // Notify all observers
-    for (const auto& observer : observers) { // Accessing observers directly is not allowed
+    for (const auto& observer : observers) { 
         auto textDisplay = std::dynamic_pointer_cast<TextDisplay>(observer);
         if (textDisplay) {
             textDisplay->display(board, players); // Pass the board and players to TextDisplay
@@ -76,12 +76,13 @@ void Game::roll(int die1, int die2) {
                         currentPlayer->setInTimsLine(false);
                         currentPlayer->setTurnsInTimsLine(0);
                         std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
-                    }
-                    std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
-                    if (dice.isEqual()) {
-                        currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
                     } else {
-                        currentPlayer->setNumDoubleRolls(0);
+                        std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
+                        if (dice.isEqual()) {
+                            currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
+                        } else {
+                            currentPlayer->setNumDoubleRolls(0);
+                        }
                     }
                 } else if (action == "pay") {
                     int cost = 50; // Cost to get out of Tims Line
@@ -394,7 +395,7 @@ void Game::assets() {
     }
     std::cout << "You have $" << board->getCurrentPlayer()->getMoney() << "." << std::endl;
     std::cout << "You have " << board->getCurrentPlayer()->getNumRimCups() << " Tim Cups." << std::endl;
-    notifyObservers();
+    //notifyObservers();
 }
 
 void Game::all() {

@@ -5,9 +5,9 @@
 #include "Player.h"
 using namespace std;
 
-int Property::mortgageValue = 0;
-std::shared_ptr<Player> Property::owner = nullptr;
-bool Property::isMortgaged = false;
+// int Property::mortgageValue = 0;
+// std::shared_ptr<Player> Property::owner = nullptr;
+// bool Property::isMortgaged = false;
 
 // Constructor for Property
 Property::Property(const std::string& name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
@@ -23,17 +23,17 @@ int Property::getCost() const {
 } // Property::getCost
 
 // Returns the mortgage value of the property
-int Property::getMortgageValue() {
+int Property::getMortgageValue() const{
     return mortgageValue;
 } // Property::getMortgageValue
 
 // Returns the owner of the property
-std::shared_ptr<Player> Property::getOwner() {
+std::shared_ptr<Player> Property::getOwner() const {
     return owner;
 } // Property::getOwner
 
 // Returns whether the property is mortgaged
-bool Property::getIsMortgaged() {
+bool Property::getIsMortgaged() const {
     return isMortgaged;
 } // Property::getIsMortgaged
 
