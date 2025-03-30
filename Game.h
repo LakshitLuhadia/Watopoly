@@ -40,7 +40,7 @@ class Game: public Subject {
         void setPlayerTimCups(int pos, int TimCups);
         void setPlayerMoney(int pos, int money);
         void setPlayerPosition(int pos, int position);
-        void addPlayer(std::string name);
+        void addPlayer(std::string name, int money);
         void setPlayerCharacter(int pos, char character);
         void setupBoard();
         void setBuildingOwner(std::string buildingName, std::string owner);

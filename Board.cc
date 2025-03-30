@@ -53,9 +53,10 @@ Board::Board(int numPlayers) : numPlayers(numPlayers) {
     squares.push_back(std::make_shared<Academic>("DC", 39, true, 400, true, false, false, "Math", 200, vector<int>{50, 200, 600, 1400, 1700, 2000}));
 
     // Initialize the players
-    for (int i = 0; i < numPlayers; i++) {
-        players.push_back(std::make_shared<Player>("Player", 1500));
-    }
+    // for (int i = 0; i < numPlayers; i++) {
+    //     players.push_back(std::make_shared<Player>("Player", 1500));
+    // }
+
 
 }
 
@@ -88,10 +89,10 @@ void Board::nextPlayer() {
     currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
 }
 
-void Board::addPlayer(std::string name) {
+void Board::addPlayer(string name, int money) {
     // Add a player
-    shared_ptr<Player> p = getPlayerByName(name);
-    players.push_back(std::shared_ptr<Player>(p));
+    shared_ptr<Player> p = make_shared<Player>(name, money);
+    players.push_back(p);
     numPlayers++;
 }
 

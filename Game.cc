@@ -381,8 +381,8 @@ void Game::setPlayerPosition(int i, int position) {
     board->getPlayer(i)->setPosition(position);
 }
 
-void Game::addPlayer(std::string name) {
-    board->addPlayer(name);
+void Game::addPlayer(std::string name, int money) {
+    board->addPlayer(name, money);
 } // Game::addPlayer
 
 void Game::setPlayerCharacter(int i, char character) {

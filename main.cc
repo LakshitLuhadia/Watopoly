@@ -116,8 +116,6 @@ Game processLoadedFile(const std::string& filename) {
         std::cerr << "Cannot open the loaded file" << std::endl;
     }
     Game g;
-    // Player* p;
-    // Property* prop;
     std::shared_ptr<Board> board;
     int numPlayers;
     loadfile >> numPlayers;
@@ -129,7 +127,7 @@ Game processLoadedFile(const std::string& filename) {
         int money;
         int position;
         loadfile >> name >> character >> TimCups >> money >> position;
-        board->addPlayer(name);
+        board->addPlayer(name, money);
         g.setPlayerCharacter(i, character);
         if (position == 30) {
             std::cerr << "Player cannot start on square 30 (Go to DC Tims Line)." << std::endl;
@@ -148,7 +146,7 @@ Game processLoadedFile(const std::string& filename) {
             }
         }
         g.setPlayerTimCups(i, TimCups);
-        g.setPlayerMoney(i, money);
+        // g.setPlayerMoney(i, money);
         g.setPlayerPosition(i, position);
     }
     std::string buildingName;
@@ -185,7 +183,7 @@ Game setupGame() {
         std::string name;
         std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
         std::cin >> name;
-        b->addPlayer(name); // add the player
+        b->addPlayer(name, 1500); // add the player
         bool validCharacter = false;
         while (!validCharacter) { // check if the character is valid
             std::cout << "Please enter " << name << "'s character: " << std::endl;
