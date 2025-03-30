@@ -1,5 +1,6 @@
 #include "Dice.h"
 #include <stdlib.h>
+#include <ctime>
 
 int Dice::dice1 = 0;
 int Dice::dice2 = 0;
@@ -9,7 +10,8 @@ bool Dice::testing = false;
 Dice::Dice(bool testing) {
     dice1 = 0;
     dice2 = 0;
-    testing = false;
+    testing = false; // Set testing mode (default false)
+    srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
 }
 
 // Roll function for Dice
