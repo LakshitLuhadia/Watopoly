@@ -60,13 +60,3 @@ void Property::setMortgageValue(int newMortgageValue) {
 void Property::setIsMortgaged(bool newIsMortgaged) {
     isMortgaged = newIsMortgaged;
 } // Property::setIsMortgaged
-
-// Performs the action of the property
-void Property::performAction(std::shared_ptr<Player>& player) const {
-    if (owner) {
-        if (owner.get() != player.get()) {
-            player->subtractMoney(cost);
-            owner->addMoney(cost);
-        }
-    } 
-} // Property::performAction

@@ -110,7 +110,7 @@ void Academic::sellimprove() {
 // Performs the action of the property
 void Academic::performAction(std::shared_ptr<Player>& player) const {
     if (getOwner()) {
-        if (getOwner().get() != player.get()) {
+        if (getOwner() != player) {
             if (isMonopoly) {
                 if (numImprovements == 0) {
                     int tuition = getTuition(numImprovements) * 2;

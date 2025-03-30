@@ -18,14 +18,14 @@
 #include "Board.h"
 
 class Game: public Subject {
-    static bool testingMode; // a flag to check if testing mode is on
+    bool testingMode; // a flag to check if testing mode is on
     int numPlayers = 0; // the number of players
     std::shared_ptr<Board> board; // the board
 
     public:
         // Ctor for Game
         Game();
-        void roll(); // rolls the dice
+        void roll(int die1 = 0, int die2 = 0); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
         void improve(const std::string& property, const std::string& action);

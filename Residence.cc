@@ -17,7 +17,7 @@ int Residence::getRent() const {
 // Performs the action of the residence
 void Residence::performAction(std::shared_ptr<Player>& player) const {
     if (getOwner()) {
-        if (getOwner().get() != player.get()) {
+        if (getOwner() != player) {
             int rent = getRent();
             player->subtractMoney(rent);
             getOwner()->addMoney(rent);

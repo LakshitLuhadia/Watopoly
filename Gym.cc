@@ -29,7 +29,7 @@ void Gym::setIsMonopoly(bool newIsMonopoly) {
 // Performs the action of the gym
 void Gym::performAction(std::shared_ptr<Player>& player) const {
     if (getOwner()) {
-        if (getOwner().get() != player.get()) {
+        if (getOwner() != player) {
             int roll = Dice::add();
             bool isMonopoly = getIsMonopoly();
             if (isMonopoly) {
