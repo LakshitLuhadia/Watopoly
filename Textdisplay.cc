@@ -1,14 +1,64 @@
 #include "Textdisplay.h"
+#include <memory>
+#include <fstream>
+#include <vector>
+#include <string>
 using namespace std;
 
 // Constructor
 TextDisplay::TextDisplay(std::shared_ptr<Game> game) : 
-g{std::move(game)} {} // TextDisplay::TextDisplay
+game{move(game)} {} // TextDisplay::TextDisplay
 
 // Override the notify function from Observer
 void TextDisplay::notify(Subject &whoNotified) {
     display();
 } // TextDisplay::notify
+
+/*
+void addImprovements(string &line, int col, int improvements) {
+    for (int i = 0; i < improvements; ++i) {
+        line[col + i] = 'I';
+    }
+}
+*/
+void TextDisplay::display() const {
+    shared_ptr<Board> board = game->getBoard();
+    shared_ptr<Square> square;
+    vector<shared_ptr<Player>> players;
+    for (int i = 0; i < game->getNumPlayers(); ++i) {
+        players.push_back(board->getPlayer(i));  
+    }
+    ifstream board_file("board.txt");
+    string line;
+    int counter = 1;
+    int squareWidth = 8;
+    while (getline(board_file, line)) {
+        if (counter == 2) {
+            int arr[6] = {22, 24, 25, 27, 28, 30};
+            for (int i = 0; i < 6; ++i) {
+                square = board->getSquare(arr[i]);
+                shared_ptr<Academic> academicBuilding = dynamic_pointer_cast<Academic>(square);
+                int tempCol = ((arr[i] - 22) * squareWidth) + squareWidth + 1;
+                for (int k = 0; k < academicBuilding->getNumImprovements(); ++k) {
+                    line[tempCol + k] = 'I';
+                }
+            }
+        } else if (counter == 5) {
+            for (int i = 21; i <= 31; ++i) {
+                int tempCol = (i - 21)*squareWidth + 1;
+                int k = 0;
+                for (const auto& player : players) {
+                    if (player->getPosition() == i) {
+                        line[tempCol + k] = player->getCharacter();
+                    }
+                    ++k;
+                }
+
+            }
+        }
+
+    }
+}
 
 // Display the current state of the game
 void TextDisplay::display() const {

@@ -6,7 +6,7 @@
 #include "Observer.h"
 
 class TextDisplay : public Observer {
-    std::shared_ptr<Game> g; // Unique pointer to the Game object
+    std::shared_ptr<Game> game; // Unique pointer to the Game object
 
 public:
     // Constructor
