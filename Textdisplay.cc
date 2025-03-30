@@ -10,7 +10,7 @@ TextDisplay::TextDisplay(std::shared_ptr<Game> game) :
 game{move(game)} {} // TextDisplay::TextDisplay
 
 // Override the notify function from Observer
-void TextDisplay::notify(Subject &whoNotified) {
+void TextDisplay::notify() {
     display();
 } // TextDisplay::notify
 

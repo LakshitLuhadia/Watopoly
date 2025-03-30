@@ -18,7 +18,7 @@ public:
 
 
     // Override the notify function from Observer
-    void notify(Subject &whoNotified) override;
+    void notify() override;
 
     // Display the current state of the game
     void display();
