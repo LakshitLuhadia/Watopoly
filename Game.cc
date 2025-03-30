@@ -16,7 +16,9 @@
 #include "Board.h"
 #include "Game.h"
 
-Game::Game(): testingMode{false}, numPlayers{0}, board{std::make_shared<Board>()} {}
+Game::Game(): testingMode{false}, numPlayers{0}, board{} {
+    std::make_shared<Board>(numPlayers);
+}
 
 void Game::roll(int die1, int die2) {
     Dice dice(testingMode);
