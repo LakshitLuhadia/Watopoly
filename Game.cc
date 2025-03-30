@@ -16,7 +16,7 @@
 #include "Board.h"
 #include "Game.h"
 
-Game::Game(): testingMode{false}, board{std::make_shared<Board>(numPlayers)}, numPlayers{0} {}
+Game::Game(int numPlayers): testingMode{false}, board{std::make_shared<Board>(numPlayers)}, numPlayers{numPlayers} {}
 
 void Game::roll(int die1, int die2) {
     Dice dice(testingMode);
@@ -37,15 +37,17 @@ void Game::roll(int die1, int die2) {
             std::cout << "You are out of Tims Line." << std::endl;
         }
     }
-    if (testingMode) {
-        if (die1 < 0 || die2 < 0) {
-            std::cerr << "Error: Invalid dice values in testing mode." << std::endl;
-            return;
-        }
-        dice.roll(die1, die2); // Roll with specified values
-    } else {
-        dice.roll(); // Roll randomly
-    }
+    dice.roll(die1, die2); // Roll the dice
+    // if (testingMode) {
+    //     if (die1 < 0 || die2 < 0) {
+    //         std::cerr << "Error: Invalid dice values in testing mode." << std::endl;
+    //         return;
+    //     }
+    //     dice.roll(die1, die2); // Roll with specified values
+    // } else {
+    //     dice.roll(); // Roll randomly
+    // }
+    std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
 
     if (dice.isEqual()) {
         currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);

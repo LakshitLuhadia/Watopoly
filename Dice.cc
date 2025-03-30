@@ -32,3 +32,10 @@ bool Dice::isEqual() {
     return dice1 == dice2;
 } // Dice::isEqual
 
+int Dice::getDice1() const {
+    return dice1;
+} // Dice::getDice1
+
+int Dice::getDice2() const {
+    return dice2;
+} // Dice::getDice2

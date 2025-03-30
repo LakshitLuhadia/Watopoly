@@ -24,7 +24,7 @@ class Game: public Subject {
 
     public:
         // Ctor for Game
-        Game();
+        Game(int numPlayers = 0);
         void roll(int die1 = 0, int die2 = 0); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);

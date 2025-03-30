@@ -11,9 +11,8 @@
 #include "Square.h"
 #include "Dice.h"
 
-void processInGameCommands() {
-    Game g;
-    std::shared_ptr<Board> b;
+void processInGameCommands(Game g) {
+    auto b = g.getBoard(); // Get the board from the game
     while (true) {
         auto currentPlayer = b->getCurrentPlayer();
         std::cout << currentPlayer->getName() << "'s turn." << std::endl;
@@ -30,8 +29,9 @@ void processInGameCommands() {
                         std::cerr << "Invalid dice roll. Please enter a non-negative number." << std::endl;
                         std::cin.clear();
                         std::cin.ignore();
+                    } else {
+                        g.roll(die1, die2);
                     }
-                    g.roll(die1, die2);
                 } else {
                     g.roll();
                 }
@@ -167,8 +167,7 @@ bool isCharacter(char character, const std::vector<char>& characters) {
 
 // Function to set up the game
 Game setupGame() {
-    Game g;
-    std::unique_ptr<Board> b;
+
     std::vector<char> characters = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
     std::cout << "Welcome to the game of Watopoly!" << std::endl;
     std::cout << "Please enter the number of players(2-6): " << std::endl;
@@ -178,7 +177,9 @@ Game setupGame() {
         std::cin.clear();
         std::cin.ignore();
     }
-    g.setNumPlayers(numPlayers); // set the number of players
+    Game g(numPlayers); // create a new game
+    auto b = g.getBoard(); // get the board
+
     for (int i = 0; i < numPlayers; ++i) {
         std::string name;
         std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
@@ -202,7 +203,7 @@ Game setupGame() {
         }
     }
     std::cout << "Setting things up and starting the game" << std::endl;
-    g.setupBoard(); // set up the board
+    //g.setupBoard(); // set up the board
 
     return g;
 }
@@ -244,11 +245,11 @@ int main(int argc, char* argv[]) {
                 Game g = processLoadedFile(filename); // process the loaded file
                 std::cout << "Loaded game file successfully" << std::endl;
                 std::cout << "Starting the game" << std::endl;
-                processInGameCommands(); // process the in-game commands
+                processInGameCommands(g); // process the in-game commands
             }
         }
     } else {
         Game g = setupGame(); // set up the game
-        processInGameCommands(); // process the in-game commands
+        processInGameCommands(g); // process the in-game commands
     }
 }
