@@ -19,15 +19,7 @@
 #include "GoToTimsSquare.h"
 
 class Board { // Note to everyone, we will be using smart pointers. No raw pointers.
-  private:
-  
-    // Constructor
-    // Default constructor
-    Board(int numPlayers);
-
-    // Custom constructor
-    
-    
+  private:    
     // Data fields
     int currentPlayerIndex = 0; // The current player
     int numPlayers = 0; // The number of players
@@ -41,6 +33,8 @@ class Board { // Note to everyone, we will be using smart pointers. No raw point
     std::shared_ptr<Player> getPlayerByName(const std::string& name) const; // Get a player by name
 
   public:
+    // Constructor
+    Board(int numPlayers);
     void nextPlayer(); // Move to the next player
     void addPlayer(std::string name); // Add a player
     void trade(std::string player, std::string give, std::string receive); // Trade properties between players
