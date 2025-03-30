@@ -38,12 +38,7 @@ void TextDisplay::sidePlayers(string &line, int arr[2], vector<shared_ptr<Player
 }
 
 void TextDisplay::display(std::shared_ptr<Board> board, const std::vector<std::shared_ptr<Player>>& players) {
-    //shared_ptr<Board> board = game->getBoard();
     shared_ptr<Square> square;
-    //vector<shared_ptr<Player>> players;
-    // for (int i = 0; i < game->getNumPlayers(); ++i) {
-    //     players.push_back(board->getPlayer(i));  
-    // }
     ifstream board_file("board.txt");
     string line;
     int counter = 1;
