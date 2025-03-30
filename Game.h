@@ -19,8 +19,8 @@
 
 class Game: public Subject {
     bool testingMode; // a flag to check if testing mode is on
-    int numPlayers = 0; // the number of players
     std::shared_ptr<Board> board; // the board
+    int numPlayers = 0; // the number of players
 
     public:
         // Ctor for Game

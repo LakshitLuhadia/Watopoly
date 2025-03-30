@@ -4,6 +4,9 @@
 #include "Player.h"
 using namespace std;
 
+int Gym::usageFee = 0;
+bool Gym::isMonopoly = false;
+
 // Constructor for Gym
 Gym::Gym(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
 Property{name, index, true, 150, false, false, true} {

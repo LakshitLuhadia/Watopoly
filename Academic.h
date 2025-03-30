@@ -6,6 +6,11 @@
 #include "Player.h"
 using std::vector; 
 
+// static int numImprovements;               // Number of improvements on the property
+// static bool isMonopoly;                   // Is the property part of a monopoly?
+// static bool isImprovable;                 // Is the property improvable?
+// static bool isSellable;                   // Is the property sellable?
+
 // Academic class
 class Academic: public Property {
     const std::string block;                  // Block of the property

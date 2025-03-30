@@ -1,6 +1,10 @@
 #include "Dice.h"
 #include <stdlib.h>
 
+int Dice::dice1 = 0;
+int Dice::dice2 = 0;
+bool Dice::testing = false;
+
 // Dice Ctor
 Dice::Dice(bool testing) {
     dice1 = 0;

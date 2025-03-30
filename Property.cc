@@ -5,6 +5,10 @@
 #include "Player.h"
 using namespace std;
 
+int Property::mortgageValue = 0;
+std::shared_ptr<Player> Property::owner = nullptr;
+bool Property::isMortgaged = false;
+
 // Constructor for Property
 Property::Property(const std::string& name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym) :
 Square{name, index, isProperty}, cost{cost}, isAcademic{isAcademic}, isResidence{isResidence}, isGym{isGym} {
