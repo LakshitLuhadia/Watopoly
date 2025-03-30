@@ -213,7 +213,7 @@ int main(int argc, char* argv[]) {
     bool loadMode = false; // a flag to check if load mode is on
     std::string filename = ""; // a string to store the filename
 
-    for (int i = 0; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
