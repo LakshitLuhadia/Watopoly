@@ -48,62 +48,106 @@ void Game::roll(int die1, int die2) {
         return;
     } 
     if (currentPlayer->getInTimsLine()) {
-        std::cout << "You are in Tims Line. You have " << currentPlayer->getTurnsInTimsLine() << " turns left." << std::endl;
-        currentPlayer->setTurnsInTimsLine(currentPlayer->getTurnsInTimsLine() + 1);
-        if (currentPlayer->getTurnsInTimsLine() >= 3) {
-            currentPlayer->setInTimsLine(false);
-            currentPlayer->setTurnsInTimsLine(0);
-            std::cout << "You are out of Tims Line." << std::endl;
-        }
-    }
-    dice.roll(die1, die2); // Roll the dice
-    // if (testingMode) {
-    //     if (die1 < 0 || die2 < 0) {
-    //         std::cerr << "Error: Invalid dice values in testing mode." << std::endl;
-    //         return;
-    //     }
-    //     dice.roll(die1, die2); // Roll with specified values
-    // } else {
-    //     dice.roll(); // Roll randomly
-    // }
-    std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
-
-    if (dice.isEqual()) {
-        currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
-    } else {
-        currentPlayer->setNumDoubleRolls(0);
-    }
-    int move = dice.add();
-    currentPlayer->move(move);
-    int newPosition = currentPlayer->getPosition();
-    std::shared_ptr<Square> square = board->getSquare(newPosition);
-    std::cout << square->getName() << std::endl;
-    if (square->getIsProperty()) {
-        std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(square);
-        if (property->getOwner() == nullptr) {
-            // Property is unowned
-            int cost = property->getCost();
-            std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
+        std::cout << "You are in Tims Line. You have " << 3 - currentPlayer->getTurnsInTimsLine() << " turns left." << std::endl;
+        std::cout << "You have " << currentPlayer->getNumRimCups() << " Tim Cups left." << std::endl;
+        if (currentPlayer->getNumRimCups() > 0) {
+            std::cout << "Do you want to use a Tim Cup to get out of Tims Line? (y/n): ";
             std::string response;
             std::cin >> response;
             if (response == "y" || response == "Y") {
-                currentPlayer->addProperty(property);
-                currentPlayer->subtractMoney(cost);
-                property->setOwner(currentPlayer);
-                std::cout << square->getName() << " bought " << "by " << currentPlayer->getName() << "." << std::endl;
+                currentPlayer->setInTimsLine(false);
+                currentPlayer->setTurnsInTimsLine(0);
+                currentPlayer->setNumRimCups(currentPlayer->getNumRimCups() - 1);
+                std::cout << "You are out of Tims Line." << std::endl;
+                return;
             } else if (response == "n" || response == "N") {
-                std::cout << "Property not bought." << std::endl;
-                std::cout << "Starting Auction" << std::endl;
-                currentPlayer->auction(property, currentPlayer);
+                std::cout << "You chose not to use a Tim Cup." << std::endl;
+                std::cout << "You can (roll/pay): ";
+                std::string action;
+                std::cin >> action;
+                if (action == "roll") {
+                    dice.roll(die1, die2); // Roll the dice
+                    currentPlayer->setTurnsInTimsLine(currentPlayer->getTurnsInTimsLine() + 1);
+                    if (currentPlayer->getTurnsInTimsLine() >= 3) {
+                        std::cout << "You are out of possible rolls in Tims Line." << std::endl;
+                        std::cout << "You have to pay $50 to get out of Tims Line." << std::endl;
+                        int cost = 50; // Cost to get out of Tims Line
+                        currentPlayer->subtractMoney(cost);
+                        currentPlayer->setInTimsLine(false);
+                        currentPlayer->setTurnsInTimsLine(0);
+                        std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
+                    }
+                    std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
+                    if (dice.isEqual()) {
+                        currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
+                    } else {
+                        currentPlayer->setNumDoubleRolls(0);
+                    }
+                } else if (action == "pay") {
+                    int cost = 50; // Cost to get out of Tims Line
+                    currentPlayer->subtractMoney(cost);
+                    currentPlayer->setInTimsLine(false);
+                    currentPlayer->setTurnsInTimsLine(0);
+                    std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
+                } else {
+                    std::cerr << "Invalid action. Please enter 'roll' or 'pay'." << std::endl;
+                }
+            }
+            else {
+                std::cerr << "Invalid response. Please enter 'y' or 'n'." << std::endl;
+            }
+        }
+    }
+    else {
+        dice.roll(die1, die2); // Roll the dice
+        // if (testingMode) {
+        //     if (die1 < 0 || die2 < 0) {
+        //         std::cerr << "Error: Invalid dice values in testing mode." << std::endl;
+        //         return;
+        //     }
+        //     dice.roll(die1, die2); // Roll with specified values
+        // } else {
+        //     dice.roll(); // Roll randomly
+        // }
+        std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
+
+        if (dice.isEqual()) {
+            currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
+        } else {
+            currentPlayer->setNumDoubleRolls(0);
+        }
+        int move = dice.add();
+        currentPlayer->move(move);
+        int newPosition = currentPlayer->getPosition();
+        std::shared_ptr<Square> square = board->getSquare(newPosition);
+        std::cout << square->getName() << std::endl;
+        if (square->getIsProperty()) {
+            std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(square);
+            if (property->getOwner() == nullptr) {
+                // Property is unowned
+                int cost = property->getCost();
+                std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
+                std::string response;
+                std::cin >> response;
+                if (response == "y" || response == "Y") {
+                    currentPlayer->addProperty(property);
+                    currentPlayer->subtractMoney(cost);
+                    property->setOwner(currentPlayer);
+                    std::cout << square->getName() << " bought " << "by " << currentPlayer->getName() << "." << std::endl;
+                } else if (response == "n" || response == "N") {
+                    std::cout << "Property not bought." << std::endl;
+                    std::cout << "Starting Auction" << std::endl;
+                    currentPlayer->auction(property, currentPlayer);
+                }
+            } else {
+                // Property is owned
+                std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You have to pay rent." << std::endl;
+                square->performAction(currentPlayer);
             }
         } else {
-            // Property is owned
-            std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner() << ". You have to pay rent." << std::endl;
+            // Non-property square actions
             square->performAction(currentPlayer);
         }
-    } else {
-        // Non-property square actions
-        square->performAction(currentPlayer);
     }
     notifyObservers();
 }
@@ -348,16 +392,23 @@ void Game::assets() {
     for (auto property : properties) {
         std::cout << property->getName() << std::endl;
     }
+    std::cout << "You have $" << board->getCurrentPlayer()->getMoney() << "." << std::endl;
+    std::cout << "You have " << board->getCurrentPlayer()->getNumRimCups() << " Tim Cups." << std::endl;
     notifyObservers();
 }
 
 void Game::all() {
     // Display asssets of all players
-    // This function will use getProperties function from Player class
-    // This function will also use getPlayer function from Board class
     for (int i = 0; i < numPlayers; i++) {
-        std::cout << board->getPlayer(i)->getName() << " has: " << std::endl; 
-        board->getPlayer(i)->getProperties();
+        std::cout << board->getPlayer(i)->getName() << " has: " << std::endl;
+        std::vector<std::shared_ptr<Property>> properties = board->getPlayer(i)->getProperties();
+        std::cout << "Properties: ";
+        for (auto property : properties) {
+            std::cout << property->getName() << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "Money: " << board->getPlayer(i)->getMoney() << std::endl;
+        std::cout << "Tim Cups: " << board->getPlayer(i)->getNumRimCups() << std::endl;
     }
     notifyObservers();
 }
