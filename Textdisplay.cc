@@ -132,8 +132,8 @@ void TextDisplay::display(std::shared_ptr<Board> board, const std::vector<std::s
                 }
             }
         } else if (counter == 55) {
-            for (int i = 10; i <= 1; --i) {
-                int tempCol = (10 - i)*squareWidth + 1;
+            for (int i = 10; i >= 0; --i) {
+                int tempCol = ((10 - i)*squareWidth) + 1;
                 int k = 0;
                 for (const auto& player : players) {
                     if (player->getPosition() == i) {
@@ -141,7 +141,6 @@ void TextDisplay::display(std::shared_ptr<Board> board, const std::vector<std::s
                         ++k;
                     }
                 }
-
             }
         }
         counter++;
