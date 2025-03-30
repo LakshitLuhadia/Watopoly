@@ -8,15 +8,36 @@
 #include "Property.h"
 #include "Square.h"
 #include "Player.h"
-
+#include "Academic.h"
+#include "Residence.h"
+#include "Gym.h"
+#include "Square.h"
+#include "Nonproperty.h"
+#include "FeesSquare.h"
+#include "OSAPSquare.h"
+#include "ChanceSquare.h"
+#include "GoToTimSquare.h"
 class Board { // Note to everyone, we will be using smart pointers. No raw pointers.
   private:
-    std::shared_ptr<Property> getPropertyByName(const std::string& name) const; // Get a property by name
-    std::shared_ptr<Player> getPlayerByName(const std::string& name) const; // Get a player by name
+  
+    // Constructor
+    // Default constructor
+    Board(int numPlayers) : numPlayers(numPlayers) {}
+
+    // Custom constructor
+    
+    
+    // Data fields
     int currentPlayerIndex = 0; // The current player
     int numPlayers = 0; // The number of players
+
+    // Data Storing
     std::vector<std::shared_ptr<Square>> squares; // Vector of Squares
     std::vector<std::shared_ptr<Player>> players; // Vector of Players
+
+    // Private functions
+    std::shared_ptr<Property> getPropertyByName(const std::string& name) const; // Get a property by name
+    std::shared_ptr<Player> getPlayerByName(const std::string& name) const; // Get a player by name
 
   public:
     void nextPlayer(); // Move to the next player
