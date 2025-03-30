@@ -14,14 +14,31 @@ void TextDisplay::notify(Subject &whoNotified) {
     display();
 } // TextDisplay::notify
 
-/*
-void addImprovements(string &line, int col, int improvements) {
-    for (int i = 0; i < improvements; ++i) {
-        line[col + i] = 'I';
+void TextDisplay::sideImprovements(string &line, int arr[2], shared_ptr<Board> board) {
+    int sidesCol[2] = {1, 81};
+    for (int i = 0; i < 2; ++i) {
+        shared_ptr<Square> square = board->getSquare(arr[i]);
+        shared_ptr<Academic> academicBuilding = dynamic_pointer_cast<Academic>(square);
+        for (int k = 0; k < academicBuilding->getNumImprovements(); ++k) {
+            line[sidesCol[i] + k] = 'I';
+        }
     }
 }
-*/
-void TextDisplay::display() const {
+
+void TextDisplay::sidePlayers(string &line, int arr[2], vector<shared_ptr<Player>> players) {
+    int sidesCol[2] = {1, 81};
+    for (int i = 0; i < 2; ++i) {
+        int k = 0;
+        for (const auto& player : players) {
+            if (player->getPosition() == arr[i]) {
+                line[sidesCol[i] + k] = player->getCharacter();
+                ++k;
+            }
+        }
+    }
+}
+
+void TextDisplay::display() {
     shared_ptr<Board> board = game->getBoard();
     shared_ptr<Square> square;
     vector<shared_ptr<Player>> players;
@@ -32,6 +49,7 @@ void TextDisplay::display() const {
     string line;
     int counter = 1;
     int squareWidth = 8;
+    int sidesCol[2] = {1, 81};
     while (getline(board_file, line)) {
         if (counter == 2) {
             int arr[6] = {22, 24, 25, 27, 28, 30};
@@ -50,16 +68,89 @@ void TextDisplay::display() const {
                 for (const auto& player : players) {
                     if (player->getPosition() == i) {
                         line[tempCol + k] = player->getCharacter();
+                        ++k;
                     }
-                    ++k;
+                }
+
+            }
+        } 
+        else if (counter == 7) {
+            int arr[2] = {20, 32};
+            sideImprovements(line, arr, board);
+        } else if (counter == 10) {
+            int arr[2] = {20, 32};
+            sidePlayers(line, arr, players);
+        } else if (counter == 12) {
+            int arr[2] = {19, 33};
+            sideImprovements(line, arr, board);
+        } else if (counter == 15) {
+            int arr[2] = {19, 33};
+            sidePlayers(line, arr, players);
+        } else if (counter == 20) {
+            int arr[2] = {18, 34};
+            sidePlayers(line, arr, players);
+        } else if (counter == 22) {
+            int arr[2] = {17, 35};
+            sideImprovements(line, arr, board);
+        } else if (counter == 25) {
+            int arr[2] = {17, 35};
+            sidePlayers(line, arr, players);
+        } else if (counter == 30) {
+            int arr[2] = {16, 36};
+            sidePlayers(line, arr, players);
+        } else if (counter == 32) {
+            shared_ptr<Square> square = board->getSquare(15);
+            shared_ptr<Academic> academicBuilding = dynamic_pointer_cast<Academic>(square);
+            for (int k = 0; k < academicBuilding->getNumImprovements(); ++k) {
+                line[sidesCol[0] + k] = 'I';
+            }
+        } else if (counter == 35) {
+            int arr[2] = {15, 37};
+            sidePlayers(line, arr, players);
+        } else if (counter == 37) {
+            int arr[2] = {14, 38};
+            sideImprovements(line, arr, board);
+        } else if (counter == 40) {
+            int arr[2] = {14, 38};
+            sidePlayers(line, arr, players);
+        } else if (counter == 45) {
+            int arr[2] = {13, 39};
+            sidePlayers(line, arr, players);
+        } else if (counter == 47) {
+            int arr[2] = {12, 40};
+            sideImprovements(line, arr, board);
+        } else if (counter == 50) {
+            int arr[2] = {12, 40};
+            sidePlayers(line, arr, players);
+        } else if (counter == 52) {
+            int arr[5] = {10, 9, 7, 4, 2};
+            for (int i = 0; i < 5; ++i) {
+                square = board->getSquare(arr[i]);
+                shared_ptr<Academic> academicBuilding = dynamic_pointer_cast<Academic>(square);
+                int tempCol = ((10 - arr[i]) * squareWidth) + squareWidth + 1;
+                for (int k = 0; k < academicBuilding->getNumImprovements(); ++k) {
+                    line[tempCol + k] = 'I';
+                }
+            }
+        } else if (counter == 55) {
+            for (int i = 11; i <= 1; --i) {
+                int tempCol = (11 - i)*squareWidth + 1;
+                int k = 0;
+                for (const auto& player : players) {
+                    if (player->getPosition() == i) {
+                        line[tempCol + k] = player->getCharacter();
+                        ++k;
+                    }
                 }
 
             }
         }
-
+        counter++;
+        cout << line;
     }
 }
 
+/*
 // Display the current state of the game
 void TextDisplay::display() const {
     const Board& board = g->getBoard();
@@ -136,3 +227,5 @@ std::string TextDisplay::formatSquare(const Square* square) const {
     }
     return str;
 } // TextDisplay::formatSquare
+ */
+
