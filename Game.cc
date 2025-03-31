@@ -329,7 +329,9 @@ void Game::bankrupt() {
         int numplayers = getNumPlayers();
         if (numplayers == 2) {
             std::cout << "Game Over! " << currentPlayer->getName() << " is bankrupt!" << std::endl;
-            std::cout << "The other player wins!" << std::endl;
+            removePlayer(currentPlayer->getName());
+            std::shared_ptr<Player> winner = board->getPlayer(1);
+            std::cout << "Congratulations! " << winner->getName() << " wins the game." << std::endl;
         } else {
             int index = currentPlayer->getPosition();
             std::shared_ptr<Square> square = board->getSquare(index);
@@ -358,6 +360,7 @@ void Game::bankrupt() {
                     currentPlayer->auction(property, currentPlayer);
                 }
             }
+            removePlayer(currentPlayer->getName());
         }
     } else {
         std::cout << "You are not bankrupt. You can not declare bankruptcy." << std::endl;
