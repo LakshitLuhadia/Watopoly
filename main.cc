@@ -11,7 +11,7 @@
 #include "Square.h"
 #include "Dice.h"
 
-void processInGameCommands(Game g) {
+void processInGameCommands(Game& g) {
     auto b = g.getBoard(); // Get the board from the game
     while (true) {
         auto currentPlayer = b->getCurrentPlayer();
