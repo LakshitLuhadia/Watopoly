@@ -366,10 +366,13 @@ void Game::bankrupt() {
                     std::string propertyName = property->getName();
                     unmortgage(propertyName);
                     property->setOwner(nullptr);
-                    currentPlayer->auction(property, currentPlayer);
+                    auction(property);
                 }
             }
             removePlayer(currentPlayer->getName());
+            std::cout << currentPlayer->getName() << " is bankrupt!" << std::endl;
+            std::cout << "You have been removed from the game." << std::endl;
+            next();
         }
     } else {
         std::cout << "You are not bankrupt. You can not declare bankruptcy." << std::endl;

@@ -1,6 +1,6 @@
 4
-Dolly D 1 890 3 
-Teddy T 2 1200 18 
+Dolly D 1 90 3 
+Teddy T 2 200 18 
 Sara S 0 900 10 0
 Liam L 0 500 10 0
 AL Dolly 1
