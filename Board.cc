@@ -95,6 +95,17 @@ void Board::addPlayer(string name, int money) {
     numPlayers++;
 }
 
+void Board::removePlayer(string name) {
+    // Remove a player
+    for (auto it = players.begin(); it != players.end(); ++it) {
+        if ((*it)->getName() == name) {
+            players.erase(it);
+            break;
+        }
+    }
+    numPlayers--;
+}
+
 void Board::trade(std::string player, std::string give, std::string receive) {
     // Trade properties between players
     bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);

@@ -359,6 +359,8 @@ void Game::bankrupt() {
                 }
             }
         }
+    } else {
+        std::cout << "You are not bankrupt. You can not declare bankruptcy." << std::endl;
     }
 }
 
@@ -478,6 +480,13 @@ void Game::setPlayerPosition(int i, int position) {
 void Game::addPlayer(std::string name, int money) {
     board->addPlayer(name, money);
 } // Game::addPlayer
+
+void Game::removePlayer(std::string name) {
+    // Remove a player from the game
+    // This function will use removePlayer function from Board class
+    board->removePlayer(name);
+    numPlayers--;
+} // Game::removePlayer
 
 void Game::setPlayerCharacter(int i, char character) {
     // Set the character of the player

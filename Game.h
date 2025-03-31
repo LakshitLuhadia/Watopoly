@@ -51,6 +51,7 @@ class Game: public Subject {
         void setPlayerMoney(int pos, int money);
         void setPlayerPosition(int pos, int position);
         void addPlayer(std::string name, int money);
+        void removePlayer(std::string name);
         void setPlayerCharacter(int pos, char character);
         void setupBoard();
         void setBuildingOwner(std::string buildingName, std::string owner);

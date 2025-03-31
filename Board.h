@@ -37,6 +37,7 @@ class Board { // Note to everyone, we will be using smart pointers. No raw point
     Board(int numPlayers);
     void nextPlayer(); // Move to the next player
     void addPlayer(std::string name, int money); // Add a player
+    void removePlayer(std::string name); // Remove a player
     void trade(std::string player, std::string give, std::string receive); // Trade properties between players
     std::shared_ptr<Player> getCurrentPlayer() const; // Get the current player
     std::shared_ptr<Player> getPlayer(int i) const; // Get a player by index
