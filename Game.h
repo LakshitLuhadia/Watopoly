@@ -25,6 +25,7 @@ class Game: public Subject {
     std::shared_ptr<Board> board; // the board
     int numPlayers = 0; // the number of players
     std::shared_ptr<TextDisplay> td; // the text display
+    int getPropertyRent(std::shared_ptr<Property> property); // get the rent of a property
     void auction(std::shared_ptr<Property> property); // auction function
     void checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop); // check for monopoly
     void checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop); // check for monopoly
