@@ -103,6 +103,13 @@ void processInGameCommands(Game& g) {
             std::string property;
             std::string action;
             std::cin >> property >> action;
+
+            if ((b->getSquare(currentPlayer->getPosition()))->getName() != property) {
+                std::cerr << "You are not on the property." << std::endl;
+                std::cin.clear();
+                std::cin.ignore();
+                continue;
+            }
             if (action != "buy" && action != "sell") {
                 std::cerr << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
                 std::cin.clear();
@@ -150,7 +157,8 @@ Game processLoadedFile(const std::string& filename) {
         std::cerr << "Cannot open the loaded file" << std::endl;
     }
     Game g;
-    std::shared_ptr<Board> board;
+    //std::shared_ptr<Board> board;
+    std::shared_ptr<Board> board = g.getBoard();    
     int numPlayers;
     loadfile >> numPlayers;
     g.setNumPlayers(numPlayers);
@@ -163,6 +171,7 @@ Game processLoadedFile(const std::string& filename) {
         loadfile >> name >> character >> TimCups >> money >> position;
         board->addPlayer(name, money);
         g.setPlayerCharacter(i, character);
+        
         if (position == 30) {
             std::cerr << "Player cannot start on square 30 (Go to DC Tims Line)." << std::endl;
         }
@@ -190,6 +199,7 @@ Game processLoadedFile(const std::string& filename) {
         loadfile >> owner >> numImprovements;
         g.setBuildingOwner(buildingName, owner);
         g.setBuildingImprovements(buildingName, numImprovements);
+        // Figure out monopolies
     }
     return g;
 }
@@ -260,7 +270,7 @@ int main(int argc, char* argv[]) {
     bool loadMode = false; // a flag to check if load mode is on
     std::string filename = ""; // a string to store the filename
 
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc - 1; ++i) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
