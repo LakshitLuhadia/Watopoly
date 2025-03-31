@@ -526,6 +526,24 @@ void Game::setBuildingOwner(std::string buildingName, std::string owner) {
             }
         }
     }
+        // Sets the Monopoly for the property
+    auto property = board->getPropertyByName(buildingName);
+    auto ownerPlayer = board->getPlayerByName(owner);
+    
+    if (ownerPlayer && property) {
+        if (property->getIsAcademic()) {
+            checkAcademicforMonopoly(ownerPlayer, property);
+        } else if (property->getIsResidence()) {
+            checkResidenceforMonopoly(ownerPlayer, property);
+        } else if (property->getIsGym()) {
+            checkGymforMonopoly(ownerPlayer, property);
+        }
+    }
+    
+    // Set the property in the player's list of properties
+    if (property && ownerPlayer) {
+        ownerPlayer->addProperty(property);
+    }
 } // Game::setBuildingOwner
 
 void Game::setBuildingImprovements(std::string buildingName, int numImprovements) {
