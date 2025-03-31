@@ -658,71 +658,92 @@ void Game::auction(std::shared_ptr<Property> property) {
 }
 
 void Game::checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop) {
-    // Check for monopoly
     std::string block;
-    if (prop->getIsAcademic()) {
-        std::shared_ptr<Academic> acad = std::dynamic_pointer_cast<Academic>(prop);
-        if (acad) {
-            std::string block = acad->getBlock();
+    if (auto academic = std::dynamic_pointer_cast<Academic>(prop)) {
+        block = academic->getBlock();
+    } else return;
+
+    // Find all properties in the block
+    std::vector<std::shared_ptr<Academic>> blockProperties;
+    for(int i = 0; i < 40; ++i) {
+        if(auto property = std::dynamic_pointer_cast<Academic>(board->getSquare(i))) {
+            if(property->getBlock() == block) {
+                blockProperties.emplace_back(property);
+            }
         }
     }
-    for (int i = 0; i < 40; i++) {
-        if (board->getSquare(i)->getIsProperty()) {
-            std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i));
-            if (property) {
-                std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property);
-                if (academicBuilding) {
-                    if (academicBuilding->getBlock() == block) {
-                        if (property->getOwner() != owner) {
-                            return; // Not a monopoly
-                        } else {
-                            if (academicBuilding->getIsMonopoly() == false) {
-                                academicBuilding->setIsMonopoly(true);
-                                academicBuilding->setIsImprovable(true);
-                                std::cout << "You have a monopoly on " << block << "." << std::endl;
-                            }
-                            if (academicBuilding->getIsImprovable() == false) {
-                                academicBuilding->setIsImprovable(true);
-                                std::cout << "You can now improve your properties in " << block << "." << std::endl;
-                            }
-                        }
-                    } 
-                }
-            }
+
+    // Manual check for monopoly
+    bool hasMonopoly = true;
+    for(auto& p : blockProperties) {
+        if(p->getOwner() != owner) {
+            hasMonopoly = false;
+            break;
+        }
+    }
+
+    // Update properties
+    for(auto& academic : blockProperties) {
+        academic->setIsMonopoly(hasMonopoly);
+        academic->setIsImprovable(hasMonopoly);
+    }
+    
+    if(hasMonopoly) {
+        std::cout << "Monopoly achieved on " << block << " block!\n";
+    }
+}
+
+void Game::checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> boughtResidence) {
+    const int RENT_VALUES[] = {25, 50, 100, 200};
+    
+    owner->setNumResidences(owner->getNumResidences() + 1);
+    int residenceCount = owner->getNumResidences();
+    
+    if(residenceCount < 1 || residenceCount > 4) {
+        std::cerr << "Invalid residence count: " << residenceCount << std::endl;
+        return;
+    }
+
+    int newRent = RENT_VALUES[residenceCount - 1];
+    
+    // Update all owned residences
+    for(auto& property : owner->getProperties()) {
+        if(auto residence = std::dynamic_pointer_cast<Residence>(property)) {
+            residence->setRent(newRent);
         }
     }
 }
 
-void Game::checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop) {
-    // Check for monopoly
-    int numResidences = owner->getNumResidences();
-    if (prop->getIsResidence()) {
-        std::shared_ptr<Residence> res = std::dynamic_pointer_cast<Residence>(prop);
-        if (res) {
-            numResidences++;
-            owner->setNumResidences(numResidences);
-        }
-    }
-}
 
-void Game::checkGymforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop) {
-    // Check for monopoly
-    if (prop->getIsGym()) {
-        std::shared_ptr<Gym> gym = std::dynamic_pointer_cast<Gym>(prop);
-        if (gym) {
-            for (auto& property : owner->getProperties()) {
-                if (property->getIsGym()) {
-                    std::shared_ptr<Gym> gymProperty = std::dynamic_pointer_cast<Gym>(property);
-                    if (gymProperty) {
-                        if (gymProperty->getIsMonopoly() == false) {
-                            gymProperty->setIsMonopoly(true);
-                        } if(gym->getIsMonopoly() == false) {
-                            gym->setIsMonopoly(true);
-                            std::cout << "You have a monopoly on gyms." << std::endl;
-                        }
-                    }
-                }
+void Game::checkGymforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> boughtGym) {
+    int gymCount = 0;
+    bool ownsAllGyms = true;
+    
+    // Check all gyms on the board
+    for(int i = 0; i < 40; ++i) {
+        if(auto gym = std::dynamic_pointer_cast<Gym>(board->getSquare(i))) {
+            if(gym->getOwner() == owner) {
+                gymCount++;
+            } else if(gym != boughtGym) { // Check if other gyms are unowned
+                ownsAllGyms = false;
             }
         }
     }
-} // Game::checkGymforMonopoly
+
+    // Monopoly requires owning both gyms
+    const bool hasMonopoly = (gymCount >= 2) && ownsAllGyms;
+
+    // Update monopoly status for all owned gyms
+    for(int i = 0; i < 40; ++i) {
+        if(auto gym = std::dynamic_pointer_cast<Gym>(board->getSquare(i))) {
+            if(gym->getOwner() == owner) {
+                gym->setIsMonopoly(hasMonopoly);
+            }
+        }
+    }
+
+    if(hasMonopoly) {
+        std::cout << "Gym monopoly achieved with purchase of " 
+                  << boughtGym->getName() << "!\n";
+    }
+}
