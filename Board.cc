@@ -115,24 +115,26 @@ void Board::trade(std::string player, std::string give, std::string receive) {
         int money = getPlayerByName(player)->getMoney();
         int new_money = money + std::stoi(give);
         getPlayerByName(player)->setMoney(new_money);
-        getPlayerByName(player)->removeProperty(getPropertyByName(receive));
-
-        players[currentPlayerIndex]->addProperty(getPropertyByName(receive));
-        players[currentPlayerIndex]->setMoney(players[currentPlayerIndex]->getMoney() - std::stoi(give));
+        //getPlayerByName(player)->removeProperty(getPropertyByName(receive));
+        getPlayerByName(player)->auction(getPropertyByName(receive), players[currentPlayerIndex]);
+        //players[currentPlayerIndex]->addProperty(getPropertyByName(receive));
+        players[currentPlayerIndex]->setMoney(players[currentPlayerIndex]->getMoney() - std::stoi(give)); 
+    
     } else if (!giveIsInt && receiveIsInt) {
         int money = getPlayerByName(player)->getMoney();
         int new_money = money - std::stoi(receive);
         getPlayerByName(player)->setMoney(new_money);
-        getPlayerByName(player)->addProperty(getPropertyByName(give));
-
-        players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
+        //getPlayerByName(player)->addProperty(getPropertyByName(give));
+        players[currentPlayerIndex]->auction(getPropertyByName(give), getPlayerByName(player));
+        //players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
         players[currentPlayerIndex]->setMoney(players[currentPlayerIndex]->getMoney() + std::stoi(receive));
     } else if (!giveIsInt && !receiveIsInt) {
-        getPlayerByName(player)->removeProperty(getPropertyByName(receive));
-        players[currentPlayerIndex]->addProperty(getPropertyByName(receive));
-
-        getPlayerByName(player)->addProperty(getPropertyByName(give));
-        players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
+        //getPlayerByName(player)->removeProperty(getPropertyByName(receive));
+        //players[currentPlayerIndex]->addProperty(getPropertyByName(receive));
+        players[currentPlayerIndex]->auction(getPropertyByName(give), getPlayerByName(player));
+        getPlayerByName(player)->auction(getPropertyByName(receive), players[currentPlayerIndex]);
+        //getPlayerByName(player)->addProperty(getPropertyByName(give));
+        //players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
     } else {
         std::cout << "reject" << std::endl;
     }

@@ -156,8 +156,26 @@ void Game::trade(std::string player, std::string give, std::string receive) {
         std::cout << "reject" << std::endl;
     } else {
         board->trade(player, give, receive);
+        if (!giveIsInt) {
+            if (board->getPropertyByName(give)->getIsAcademic()) {
+                checkAcademicforMonopoly(board->getPlayerByName(player), board->getPropertyByName(give));
+            } else if (board->getPropertyByName(give)->getIsResidence()) {
+                checkResidenceforMonopoly(board->getPlayerByName(player), board->getPropertyByName(give));
+            } else if (board->getPropertyByName(give)->getIsGym()) {
+                checkGymforMonopoly(board->getPlayerByName(player), board->getPropertyByName(give));
+            }
+        }
+        if (!receiveIsInt) {
+            if (board->getPropertyByName(receive)->getIsAcademic()) {
+                checkAcademicforMonopoly(board->getCurrentPlayer(), board->getPropertyByName(receive));
+            } else if (board->getPropertyByName(receive)->getIsResidence()) {
+                checkResidenceforMonopoly(board->getCurrentPlayer(), board->getPropertyByName(receive));
+            } else if (board->getPropertyByName(receive)->getIsGym()) {
+                checkGymforMonopoly(board->getCurrentPlayer(), board->getPropertyByName(receive));
+            }
+
+        }
     }
-    notifyObservers();
 }
 
 void Game::improve(const std::string& property, const std::string& action) {
@@ -559,6 +577,11 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
             if (board->getSquare(i)->getIsProperty()) {
                 std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i)); // Downcast to Property
                 if (property) {
+                    if (numImprovements == -1) {
+                        property->setIsMortgaged(true); // Set the property as mortgaged
+                    } else {
+                        property->setIsMortgaged(false); // Set the property as not mortgaged
+                    }
                     std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property); // Downcast to Academic
                     if (academicBuilding) {
                         academicBuilding->setNumImprovements(numImprovements);
@@ -705,7 +728,7 @@ void Game::checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_p
     // Find all properties in the block
     std::vector<std::shared_ptr<Academic>> blockProperties;
     for(int i = 0; i < 40; ++i) {
-        if(auto property = std::dynamic_pointer_cast<Academic>(board->getSquare(i))) {
+        if (auto property = std::dynamic_pointer_cast<Academic>(board->getSquare(i))) {
             if(property->getBlock() == block) {
                 blockProperties.emplace_back(property);
             }

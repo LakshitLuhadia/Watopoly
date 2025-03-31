@@ -10,6 +10,7 @@
 #include "Property.h"
 #include "Square.h"
 #include "Dice.h"
+#include "Academic.h"
 
 void processInGameCommands(Game& g) {
     auto b = g.getBoard(); // Get the board from the game
@@ -79,26 +80,53 @@ void processInGameCommands(Game& g) {
             std::string give;
             std::string receive;
             std::cin >> player >> give >> receive;
+            if (std::cin.fail()) {
+                std::cerr << "Invalid input. Please enter a valid command." << std::endl;
+                std::cin.clear();
+                while (std::cin.get() != '\n');
+                continue;
+            }
             bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);
             bool receiveIsInt = std::all_of(receive.begin(), receive.end(), ::isdigit);
     
             if (giveIsInt && receiveIsInt) {
                 std::cout << "reject" << std::endl;
-            } else {
-                std::cout << "Does "<< player << " want to trade " << give << " for " << receive << "? (y/n):" << std::endl;
-                std::string response;
-                std::cin >> response;
-                if (response == "y" || response == "Y") {
-                    std::cout << "accept" << std::endl;
-                    g.trade(player, give, receive);
-                } else if (response == "n" || response == "N") {
-                    std::cout << "reject" << std::endl;
-                } else {
-                    std::cerr << "Invalid response. Please enter a valid response." << std::endl;
-                    std::cin.clear();
-                    while (std::cin.get() != '\n');
+                continue;
+            } 
+            if (!giveIsInt) {
+                std::shared_ptr<Property> property = (g.getBoard())->getPropertyByName(give);
+                if (property->getIsAcademic()) {
+                    std::shared_ptr<Academic> academicBuilding = dynamic_pointer_cast<Academic>(property);
+                    if (academicBuilding->getNumImprovements() > 0) {
+                        std::cout << "reject" << std::endl;
+                        continue;
+                    }
                 }
             }
+            if (!receiveIsInt) {
+                std::shared_ptr<Property> property = (g.getBoard())->getPropertyByName(receive);
+                if (property->getIsAcademic()) {
+                    std::shared_ptr<Academic> academicBuilding = dynamic_pointer_cast<Academic>(property);
+                    if (academicBuilding->getNumImprovements() > 0) {
+                        std::cout << "reject" << std::endl;
+                        continue;
+                    }
+                }
+            }
+            std::cout << "Does "<< player << " want to trade " << give << " for " << receive << "? (y/n):" << std::endl;
+            std::string response;
+            std::cin >> response;
+            if (response == "y" || response == "Y") {
+                std::cout << "accept" << std::endl;
+                g.trade(player, give, receive);
+            } else if (response == "n" || response == "N") {
+                std::cout << "reject" << std::endl;
+            } else {
+                std::cerr << "Invalid response. Please enter a valid response." << std::endl;
+                std::cin.clear();
+                while (std::cin.get() != '\n');
+            }
+            
         } else if (command == "improve") {
             std::string property;
             std::string action;

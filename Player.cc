@@ -128,6 +128,7 @@ void Player::addProperty(shared_ptr<Property> property) {
     if (property->getIsResidence()) {
         numResidences++;
     }
+    //property->setOwner(shared_from_this()); // Set the owner of the property
 }
 // Removes property from Player's list of properties and sets its owner to nullptr
 void Player::removeProperty(shared_ptr<Property> property) {
