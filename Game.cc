@@ -31,8 +31,12 @@ void Game::notifyObservers() {
     // Notify all observers
     for (const auto& observer : observers) { 
         auto textDisplay = std::dynamic_pointer_cast<TextDisplay>(observer);
+        auto graphicalDisplay = std::dynamic_pointer_cast<GraphicalDisplay>(observer);
         if (textDisplay) {
             textDisplay->display(board, players); // Pass the board and players to TextDisplay
+        }
+        if (graphicalDisplay) {
+            graphicalDisplay->display(board, players);
         }
     }
 }
