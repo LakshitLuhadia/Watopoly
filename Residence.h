@@ -19,7 +19,7 @@ class Residence : public Property {
         
         // Setters
         // Sets the rent of the residence
-        void setRent(int rent) const;
+        void setRent(int newRent);
 
         // Performs the action of the residence
         void performAction(std::shared_ptr<Player>& player) const override;

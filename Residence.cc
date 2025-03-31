@@ -15,8 +15,8 @@ int Residence::getRent() const {
 } // Residence::getRent
 
 // Sets the rent of the residence
-void Residence::setRent(int rent) {
-    this->rent = rent;
+void Residence::setRent(int newRent) {
+    this->rent = newRent;
 } // Residence::setRent
 
 // Performs the action of the residence
