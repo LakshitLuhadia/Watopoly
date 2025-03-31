@@ -270,7 +270,7 @@ int main(int argc, char* argv[]) {
     bool loadMode = false; // a flag to check if load mode is on
     std::string filename = ""; // a string to store the filename
 
-    for (int i = 1; i < argc - 1; ++i) {
+    for (int i = 1; i < argc; ++i) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
@@ -284,7 +284,7 @@ int main(int argc, char* argv[]) {
                 filename = argv[i + 1];
                 loadMode = true; // set the flag to true
             }
-        } else { // else, print an appropriate error message
+        } else if (loadMode != true) { // else, print an appropriate error message
             std::cerr << "Invalid command line argument" << std::endl;
         }
     }
