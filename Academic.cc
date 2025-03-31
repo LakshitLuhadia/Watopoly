@@ -76,7 +76,7 @@ void Academic::setIsSellable(bool newIsSellable) {
 
 // Implement the add improvement method
 void Academic::addimprove() {
-    if (getOwner()) {
+    if (getOwner() != nullptr) {
         if (isMonopoly) {
             if (isImprovable) {
                 if (numImprovements > 0) {
@@ -95,7 +95,7 @@ void Academic::addimprove() {
 
 // Implement the sell improvement method
 void Academic::sellimprove() {
-    if (getOwner()) {
+    if (getOwner() != nullptr) {
         if (isMonopoly) {
             if (isImprovable) {
                 if (numImprovements < 5) {
@@ -114,7 +114,7 @@ void Academic::sellimprove() {
 
 // Performs the action of the property
 void Academic::performAction(std::shared_ptr<Player>& player) const {
-    if (getOwner()) {
+    if (getOwner() != nullptr) {
         if (getOwner() != player) {
             if (isMonopoly) {
                 if (numImprovements == 0) {

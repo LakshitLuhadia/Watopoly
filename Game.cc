@@ -48,71 +48,37 @@ void Game::roll(int die1, int die2) {
         return;
     } 
     if (currentPlayer->getInTimsLine()) {
-        std::cout << "You are in Tims Line. You have " << 3 - currentPlayer->getTurnsInTimsLine() << " turns left." << std::endl;
-        std::cout << "You have " << currentPlayer->getNumRimCups() << " Tim Cups left." << std::endl;
-        if (currentPlayer->getNumRimCups() > 0) {
-            std::cout << "Do you want to use a Tim Cup to get out of Tims Line? (y/n): ";
-            std::string response;
-            std::cin >> response;
-            if (response == "y" || response == "Y") {
+        currentPlayer->setTurnsInTimsLine(currentPlayer->getTurnsInTimsLine() + 1);
+        std::cout << "You have " << 3 - currentPlayer->getTurnsInTimsLine() << " turns in Tims Line left." << std::endl;
+        //std::cout << "You have " << currentPlayer->getNumRimCups() << " Tim Cups left." << std::endl;
+        dice.roll(die1, die2); // Roll the dice
+        if (currentPlayer->getTurnsInTimsLine() >= 3) {
+            std::cout << "You are out of possible turns in Tims Line." << std::endl;
+            std::cout << "You have to pay $50 to get out of Tims Line." << std::endl;
+            int cost = 50; // Cost to get out of Tims Line
+            currentPlayer->subtractMoney(cost);
+            currentPlayer->setInTimsLine(false);
+            currentPlayer->setTurnsInTimsLine(0);
+            std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
+        } else {
+            std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
+            if (dice.isEqual()) {
+                std::cout << "You are out of the Tims Line" << std::endl;
                 currentPlayer->setInTimsLine(false);
                 currentPlayer->setTurnsInTimsLine(0);
-                currentPlayer->setNumRimCups(currentPlayer->getNumRimCups() - 1);
-                std::cout << "You are out of Tims Line." << std::endl;
-                return;
-            } else if (response == "n" || response == "N") {
-                std::cout << "You chose not to use a Tim Cup." << std::endl;
-                std::cout << "You can (roll/pay): ";
-                std::string action;
-                std::cin >> action;
-                if (action == "roll") {
-                    dice.roll(die1, die2); // Roll the dice
-                    currentPlayer->setTurnsInTimsLine(currentPlayer->getTurnsInTimsLine() + 1);
-                    if (currentPlayer->getTurnsInTimsLine() >= 3) {
-                        std::cout << "You are out of possible rolls in Tims Line." << std::endl;
-                        std::cout << "You have to pay $50 to get out of Tims Line." << std::endl;
-                        int cost = 50; // Cost to get out of Tims Line
-                        currentPlayer->subtractMoney(cost);
-                        currentPlayer->setInTimsLine(false);
-                        currentPlayer->setTurnsInTimsLine(0);
-                        std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
-                    } else {
-                        std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
-                        if (dice.isEqual()) {
-                            currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
-                        } else {
-                            currentPlayer->setNumDoubleRolls(0);
-                        }
-                    }
-                } else if (action == "pay") {
-                    int cost = 50; // Cost to get out of Tims Line
-                    currentPlayer->subtractMoney(cost);
-                    currentPlayer->setInTimsLine(false);
-                    currentPlayer->setTurnsInTimsLine(0);
-                    std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
-                } else {
-                    std::cerr << "Invalid action. Please enter 'roll' or 'pay'." << std::endl;
-                }
-            }
-            else {
-                std::cerr << "Invalid response. Please enter 'y' or 'n'." << std::endl;
+                currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
+            } else {
+                std::cout << "You are still in Tims Line" << std::endl;
+                currentPlayer->setNumDoubleRolls(0);
             }
         }
-    }
-    else {
+    } else {
         dice.roll(die1, die2); // Roll the dice
-        // if (testingMode) {
-        //     if (die1 < 0 || die2 < 0) {
-        //         std::cerr << "Error: Invalid dice values in testing mode." << std::endl;
-        //         return;
-        //     }
-        //     dice.roll(die1, die2); // Roll with specified values
-        // } else {
-        //     dice.roll(); // Roll randomly
-        // }
         std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
 
         if (dice.isEqual()) {
+            std::cout << "You rolled doubles!" << std::endl;
+            std::cout << "You can roll again." << std::endl;
             currentPlayer->setNumDoubleRolls(currentPlayer->getNumDoubleRolls() + 1);
         } else {
             currentPlayer->setNumDoubleRolls(0);
@@ -415,7 +381,7 @@ void Game::all() {
         std::cout << "Money: " << board->getPlayer(i)->getMoney() << std::endl;
         std::cout << "Tim Cups: " << board->getPlayer(i)->getNumRimCups() << std::endl;
     }
-    notifyObservers();
+    //notifyObservers();
 }
 
 void Game::save(std::string filename) {

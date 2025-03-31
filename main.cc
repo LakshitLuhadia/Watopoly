@@ -13,13 +13,23 @@
 
 void processInGameCommands(Game& g) {
     auto b = g.getBoard(); // Get the board from the game
+    bool hasRolled = false;
     while (true) {
         auto currentPlayer = b->getCurrentPlayer();
         std::cout << currentPlayer->getName() << "'s turn." << std::endl;
-
+        if (currentPlayer->getInTimsLine()) {
+            std::cout << "You are in Tims Line. Do you want to use a : Tim Cup, Roll for doubles or Pay 50? (tim/roll/pay): ";
+        }
         std::string command;
         std::cin >> command;
         if (command == "roll") {
+            if (hasRolled) {
+                std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
+                std::cin.clear();
+                std::cin.ignore();
+                continue;
+            }
+            
             if (g.getTestingMode()) {
                 int die1;
                 int die2;
@@ -38,6 +48,30 @@ void processInGameCommands(Game& g) {
             } else {
                 g.roll();
             }
+            if (currentPlayer->getNumDoubleRolls() == 0) {
+                hasRolled = true;
+            }
+        } else if ((currentPlayer->getInTimsLine()) && (command == "tim" || command == "pay")) {
+            if (command == "pay") {
+                int cost = 50; // Cost to get out of Tims Line
+                currentPlayer->subtractMoney(cost);
+                currentPlayer->setInTimsLine(false);
+                currentPlayer->setTurnsInTimsLine(0);
+                std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
+            } else if (command == "tim") {
+                if (currentPlayer->getNumRimCups() > 0) {
+                    std::cout << "You have" << currentPlayer->getNumRimCups() << " Tim Cups." << std::endl;
+                    currentPlayer->setInTimsLine(false);
+                    currentPlayer->setTurnsInTimsLine(0);
+                    currentPlayer->setNumRimCups(currentPlayer->getNumRimCups() - 1);
+                    std::cout << "You are out of Tims Line." << std::endl;
+                } else {
+                    std::cerr << "You don't have any Tim Cups left." << std::endl;
+                }
+            }
+        } else if (command == "next") {
+            g.next();
+            hasRolled = false;
         } else if (command == "next") {
             g.next();
         } else if (command == "trade") {
