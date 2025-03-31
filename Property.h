@@ -40,7 +40,9 @@ class Property : public Square {
 
         // Setters
         // Sets the owner of the property
-         void setOwner(std::shared_ptr<Player> newOwner);
+        void setOwner(std::shared_ptr<Player> newOwner);
+        // Sets the owner of the property
+        void setOwner(Player newOwner);
         // Sets the mortgage value of the property
          void setMortgageValue(int mortgageValue);
         // Sets whether the property is mortgaged

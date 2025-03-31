@@ -57,6 +57,11 @@ void Property::setOwner(std::shared_ptr<Player> newOwner) {
     owner = newOwner;
 } // Property::setOwner
 
+// Sets the owner of the property
+void Property::setOwner(Player newOwner) {
+    owner = std::make_shared<Player>(newOwner); 
+} // Property::setOwner
+
 // Sets the mortgage value of the property 
 void Property::setMortgageValue(int newMortgageValue) {
     mortgageValue = newMortgageValue;

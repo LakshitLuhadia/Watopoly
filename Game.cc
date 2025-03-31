@@ -384,10 +384,13 @@ void Game::bankrupt() {
                     std::string propertyName = property->getName();
                     unmortgage(propertyName);
                     property->setOwner(nullptr);
-                    currentPlayer->auction(property, currentPlayer);
+                    auction(property);
                 }
             }
             removePlayer(currentPlayer->getName());
+            std::cout << currentPlayer->getName() << " is bankrupt!" << std::endl;
+            std::cout << "You have been removed from the game." << std::endl;
+            next();
         }
     } else {
         std::cout << "You are not bankrupt. You can not declare bankruptcy." << std::endl;
@@ -447,6 +450,7 @@ void Game::save(std::string filename) {
             savefile << std::endl;
         }
         for (int i = 0; i < 40; i++) {
+            int mortgageImprovements = -1;
             // This is following the format: name owner numImprovements
             if (board->getSquare(i)->getIsProperty() == false) {
                 // Do not save the non-property square
@@ -462,7 +466,7 @@ void Game::save(std::string filename) {
                     }
 
                     if (property->getIsMortgaged()) {
-                        savefile << -1 << std::endl; // -1 for mortgaged
+                        savefile << mortgageImprovements << std::endl; // -1 for mortgaged
                     } else if (property->getIsResidence() || property->getIsGym()) {
                         savefile << 0 << std::endl; // No improvements for Residence and Gym
                     } else {
