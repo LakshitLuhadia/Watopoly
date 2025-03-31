@@ -1,6 +1,7 @@
 #include "Dice.h"
 #include <stdlib.h>
 #include <ctime>
+#include <iostream>
 
 int Dice::dice1 = 0;
 int Dice::dice2 = 0;
@@ -10,7 +11,7 @@ bool Dice::testing = false;
 Dice::Dice(bool testing) {
     dice1 = 0;
     dice2 = 0;
-    testing = false; // Set testing mode (default false)
+    this->testing = testing; // Set testing mode (default false)
     srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
 }
 
@@ -19,9 +20,10 @@ void Dice::roll(int d1, int d2) {
     if (testing && d1 > -1 && d2 > -1) {
         dice1 = d1;
         dice2 = d2;
+    } else {
+        dice1 = rand() % 6 + 1;
+        dice2 = rand() % 6 + 1;
     }
-    dice1 = rand() % 6 + 1;
-    dice2 = rand() % 6 + 1;
 }
 
 // Returns sum of the 2 dices
