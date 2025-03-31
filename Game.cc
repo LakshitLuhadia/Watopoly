@@ -223,6 +223,7 @@ void Game::improve(const std::string& property, const std::string& action) {
         std::cin.ignore();
         return;
     }
+    notifyObservers();
 }
 
 void Game::mortgage(std::string property) {
