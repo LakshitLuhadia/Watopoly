@@ -112,9 +112,10 @@ void Player::addMoney(int amount) {
 }
 // Subtracts amount from Player's money
 void Player::subtractMoney(int amount) {
-    money -= amount;
-    if (money < 0) {
+    if (money < amount) {
         isBankrupt = true;
+    } else {
+        money -= amount;
     }
 }
 // Adds property to Player's list of properties
