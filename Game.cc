@@ -98,7 +98,59 @@ void Game::roll(int die1, int die2) {
                 }
                 if (currentPlayer->getIsBankrupt()) {
                     std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". You cannot buy it because you have insufficent money" << std::endl;
-                    std::cout << "Either declare bankruptcy or try to raise money" << std::endl;
+
+                    while (currentPlayer->getMoney() < cost) {
+                        std::cout << "You can raise money by selling improvements or mortgaging properties." << std::endl;
+                        std::cout << "Enter 'improve' to sell improvements, 'mortgage' to mortgage properties, or 'pass' to skip buying: ";
+                        std::string action;
+                        std::cin >> action;
+
+                        if (action == "improve") {
+                            std::string propertyName, improvementAction;
+                            std::cin >> propertyName >> improvementAction;
+                            if (improvementAction == "buy") {
+                                std::cout << "You can only sell improvements." << std::endl;
+                                std::cin.clear();
+                                std::cin.ignore();
+                            } else if (improvementAction == "sell") {
+                                improve(propertyName, improvementAction);
+                            } else {
+                                std::cout << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
+                                std::cin.clear();
+                                std::cin.ignore();
+                            }
+                        } else if (action == "mortgage") {
+                            std::string propertyName;
+                            std::cin >> propertyName;
+                            mortgage(propertyName);
+                        } else if (action == "pass") {
+                            std::cout << "You chose not to buy the property. Starting auction." << std::endl;
+                            auction(property);
+                            return;
+                        } else {
+                            std::cout << "Invalid action. Please enter 'improve', 'mortgage', or 'pass'." << std::endl;
+                            std::cin.clear();
+                            std::cin.ignore();
+                        }
+                    }
+                    if (currentPlayer->getMoney() >= cost) {
+                        currentPlayer->setIsBankrupt(false);
+                        std::cout << "You now have enough money to buy the property. Do you want to buy it? (y/n): ";
+                        std::string response;
+                        std::cin >> response;
+                        if (response == "y" || response == "Y")
+                        {
+                            currentPlayer->addProperty(property);
+                            currentPlayer->subtractMoney(cost);
+                            property->setOwner(currentPlayer);
+                            std::cout << square->getName() << " bought by " << currentPlayer->getName() << "." << std::endl;
+                        }
+                        else
+                        {
+                            std::cout << "You chose not to buy the property. Starting auction." << std::endl;
+                            auction(property);
+                        }
+                    }
                 } else {
                     std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
                     std::string response;
@@ -127,8 +179,57 @@ void Game::roll(int die1, int die2) {
                 if (currentPlayer->getName() == property->getOwner()->getName()) {
                     std::cout << "You landed on " << square->getName() << ". It is owned by you." << std::endl;
                 } else {
-                    std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You have to pay rent." << std::endl;
-                    square->performAction(currentPlayer);
+                    int cost = getPropertyRent(property);
+                    if (currentPlayer->getMoney() < cost) {
+                        currentPlayer->setIsBankrupt(true);
+                    }
+                    if (currentPlayer->getIsBankrupt()) {
+                        std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You cannot pay rent because you have insufficent money" << std::endl;
+
+                        while (currentPlayer->getMoney() < cost) {
+                            std::cout << "Enter 'improve' to sell improvements, 'mortgage' to mortgage properties, or 'bankrupt' to declare bankruptcy: ";
+                            std::string action;
+                            std::cin >> action;
+
+                            if (action == "improve") {
+                                std::string propertyName, improvementAction;
+                                std::cin >> propertyName >> improvementAction;
+                            if (improvementAction == "buy") {
+                                std::cout << "You can only sell improvements." << std::endl;
+                                std::cin.clear();
+                                std::cin.ignore();
+                            } else if (improvementAction == "sell") {
+                                improve(propertyName, improvementAction);
+                            } else {
+                                std::cout << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
+                                std::cin.clear();
+                                std::cin.ignore();
+                            }
+                            } else if (action == "mortgage") {
+                                std::string propertyName;
+                                std::cin >> propertyName;
+                                mortgage(propertyName);
+                            } else if (action == "bankrupt") {
+                                std::cout << "You declared bankruptcy. Transferring assets to " << property->getOwner()->getName() << "." << std::endl;
+                                bankrupt();
+                                return;
+                            } else {
+                                std::cout << "Invalid action. Please enter 'improve', 'mortgage', or 'pass'." << std::endl;
+                                std::cin.clear();
+                                std::cin.ignore();
+                            }
+                        }
+
+                        if (currentPlayer->getMoney() >= cost) {
+                            currentPlayer->setIsBankrupt(false);
+                            std::cout << "You raised enough money to pay rent. Paying $" << cost << " to " << property->getOwner()->getName() << "." << std::endl;
+                            currentPlayer->subtractMoney(cost);
+                            property->getOwner()->addMoney(cost);
+                            }
+                        } else {
+                            std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You have to pay rent." << std::endl;
+                            square->performAction(currentPlayer);
+                    }
                 }
             }
         } else {
@@ -156,26 +257,8 @@ void Game::trade(std::string player, std::string give, std::string receive) {
         std::cout << "reject" << std::endl;
     } else {
         board->trade(player, give, receive);
-        if (!giveIsInt) {
-            if (board->getPropertyByName(give)->getIsAcademic()) {
-                checkAcademicforMonopoly(board->getPlayerByName(player), board->getPropertyByName(give));
-            } else if (board->getPropertyByName(give)->getIsResidence()) {
-                checkResidenceforMonopoly(board->getPlayerByName(player), board->getPropertyByName(give));
-            } else if (board->getPropertyByName(give)->getIsGym()) {
-                checkGymforMonopoly(board->getPlayerByName(player), board->getPropertyByName(give));
-            }
-        }
-        if (!receiveIsInt) {
-            if (board->getPropertyByName(receive)->getIsAcademic()) {
-                checkAcademicforMonopoly(board->getCurrentPlayer(), board->getPropertyByName(receive));
-            } else if (board->getPropertyByName(receive)->getIsResidence()) {
-                checkResidenceforMonopoly(board->getCurrentPlayer(), board->getPropertyByName(receive));
-            } else if (board->getPropertyByName(receive)->getIsGym()) {
-                checkGymforMonopoly(board->getCurrentPlayer(), board->getPropertyByName(receive));
-            }
-
-        }
     }
+    notifyObservers();
 }
 
 void Game::improve(const std::string& property, const std::string& action) {
@@ -346,6 +429,35 @@ void Game::unmortgage(std::string property) {
     std::cout << "Property " << property << " has been unmortgaged." << std::endl;
 }
 
+int Game::getPropertyRent(std::shared_ptr<Property> property) {
+    // Get the rent of a property
+    if (property->getIsAcademic()) {
+        std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property);
+        if (academicBuilding->getIsMonopoly()) {
+            int improvements = academicBuilding->getNumImprovements();
+            if (improvements == 0) {
+                return academicBuilding->getTuition(improvements) * 2;
+            } else {
+                return academicBuilding->getTuition(improvements);
+            }
+        } else {
+            return academicBuilding->getTuition(academicBuilding->getNumImprovements());
+        }
+    } else if (property->getIsResidence()) {
+        std::shared_ptr<Residence> residence = std::dynamic_pointer_cast<Residence>(property);
+        return residence->getRent(); 
+    } else  {
+        std::shared_ptr<Gym> gym = std::dynamic_pointer_cast<Gym>(property);
+        int roll = Dice::add();
+        bool isMonopoly = gym->getIsMonopoly();
+        if (isMonopoly) {
+            return roll * 10;
+        } else {
+            return roll * 4;
+        }
+    }
+}
+
 void Game::bankrupt() {
     // Declare bankruptcy
     std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
@@ -368,6 +480,7 @@ void Game::bankrupt() {
                     std::vector<std::shared_ptr<Property>> properties = currentPlayer->getProperties();
                     for (auto& property : properties) {
                         property->setOwner(owner);
+                        owner->addProperty(property);
                         if (std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property)) {
                             while (academicBuilding->getNumImprovements() > 0) {
                                 academicBuilding->sellimprove();
@@ -376,9 +489,11 @@ void Game::bankrupt() {
                         currentPlayer->removeProperty(properties.back());
                         properties.pop_back();
                     }
+                    int numCups = currentPlayer->getNumRimCups();
+                    int ownerRimCups = owner->getNumRimCups();
+                    owner->setNumRimCups(numCups + ownerRimCups);
                 }
-            } else {
-                
+            } else {                
                 std::vector<std::shared_ptr<Property>> properties = currentPlayer->getProperties();
                 for (auto& property : properties) {
                     std::string propertyName = property->getName();
@@ -387,6 +502,7 @@ void Game::bankrupt() {
                     auction(property);
                 }
             }
+            
             removePlayer(currentPlayer->getName());
             std::cout << currentPlayer->getName() << " is bankrupt!" << std::endl;
             std::cout << "You have been removed from the game." << std::endl;
@@ -581,14 +697,12 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
             if (board->getSquare(i)->getIsProperty()) {
                 std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i)); // Downcast to Property
                 if (property) {
-                    if (numImprovements == -1) {
-                        property->setIsMortgaged(true); // Set the property as mortgaged
-                    } else {
-                        property->setIsMortgaged(false); // Set the property as not mortgaged
-                    }
                     std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property); // Downcast to Academic
                     if (academicBuilding) {
                         academicBuilding->setNumImprovements(numImprovements);
+                        if (numImprovements > 0) {
+                            academicBuilding->setIsSellable(true);
+                        }
                     }
                 }
             }
@@ -732,7 +846,7 @@ void Game::checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_p
     // Find all properties in the block
     std::vector<std::shared_ptr<Academic>> blockProperties;
     for(int i = 0; i < 40; ++i) {
-        if (auto property = std::dynamic_pointer_cast<Academic>(board->getSquare(i))) {
+        if(auto property = std::dynamic_pointer_cast<Academic>(board->getSquare(i))) {
             if(property->getBlock() == block) {
                 blockProperties.emplace_back(property);
             }
