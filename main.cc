@@ -167,45 +167,58 @@ bool isCharacter(char character, const std::vector<char>& characters) {
 
 // Function to set up the game
 Game setupGame() {
-
-    std::vector<char> characters = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
     std::cout << "Welcome to the game of Watopoly!" << std::endl;
-    std::cout << "Please enter the number of players(2-6): " << std::endl;
-    int numPlayers;
-    if (!(std::cin >> numPlayers) || (!(numPlayers >= 2) && !(numPlayers <= 6))) { // if the number of players is not between 2 and 6, print an appropriate error message
-        std::cerr << "Invalid number of players. Please enter an integer value between 2 and 6" << std::endl;
-        std::cin.clear();
-        std::cin.ignore();
-    }
-    Game g(numPlayers); // create a new game
-    auto b = g.getBoard(); // get the board
+    while(true) {
+        std::vector<char> characters = {'G', 'B', 'D', 'P', 'S', '$', 'L', 'T'};
+        std::cout << "Please enter the number of players(2-6): " << std::endl;
+        int numPlayers;
+        if (!(std::cin >> numPlayers) || numPlayers < 2 || numPlayers > 6) { // if the number of players is not between 2 and 6, print an appropriate error message
+            std::cerr << "Invalid number of players. Please enter an integer value between 2 and 6" << std::endl;
+            std::cin.clear();
+            std::cin.ignore();
+            continue;
+        }
+        Game g(numPlayers); // create a new game
+        auto b = g.getBoard(); // get the board
 
-    for (int i = 0; i < numPlayers; ++i) {
-        std::string name;
-        std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
-        std::cin >> name;
-        b->addPlayer(name, 1500); // add the player
-        bool validCharacter = false;
-        while (!validCharacter) { // check if the character is valid
-            std::cout << "Please enter " << name << "'s character: " << std::endl;
-            char character;
-            std::cin >> character;
-            if (isCharacter(character, characters)) {
-                g.setPlayerCharacter(i, character); // set the player's character
-                characters.erase(std::remove(characters.begin(), characters.end(), character), characters.end()); // remove the character from the list of characters
-                validCharacter = true;
-            } else {
-                std::cerr << "Invalid character. Please enter a valid character." << std::endl;
-                std::cerr << "Valid characters are: G, B, D, P, S, $, L, T" << std::endl;
-                std::cin.clear();
-                std::cin.ignore();
+        for (int i = 0; i < numPlayers; ++i) {
+            std::string name;
+            while (true) {
+                std::cout << "Please enter the name of player " << i + 1 << ": " << std::endl;
+                std::cin >> name;
+                if (name.empty() || name == "BANK" || name == "bank") { // if the name is empty or "BANK", print an appropriate error message
+                    std::cerr << "Invalid name. Please enter a valid name." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore();
+                    continue;
+                } else {
+                    break; // break the loop if the name is valid
+                }
+            }
+            b->addPlayer(name, 1500); // add the player
+            bool validCharacter = false;
+            while (!validCharacter) { // check if the character is valid
+                std::cout << "Please enter " << name << "'s character: " << std::endl;
+                char character;
+                std::cin >> character;
+                if (isCharacter(character, characters)) {
+                    g.setPlayerCharacter(i, character); // set the player's character
+                    characters.erase(std::remove(characters.begin(), characters.end(), character), characters.end()); // remove the character from the list of characters
+                    validCharacter = true;
+                } else {
+                    std::cerr << "Invalid character. Please enter a valid character." << std::endl;
+                    std::cerr << "Valid characters are: G, B, D, P, S, $, L, T" << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore();
+                    continue;
+                }
             }
         }
-    }
-    std::cout << "Setting things up and starting the game" << std::endl;
-    //g.setupBoard(); // set up the board
+        std::cout << "Setting things up and starting the game" << std::endl;
+        //g.setupBoard(); // set up the board
 
-    return g;
+        return g;
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -217,8 +230,8 @@ int main(int argc, char* argv[]) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
-            Game g;
-            g.setTestingMode(testingMode);
+            //Game g;
+            //g.setTestingMode(testingMode);
         } else if (input_arg == "-load") { // if the input argument is -load file, set the filename to the input filename
             if (i + 1 >= argc) { // if the filename is not provided, print an appropriate error message
                 std::cerr << "No file to load. Starting a new game" << std::endl;
@@ -250,6 +263,7 @@ int main(int argc, char* argv[]) {
         }
     } else {
         Game g = setupGame(); // set up the game
+        g.setTestingMode(testingMode); // set the testing mode
         processInGameCommands(g); // process the in-game commands
     }
 }
