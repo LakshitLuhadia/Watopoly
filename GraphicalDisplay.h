@@ -9,10 +9,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "Observer.h"
-#include "Board.h"
-#include "Player.h"
-#include "Game.h"
+#include <thread>
+#include <atomic>
 
 class GraphicalDisplay : public Observer {
     // Order these to match constructor initialization list
@@ -30,7 +28,6 @@ class GraphicalDisplay : public Observer {
     
     // UI state
     bool needsRedraw;
-    Window activeDialog;
     
     // Colors for players and UI elements
     unsigned long playerColors[8];
@@ -57,12 +54,6 @@ public:
     void drawImprovements();
     void drawPropertyOwnership();
     void drawPlayerInfo();
-    
-    // Event handling
-    void handleEvents();
-    void processButtonClick(int buttonIndex);
-    void createCommandButtons();
-    void createDialogWindow(const std::string& command);
     
     // Helper methods for player data (temporary workarounds)
     std::vector<std::shared_ptr<Player>> getGamePlayers();

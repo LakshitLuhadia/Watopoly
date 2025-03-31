@@ -8,7 +8,7 @@
 
 // Constructor
 GraphicalDisplay::GraphicalDisplay(std::shared_ptr<Game> game, int width, int height) 
-    : game(game), width(width), height(height), needsRedraw(true), activeDialog(0) {
+    : game(game), width(width), height(height), needsRedraw(true) {
     
     // Create XWindow
     window = std::make_unique<XWindow>(width, height);
@@ -22,9 +22,6 @@ GraphicalDisplay::GraphicalDisplay(std::shared_ptr<Game> game, int width, int he
     
     // Setup colors
     setupColors();
-    
-    // Create command buttons
-    createCommandButtons();
     
     // Map window (display it)
     window->map();
@@ -67,24 +64,18 @@ void GraphicalDisplay::setupColors() {
 
 // Get players from the game - helper method for this implementation
 std::vector<std::shared_ptr<Player>> GraphicalDisplay::getGamePlayers() {
-    // This is a temporary helper function to work around missing Game::getPlayers() method
     std::vector<std::shared_ptr<Player>> players;
+    int numPlayers = game->getNumPlayers();
     
-    // Try to get player information from the game
-    // Commented out to avoid unused variable warning
-    // int numPlayers = game->getNumPlayers();
-    
-    // In the current implementation, we can't directly access the players
-    // In a more complete implementation, Game class should have a getPlayers() method
-    // For now, we'll return an empty list (or you could implement a different approach
-    // like storing a reference to players when they're created)
+    for (int i = 0; i < numPlayers; i++) {
+        players.push_back(game->getBoard()->getPlayer(i));
+    }
     
     return players;
 }
 
 // Get current player index - helper method for this implementation
 int GraphicalDisplay::getCurrentPlayerIndex() {
-    // This is a temporary helper function to work around missing Game::getCurrentPlayerIndex() method
     // In a real implementation, Game should have a getCurrentPlayerIndex() method
     // For now we'll return 0 as a dummy value
     return 0;
@@ -311,159 +302,6 @@ void GraphicalDisplay::drawPlayerInfo() {
     }
 }
 
-// Create buttons for game commands
-void GraphicalDisplay::createCommandButtons() {
-    // Button dimensions
-    int buttonWidth = 100;
-    int buttonHeight = 30;
-    int buttonSpacing = 10;
-    int buttonY = height - 50;
-    
-    // Button labels and commands
-    std::vector<std::string> labels = {
-        "Roll", "Next", "Trade", "Improve", "Mortgage", 
-        "Unmortgage", "Bankrupt", "Assets", "All", "Save"
-    };
-    
-    // Create buttons
-    for (size_t i = 0; i < labels.size(); i++) {
-        int buttonX = 30 + i * (buttonWidth + buttonSpacing);
-        window->createButton(labels[i], buttonX, buttonY, buttonWidth, buttonHeight);
-    }
-}
-
-// Process button clicks
-void GraphicalDisplay::processButtonClick(int buttonIndex) {
-    if (buttonIndex < 0 || static_cast<size_t>(buttonIndex) >= 10) return;
-    
-    std::string command;
-    switch (buttonIndex) {
-        case 0: command = "Roll"; break;
-        case 1: command = "Next"; break;
-        case 2: command = "Trade"; break;
-        case 3: command = "Improve"; break;
-        case 4: command = "Mortgage"; break;
-        case 5: command = "Unmortgage"; break;
-        case 6: command = "Bankrupt"; break;
-        case 7: command = "Assets"; break;
-        case 8: command = "All"; break;
-        case 9: command = "Save"; break;
-    }
-    
-    if (command == "Roll") {
-        game->roll();
-    } 
-    else if (command == "Next") {
-        game->next();
-    } 
-    else if (command == "Bankrupt") {
-        game->bankrupt();
-    } 
-    else if (command == "Assets") {
-        game->assets();
-    } 
-    else if (command == "All") {
-        game->all();
-    } 
-    else {
-        // Commands requiring parameters
-        createDialogWindow(command);
-    }
-    
-    // Refresh display
-    needsRedraw = true;
-}
-
-// Create a dialog window for commands requiring parameters
-void GraphicalDisplay::createDialogWindow(const std::string& command) {
-    // Implement dialog windows for commands that need parameters
-    if (activeDialog) {
-        XDestroyWindow(window->getDisplay(), activeDialog);
-    }
-    
-    int dialogWidth = 400;
-    int dialogHeight = 250;
-    int dialogX = (width - dialogWidth) / 2;
-    int dialogY = (height - dialogHeight) / 2;
-    
-    activeDialog = XCreateSimpleWindow(
-        window->getDisplay(), window->getWindow(),
-        dialogX, dialogY, dialogWidth, dialogHeight, 2,
-        borderColor, backgroundColor
-    );
-    
-    XSelectInput(window->getDisplay(), activeDialog, ButtonPressMask | ExposureMask | KeyPressMask);
-    XMapWindow(window->getDisplay(), activeDialog);
-    
-    // Dialog title
-    std::string title = command + " Command";
-    window->drawString(10, 30, title);
-    
-    // Command-specific instructions and input fields
-    std::string instructions;
-    
-    if (command == "Trade") {
-        instructions = "Trade with another player\n\nUsage: trade <player> <give> <receive>\n\n"
-                       "- <player>: Name of the player to trade with\n"
-                       "- <give>: Property name or money amount to give\n"
-                       "- <receive>: Property name or money amount to receive";
-    } 
-    else if (command == "Improve") {
-        instructions = "Buy or sell improvements on a property\n\nUsage: improve <property> <buy/sell>\n\n"
-                       "- <property>: Name of the property to improve\n"
-                       "- <buy/sell>: Whether to buy or sell an improvement";
-    } 
-    else if (command == "Mortgage") {
-        instructions = "Mortgage a property to get funds\n\nUsage: mortgage <property>\n\n"
-                       "- <property>: Name of the property to mortgage";
-    } 
-    else if (command == "Unmortgage") {
-        instructions = "Unmortgage a property\n\nUsage: unmortgage <property>\n\n"
-                       "- <property>: Name of the property to unmortgage";
-    } 
-    else if (command == "Save") {
-        instructions = "Save the current game state\n\nUsage: save <filename>\n\n"
-                       "- <filename>: Name of the file to save to";
-    }
-    
-    // Draw multi-line instructions
-    int lineHeight = 20;
-    int y = 70;
-    std::string line;
-    std::istringstream iss(instructions);
-    
-    while (std::getline(iss, line)) {
-        window->drawString(20, y, line);
-        y += lineHeight;
-    }
-    
-    // Create command execution button
-    Window executeButton = XCreateSimpleWindow(
-        window->getDisplay(), activeDialog,
-        dialogWidth - 200, dialogHeight - 40, 90, 30, 1,
-        borderColor, backgroundColor
-    );
-    
-    XSelectInput(window->getDisplay(), executeButton, ButtonPressMask | ExposureMask);
-    XMapWindow(window->getDisplay(), executeButton);
-    
-    std::string executeText = "Execute";
-    window->drawCenteredText(executeButton, executeText, 45, 20);
-    
-    // Create close button
-    Window closeButton = XCreateSimpleWindow(
-        window->getDisplay(), activeDialog,
-        dialogWidth - 100, dialogHeight - 40, 70, 30, 1,
-        borderColor, backgroundColor
-    );
-    
-    XSelectInput(window->getDisplay(), closeButton, ButtonPressMask | ExposureMask);
-    XMapWindow(window->getDisplay(), closeButton);
-    
-    std::string closeText = "Close";
-    window->drawCenteredText(closeButton, closeText, 35, 20);
-}
-
 // Helper method to calculate square position
 void GraphicalDisplay::calculateSquarePosition(int position, int& x, int& y) {
     // Bottom row (0-10)
@@ -491,112 +329,6 @@ void GraphicalDisplay::calculateSquarePosition(int position, int& x, int& y) {
 // Helper method to draw centered text
 void GraphicalDisplay::drawCenteredText(Window win, const std::string& text, int x, int y) {
     window->drawCenteredText(win, text, x, y);
-}
-
-// Handle X11 events
-void GraphicalDisplay::handleEvents() {
-    XEvent event;
-    bool running = true;
-    
-    while (running) {
-        if (!window->handleEvent(event)) continue;
-        
-        switch (event.type) {
-            case Expose:
-                if (event.xexpose.window == window->getWindow()) {
-                    needsRedraw = true;
-                }
-                
-                // Handle dialog expose
-                if (activeDialog && event.xexpose.window == activeDialog) {
-                    // Redraw dialog content if needed
-                }
-                break;
-                
-            case ButtonPress:
-                // Handle main window clicks
-                if (event.xbutton.window == window->getWindow()) {
-                    // Process board clicks
-                    int x = event.xbutton.x;
-                    int y = event.xbutton.y;
-                    
-                    // Check if click is within board boundaries
-                    if (x >= boardX && x <= boardX + boardSize &&
-                        y >= boardY && y <= boardY + boardSize) {
-                        // Process board click
-                        // Could be used to show property details or select a square
-                    }
-                }
-                
-                // Handle button clicks
-                int buttonIndex;
-                if (window->isButtonClick(event.xbutton.window, buttonIndex)) {
-                    processButtonClick(buttonIndex);
-                }
-                
-                // Handle dialog button clicks
-                if (activeDialog) {
-                    if (event.xbutton.window == activeDialog) {
-                        // Handle clicks inside the dialog
-                    } else {
-                        // Check for dialog child windows (like buttons)
-                        Window clickedWindow = event.xbutton.window;
-                        
-                        // Check if it's the close button
-                        if (clickedWindow != window->getWindow() && clickedWindow != activeDialog) {
-                            // For now, just close the dialog
-                            XDestroyWindow(window->getDisplay(), activeDialog);
-                            activeDialog = 0;
-                        }
-                    }
-                }
-                break;
-                
-            case KeyPress: {
-                KeySym key = XLookupKeysym(&event.xkey, 0);
-                
-                // 'q' or 'Q' to quit
-                if (key == XK_q || key == XK_Q) {
-                    running = false;
-                }
-                // 'r' to roll
-                else if (key == XK_r || key == XK_R) {
-                    game->roll();
-                    needsRedraw = true;
-                }
-                // 'n' for next
-                else if (key == XK_n || key == XK_N) {
-                    game->next();
-                    needsRedraw = true;
-                }
-                // Handle other key shortcuts as needed
-                break;
-            }
-                
-            case ConfigureNotify:
-                // Handle window resize
-                if (event.xconfigure.window == window->getWindow()) {
-                    // Window has been resized
-                    width = event.xconfigure.width;
-                    height = event.xconfigure.height;
-                    
-                    // Recalculate board dimensions
-                    boardSize = std::min(width, height) - 100;
-                    squareSize = boardSize / 11;
-                    boardX = (width - boardSize) / 2;
-                    boardY = 50;
-                    
-                    needsRedraw = true;
-                }
-                break;
-        }
-        
-        // Redraw if needed
-        if (needsRedraw) {
-            display(game->getBoard(), getGamePlayers());
-            needsRedraw = false;
-        }
-    }
 }
 
 // Getters
