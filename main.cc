@@ -17,67 +17,101 @@
 void processInGameCommands(Game& g) {
     auto b = g.getBoard(); // Get the board from the game
     bool hasRolled = false;
+    bool hasTakenActionInTimsLine = false;
     while (true) {
         auto currentPlayer = b->getCurrentPlayer();
         std::cout << currentPlayer->getName() << "'s turn." << std::endl;
-        if (currentPlayer->getInTimsLine()) {
+
+        if (currentPlayer->getInTimsLine() && !hasTakenActionInTimsLine) {
+            // Only display this prompt once per turn
             std::cout << "You are in Tims Line. Do you want to use a : Tim Cup, Roll for doubles or Pay 50? (tim/roll/pay): ";
         }
+
         std::string command;
         std::cin >> command;
-        if (command == "roll") {
-            if (hasRolled) {
-                std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
-                std::cin.clear();
-                while (std::cin.get() != '\n');
-                continue;
-            }
-            
-            if (g.getTestingMode()) {
-                int die1;
-                int die2;
-                std::cin >> die1 >> die2;
-                if (!std::cin.fail()) {
-                    if (die1 < 0 || die2 < 0) {
-                        std::cerr << "Invalid dice roll. Please enter a non-negative number." << std::endl;
-                        std::cin.clear();
-                        while (std::cin.get() != '\n');
-                    } else {
-                        g.roll(die1, die2);
-                    }
-                } else {
-                    g.roll();
-                }
-            } else {
-                g.roll();
-            }
-            if (currentPlayer->getNumDoubleRolls() == 0) {
-                hasRolled = true;
-            }
-        } else if ((currentPlayer->getInTimsLine()) && (command == "tim" || command == "pay")) {
+
+        if (currentPlayer->getInTimsLine()) {
             if (command == "pay") {
                 int cost = 50; // Cost to get out of Tims Line
                 currentPlayer->subtractMoney(cost);
                 currentPlayer->setInTimsLine(false);
                 currentPlayer->setTurnsInTimsLine(0);
                 std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
+                hasTakenActionInTimsLine = true; // Mark action as taken
             } else if (command == "tim") {
                 if (currentPlayer->getNumRimCups() > 0) {
-                    std::cout << "You have" << currentPlayer->getNumRimCups() << " Tim Cups." << std::endl;
+                    std::cout << "You have " << currentPlayer->getNumRimCups() << " Tim Cups." << std::endl;
                     currentPlayer->setInTimsLine(false);
                     currentPlayer->setTurnsInTimsLine(0);
                     currentPlayer->setNumRimCups(currentPlayer->getNumRimCups() - 1);
                     std::cout << "You are out of Tims Line." << std::endl;
+                    hasTakenActionInTimsLine = true; // Mark action as taken
                 } else {
                     std::cerr << "You don't have any Tim Cups left." << std::endl;
                 }
+            } else if (command == "roll") {
+                if (hasRolled) {
+                    std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore();
+                    continue;
+                }
+
+                g.roll();
+                hasRolled = true;
+                hasTakenActionInTimsLine = true; // Mark action as taken
+            } else {
+                std::cerr << "Invalid command. Please enter 'tim', 'roll', or 'pay'." << std::endl;
+                std::cin.clear();
+                std::cin.ignore();
+                continue;
             }
-        } else if (command == "next") {
+
+            // After taking an action in Tims Line, allow other commands (except roll)
+            if (!currentPlayer->getInTimsLine()) {
+                continue; // Skip to the next iteration if the player is no longer in Tims Line
+            }
+        }
+
+        if (command == "roll") {
+            if (hasRolled) {
+                std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
+                std::cin.clear();
+                std::cin.ignore();
+                continue;
+            }
+
+            if (g.getTestingMode()) {
+                std::string input;
+                std::getline(std::cin, input); // Read the entire line after "roll"
+
+                // Check if input contains two integers
+                std::istringstream iss(input);
+                int die1, die2;
+
+                if (iss >> die1 >> die2) {
+                    if (die1 < 0 || die2 < 0) {
+                        std::cerr << "Invalid dice roll. Please enter non-negative numbers." << std::endl;
+                        continue;
+                    }
+                    g.roll(die1, die2); // Call roll with specified dice
+                }
+                else {
+                    g.roll(-1, -1); // Call usual roll function
+                }
+            } else {
+                g.roll(-1, -1); // Call usual roll function in non-testing mode
+            }
+
+            hasRolled = true; // Mark as rolled for this turn
+        
+        }
+        else if (command == "next") {
             g.next();
             hasRolled = false;
-        } else if (command == "next") {
-            g.next();
-        } else if (command == "trade") {
+            hasTakenActionInTimsLine = false;
+        }
+        else if (command == "trade") {
             std::string player;
             std::string give;
             std::string receive;
@@ -128,8 +162,8 @@ void processInGameCommands(Game& g) {
                 std::cin.clear();
                 while (std::cin.get() != '\n');
             }
-            
-        } else if (command == "improve") {
+        }
+        else if (command == "improve") {
             std::string property;
             std::string action;
             std::cin >> property >> action;
@@ -147,7 +181,8 @@ void processInGameCommands(Game& g) {
             } else {
                 g.improve(property, action);
             }
-        } else if (command == "mortgage") {
+        }
+        else if (command == "mortgage") {
             std::string property;
             std::cin >> property;
             g.mortgage(property);
@@ -157,7 +192,8 @@ void processInGameCommands(Game& g) {
             g.unmortgage(property);
         } else if (command == "bankrupt") {
             g.bankrupt();
-        } else if (command == "assets") {
+        }
+        else if (command == "assets") {
             g.assets();
         } else if (command == "all") {
             g.all();
@@ -168,7 +204,9 @@ void processInGameCommands(Game& g) {
             std::cout << "Game saved to " << filename << std::endl;
             std::cout << "Exiting the game" << std::endl;
             break;
-        } else {
+        }
+        else
+        {
             std::cerr << "Invalid command. Please enter a valid command." << std::endl;
             std::cin.clear();
             while (std::cin.get() != '\n');
@@ -178,8 +216,9 @@ void processInGameCommands(Game& g) {
             std::cout << "Congratulations! " << winner->getName() << " wins the game." << std::endl;
             break;
         }
-    }
+   }
 }
+
 
 // Function to load a game from a file
 // This function will be called in the main function

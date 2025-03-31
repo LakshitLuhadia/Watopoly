@@ -16,6 +16,7 @@
 #include "Board.h"
 #include "Game.h"
 #include "Textdisplay.h"
+#include "GraphicalDisplay.h"
 
 Game::Game(int numPlayers): testingMode{false}, board{std::make_shared<Board>(numPlayers)}, numPlayers{numPlayers} {
     auto td = std::make_shared<TextDisplay>(); // Create a TextDisplay object
@@ -918,11 +919,6 @@ void Game::checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_
     
     owner->setNumResidences(owner->getNumResidences() + 1);
     int residenceCount = owner->getNumResidences();
-    
-    if(residenceCount < 1 || residenceCount > 4) {
-        std::cerr << "Invalid residence count: " << residenceCount << std::endl;
-        return;
-    }
 
     int newRent = RENT_VALUES[residenceCount - 1];
     
