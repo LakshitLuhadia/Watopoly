@@ -28,10 +28,6 @@ class Board { // Note to everyone, we will be using smart pointers. No raw point
     std::vector<std::shared_ptr<Square>> squares; // Vector of Squares
     std::vector<std::shared_ptr<Player>> players; // Vector of Players
 
-    // Private functions
-    std::shared_ptr<Property> getPropertyByName(const std::string& name) const; // Get a property by name
-    std::shared_ptr<Player> getPlayerByName(const std::string& name) const; // Get a player by name
-
   public:
     // Constructor
     Board(int numPlayers);
@@ -42,6 +38,8 @@ class Board { // Note to everyone, we will be using smart pointers. No raw point
     std::shared_ptr<Player> getCurrentPlayer() const; // Get the current player
     std::shared_ptr<Player> getPlayer(int i) const; // Get a player by index
     std::shared_ptr<Square> getSquare(int i) const; // Get a square by index
+    std::shared_ptr<Property> getPropertyByName(const std::string& name) const; // Get a property by name
+    std::shared_ptr<Player> getPlayerByName(const std::string& name) const; // Get a player by name
 };
 
 #endif
