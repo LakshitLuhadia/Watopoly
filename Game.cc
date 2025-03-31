@@ -55,12 +55,56 @@ void Game::roll(int die1, int die2) {
         dice.roll(die1, die2); // Roll the dice
         if (currentPlayer->getTurnsInTimsLine() >= 3) {
             std::cout << "You are out of possible turns in Tims Line." << std::endl;
-            std::cout << "You have to pay $50 to get out of Tims Line." << std::endl;
             int cost = 50; // Cost to get out of Tims Line
-            currentPlayer->subtractMoney(cost);
-            currentPlayer->setInTimsLine(false);
-            currentPlayer->setTurnsInTimsLine(0);
-            std::cout << "You paid $" << cost << " to get out of Tims Line." << std::endl;
+            if (currentPlayer->getMoney() < cost) {
+                currentPlayer->setIsBankrupt(true);
+                std::cout << "You don't have enough money to pay $50 to get out of Tims Line." << std::endl;
+                while (currentPlayer->getMoney() < cost) {
+                    std::cout << "Enter 'improve' to sell improvements, 'mortgage' to mortgage properties, or 'bankrupt' to declare bankruptcy: ";
+                    std::string action;
+                    std::cin >> action;
+
+                    if (action == "improve") {
+                        std::string propertyName, improvementAction;
+                        std::cin >> propertyName >> improvementAction;
+                        if (improvementAction == "buy") {
+                            std::cout << "You can only sell improvements." << std::endl;
+                            std::cin.clear();
+                            std::cin.ignore();
+                        } else if (improvementAction == "sell") {
+                            improve(propertyName, improvementAction);
+                        } else {
+                            std::cout << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
+                            std::cin.clear();
+                            std::cin.ignore();
+                        }
+                    } else if (action == "mortgage") {
+                        std::string propertyName;
+                        std::cin >> propertyName;
+                        mortgage(propertyName);
+                    } else if (action == "bankrupt") {
+                        std::cout << "You declared bankruptcy. Transferring assets to BANK." << std::endl;
+                        bankrupt();
+                        return;
+                    } else {
+                        std::cout << "Invalid action. Please enter 'improve', 'mortgage', or 'bankrupt'." << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore();
+                    }
+                }
+                if (currentPlayer->getMoney() >= cost) {
+                    currentPlayer->setIsBankrupt(false);
+                    std::cout << "You raised enough money to pay $50 to get out of Tims Line." << std::endl;
+                    currentPlayer->subtractMoney(cost);
+                    currentPlayer->setInTimsLine(false);
+                    currentPlayer->setTurnsInTimsLine(0);
+                }
+            } else {
+                currentPlayer->subtractMoney(cost);
+                currentPlayer->setInTimsLine(false);
+                currentPlayer->setTurnsInTimsLine(0);
+                std::cout << "You paid $50 to get out of Tims Line." << std::endl;
+            }
         } else {
             std::cout << "You rolled a " << dice.getDice1() << " and a " << dice.getDice2() << "." << std::endl;
             if (dice.isEqual()) {
@@ -142,15 +186,12 @@ void Game::roll(int die1, int die2) {
                         std::cout << "You now have enough money to buy the property. Do you want to buy it? (y/n): ";
                         std::string response;
                         std::cin >> response;
-                        if (response == "y" || response == "Y")
-                        {
+                        if (response == "y" || response == "Y") {
                             currentPlayer->addProperty(property);
                             currentPlayer->subtractMoney(cost);
                             property->setOwner(currentPlayer);
                             std::cout << square->getName() << " bought by " << currentPlayer->getName() << "." << std::endl;
-                        }
-                        else
-                        {
+                        } else {
                             std::cout << "You chose not to buy the property. Starting auction." << std::endl;
                             auction(property);
                         }
@@ -190,14 +231,46 @@ void Game::roll(int die1, int die2) {
                     if (currentPlayer->getIsBankrupt()) {
                         std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You cannot pay rent because you have insufficent money" << std::endl;
 
-                        callforaction(property, cost);
+                        while (currentPlayer->getMoney() < cost) {
+                            std::cout << "Enter 'improve' to sell improvements, 'mortgage' to mortgage properties, or 'bankrupt' to declare bankruptcy: ";
+                            std::string action;
+                            std::cin >> action;
+                    
+                            if (action == "improve") {
+                                std::string propertyName, improvementAction;
+                                std::cin >> propertyName >> improvementAction;
+                                if (improvementAction == "buy") {
+                                    std::cout << "You can only sell improvements." << std::endl;
+                                    std::cin.clear();
+                                    std::cin.ignore();
+                                } else if (improvementAction == "sell") {
+                                    improve(propertyName, improvementAction);
+                                } else {
+                                    std::cout << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
+                                    std::cin.clear();
+                                    std::cin.ignore();
+                                }
+                            } else if (action == "mortgage") {
+                                std::string propertyName;
+                                std::cin >> propertyName;
+                                mortgage(propertyName);
+                            } else if (action == "bankrupt") {
+                                std::cout << "You declared bankruptcy. Transferring assets to " << property->getOwner()->getName() << "." << std::endl;
+                                bankrupt();
+                                return;
+                            } else {
+                                std::cout << "Invalid action. Please enter 'improve', 'mortgage', or 'pass'." << std::endl;
+                                std::cin.clear();
+                                std::cin.ignore();
+                            }
+                        }
 
                         if (currentPlayer->getMoney() >= cost) {
                             currentPlayer->setIsBankrupt(false);
                             std::cout << "You raised enough money to pay rent. Paying $" << cost << " to " << property->getOwner()->getName() << "." << std::endl;
                             currentPlayer->subtractMoney(cost);
                             property->getOwner()->addMoney(cost);
-                            }
+                        }
                         } else {
                             std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You have to pay rent." << std::endl;
                             square->performAction(currentPlayer);
@@ -690,43 +763,6 @@ int Game::getNumPlayers() const {
 std::shared_ptr<Board> Game::getBoard() const {
     return board;
 } // Game::getBoard
-
-void Game::callforaction(std::shared_ptr<Property> property, int cost) {
-    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
-    while (currentPlayer->getMoney() < cost) {
-        std::cout << "Enter 'improve' to sell improvements, 'mortgage' to mortgage properties, or 'bankrupt' to declare bankruptcy: ";
-        std::string action;
-        std::cin >> action;
-
-        if (action == "improve") {
-            std::string propertyName, improvementAction;
-            std::cin >> propertyName >> improvementAction;
-            if (improvementAction == "buy") {
-                std::cout << "You can only sell improvements." << std::endl;
-                std::cin.clear();
-                std::cin.ignore();
-            } else if (improvementAction == "sell") {
-                improve(propertyName, improvementAction);
-            } else {
-                std::cout << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
-                std::cin.clear();
-                std::cin.ignore();
-            }
-        } else if (action == "mortgage") {
-            std::string propertyName;
-            std::cin >> propertyName;
-            mortgage(propertyName);
-        } else if (action == "bankrupt") {
-            std::cout << "You declared bankruptcy. Transferring assets to " << property->getOwner()->getName() << "." << std::endl;
-            bankrupt();
-            return;
-        } else {
-            std::cout << "Invalid action. Please enter 'improve', 'mortgage', or 'pass'." << std::endl;
-            std::cin.clear();
-            std::cin.ignore();
-        }
-    }
-}
 
 void Game::auction(std::shared_ptr<Property> property) {
     auto currentPlayer = board->getCurrentPlayer();

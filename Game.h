@@ -30,7 +30,6 @@ class Game: public Subject {
     void checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop); // check for monopoly
     void checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop); // check for monopoly
     void checkGymforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop); // check for monopoly
-    void callforaction(std::shared_ptr<Property> property, int cost); // call for action function
 
     public:
         // Ctor for Game
