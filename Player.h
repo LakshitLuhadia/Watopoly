@@ -48,6 +48,8 @@ class Player {
         void setTurnsInTimsLine(int turnsInTimsLine);
         // Get if Player isBankrupt
         bool getIsBankrupt() const;
+        // Set if Player isBankrupt
+        void setIsBankrupt(bool isBankrupt);
         // Get Player's numDoubleRolls
         int getNumDoubleRolls() const;
         // Set Player's numDoubleRolls

@@ -65,6 +65,10 @@ void Player::setTurnsInTimsLine(int turnsInTimsLine) {
 bool Player::getIsBankrupt() const {
     return isBankrupt;
 }
+// Set if Player isBankrupt
+void Player::setIsBankrupt(bool isBankrupt) {
+    this->isBankrupt = isBankrupt;
+}
 // Get Player's numDoubleRolls
 int Player::getNumDoubleRolls() const {
     return numDoubleRolls;

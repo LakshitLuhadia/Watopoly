@@ -93,6 +93,9 @@ void Game::roll(int die1, int die2) {
             if (property->getOwner() == nullptr) {
                 // Property is unowned
                 int cost = property->getCost();
+                if (currentPlayer->getMoney() < cost) {
+                    currentPlayer->setIsBankrupt(true);
+                }
                 if (currentPlayer->getIsBankrupt()) {
                     std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". You cannot buy it because you have insufficent money" << std::endl;
                     std::cout << "Either declare bankruptcy or try to raise money" << std::endl;
