@@ -13,6 +13,7 @@ void TextDisplay::notify() {
     cout << "TextDisplay: Game state has changed." << endl;
 } // TextDisplay::notify
 
+// Helper function to add improvements to the sides of the board
 void TextDisplay::sideImprovements(string &line, int arr[2], shared_ptr<Board> board) {
     int sidesCol[2] = {1, 81};
     for (int i = 0; i < 2; ++i) {
@@ -24,6 +25,7 @@ void TextDisplay::sideImprovements(string &line, int arr[2], shared_ptr<Board> b
     }
 }
 
+// Helper function to add players to the sides of the board
 void TextDisplay::sidePlayers(string &line, int arr[2], vector<shared_ptr<Player>> players) {
     int sidesCol[2] = {1, 81};
     for (int i = 0; i < 2; ++i) {
@@ -37,6 +39,7 @@ void TextDisplay::sidePlayers(string &line, int arr[2], vector<shared_ptr<Player
     }
 }
 
+// Display the current state of the game
 void TextDisplay::display(std::shared_ptr<Board> board, const std::vector<std::shared_ptr<Player>>& players) {
     shared_ptr<Square> square;
     ifstream board_file("board.txt");

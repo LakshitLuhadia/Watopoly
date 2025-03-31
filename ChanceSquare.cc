@@ -15,7 +15,7 @@ ChanceSquare::ChanceSquare(string name, const int index, const bool isProperty) 
 }
 
 
-// performAction for FeesSquare
+// performAction for ChanceSquare (SLC and NEEDLES HALL)
 void ChanceSquare::performAction(shared_ptr<Player>& player) const {
     int rimCupChance = rand() % 100 + 1;
     if (rimCupChance == 1 && totRimCups < 4) {

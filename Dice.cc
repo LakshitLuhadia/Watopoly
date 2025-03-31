@@ -36,10 +36,12 @@ bool Dice::isEqual() {
     return dice1 == dice2;
 } // Dice::isEqual
 
+// Returns the value of dice1
 int Dice::getDice1() const {
     return dice1;
 } // Dice::getDice1
 
+// Returns the value of dice2
 int Dice::getDice2() const {
     return dice2;
 } // Dice::getDice2

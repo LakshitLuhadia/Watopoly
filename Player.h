@@ -8,7 +8,7 @@
 class Property; // Forward declaration of Property class
 
 // Player Class
-class Player {
+class Player : public std::enable_shared_from_this<Player> {
     const std::string name; // Player name
     char character;         // Player's character
     int money;              // Total money player currently has

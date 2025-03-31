@@ -20,8 +20,10 @@ class Dice {
         // Returns true if dice1 and dice2 are equal else false
         static bool isEqual();
 
+        // Returns the value of dice1
         int getDice1() const;
 
+        // Returns the value of dice2
         int getDice2() const;
 };
 

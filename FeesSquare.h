@@ -8,9 +8,9 @@
 
 
 class FeesSquare : public NonProperty {
-    int fees;
+    int fees; // Fees to be paid
     public:
-        // ctor
+        // ctor for FeesSquare
         FeesSquare(const std::string name, const int index, const bool isProperty, int fees);
         // Performs the action of the property
         void performAction(std::shared_ptr<Player>& player) const override;

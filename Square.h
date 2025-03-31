@@ -9,7 +9,7 @@ class Player; // Forward declaration of Player class
 class Square {
     const std::string name;            // Name of the square
     const int index;                   // Index of the square
-    const bool isProperty;             // Is the square a property? 
+    const bool isProperty;             // If the square is a property 
 
     public:
         // Constructor for Square

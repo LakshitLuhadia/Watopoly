@@ -7,7 +7,7 @@
 
 
 class ChanceSquare : public NonProperty {
-    mutable int totRimCups;
+    mutable int totRimCups; // Total Rim Cups in the game
 
     public:
         // ctor

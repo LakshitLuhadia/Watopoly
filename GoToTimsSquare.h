@@ -6,7 +6,7 @@
 #include <string>
 
 class GoToTimsSquare : public NonProperty {
-    int timsLineIndex;
+    int timsLineIndex; // Index of Tims Line
     public:
         // ctor
         GoToTimsSquare(const std::string name, const int index, const bool isProperty, int timsLineIndex);

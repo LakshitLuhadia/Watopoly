@@ -4,6 +4,7 @@
 #include "Player.h"
 using namespace std;
 
+// Static variables
 int Gym::usageFee = 0;
 bool Gym::isMonopoly = false;
 

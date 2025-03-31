@@ -9,7 +9,7 @@
 // Gym class
 class Gym: public Property {
     static int usageFee;                // Usage fee of the gym
-    static bool isMonopoly;             // Is the property part of a monopoly?
+    static bool isMonopoly;             // If the the property is part of a monopoly
 
     public:
         // Constructor for Gym

@@ -10,7 +10,7 @@ FeesSquare::FeesSquare(const string name, const int index, const bool isProperty
 
 // performAction for FeesSquare
 void FeesSquare::performAction(shared_ptr<Player>& player) const {
-    if (getName() == "TUITION") {
+    if (getName() == "TUITION") { // TUITION square
         int totSavings = player->getMoney();
         vector<shared_ptr<Property>> properties = player->getProperties();
         for (const auto& property : properties) {
@@ -33,7 +33,7 @@ void FeesSquare::performAction(shared_ptr<Player>& player) const {
             cout << "You have to pay 10\% of your total savings: " << totSavings << "." << endl;
             player->subtractMoney(totSavings);
         }
-    } else {
+    } else { // COOP FEE square
         cout << "You have to pay the fee of " << fees << "." << endl;
         player->subtractMoney(fees);
     }

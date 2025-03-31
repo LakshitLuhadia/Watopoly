@@ -18,7 +18,7 @@
 #include "ChanceSquare.h"
 #include "GoToTimsSquare.h"
 
-class Board { // Note to everyone, we will be using smart pointers. No raw pointers.
+class Board {
   private:    
     // Data fields
     int currentPlayerIndex = 0; // The current player

@@ -4,6 +4,7 @@
 
 class Subject;
 
+// Observer class (abstract)
 class Observer {
   public:
     // Pass in the Subject that called the notify method.

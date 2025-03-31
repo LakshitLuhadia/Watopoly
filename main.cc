@@ -12,6 +12,8 @@
 #include "Dice.h"
 #include "Academic.h"
 
+// Function to process in-game commands
+// This function will be called in the main function
 void processInGameCommands(Game& g) {
     auto b = g.getBoard(); // Get the board from the game
     bool hasRolled = false;
@@ -179,13 +181,14 @@ void processInGameCommands(Game& g) {
     }
 }
 
+// Function to load a game from a file
+// This function will be called in the main function
 Game processLoadedFile(const std::string& filename) {
     std::ifstream loadfile{filename};
     if (loadfile.fail()) {
         std::cerr << "Cannot open the loaded file" << std::endl;
     }
     Game g;
-    //std::shared_ptr<Board> board;
     std::shared_ptr<Board> board = g.getBoard();    
     int numPlayers;
     loadfile >> numPlayers;
@@ -217,7 +220,6 @@ Game processLoadedFile(const std::string& filename) {
             }
         }
         g.setPlayerTimCups(i, TimCups);
-        // g.setPlayerMoney(i, money);
         g.setPlayerPosition(i, position);
     }
     std::string buildingName;
@@ -227,7 +229,6 @@ Game processLoadedFile(const std::string& filename) {
         loadfile >> owner >> numImprovements;
         g.setBuildingOwner(buildingName, owner);
         g.setBuildingImprovements(buildingName, numImprovements);
-        // Figure out monopolies
     }
     return g;
 }
@@ -238,6 +239,7 @@ bool isCharacter(char character, const std::vector<char>& characters) {
 }
 
 // Function to set up the game
+// This function will be called in the main function
 Game setupGame() {
     std::cout << "Welcome to the game of Watopoly!" << std::endl;
     while(true) {
@@ -287,7 +289,6 @@ Game setupGame() {
             }
         }
         std::cout << "Setting things up and starting the game" << std::endl;
-        //g.setupBoard(); // set up the board
 
         return g;
     }
@@ -302,8 +303,6 @@ int main(int argc, char* argv[]) {
         std::string input_arg = argv[i];
         if (input_arg == "-testing") { // if the input argument is -testing, set the flag to true
             testingMode = true;
-            //Game g;
-            //g.setTestingMode(testingMode);
         } else if (input_arg == "-load") { // if the input argument is -load file, set the filename to the input filename
             if (i + 1 >= argc) { // if the filename is not provided, print an appropriate error message
                 std::cerr << "No file to load. Starting a new game" << std::endl;

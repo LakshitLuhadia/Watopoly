@@ -52,11 +52,6 @@ Board::Board(int numPlayers) : numPlayers(numPlayers) {
     squares.push_back(std::make_shared<FeesSquare>("COOP FEE", 38, false, 150));
     squares.push_back(std::make_shared<Academic>("DC", 39, true, 400, true, false, false, "Math", 200, vector<int>{50, 200, 600, 1400, 1700, 2000}));
 
-    // Initialize the players
-    // for (int i = 0; i < numPlayers; i++) {
-    //     players.push_back(std::make_shared<Player>("Player", 1500));
-    // }
-
 }
 
 
@@ -82,21 +77,21 @@ std::shared_ptr<Player> Board::getPlayerByName(const std::string& name) const {
     return nullptr; // Return nullptr if the player is not found
 }
 
+// Move to the next player
 void Board::nextPlayer() {
-    // Move to the next player
     numPlayers = players.size();
     currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
 }
 
+// Add a player
 void Board::addPlayer(string name, int money) {
-    // Add a player
     shared_ptr<Player> p = make_shared<Player>(name, money);
     players.push_back(p);
     numPlayers++;
 }
 
+// Remove a player
 void Board::removePlayer(string name) {
-    // Remove a player
     for (auto it = players.begin(); it != players.end(); ++it) {
         if ((*it)->getName() == name) {
             players.erase(it);
@@ -106,8 +101,8 @@ void Board::removePlayer(string name) {
     numPlayers--;
 }
 
+// Trade properties between players
 void Board::trade(std::string player, std::string give, std::string receive) {
-    // Trade properties between players
     bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);
     bool receiveIsInt = std::all_of(receive.begin(), receive.end(), ::isdigit);
 
@@ -115,41 +110,34 @@ void Board::trade(std::string player, std::string give, std::string receive) {
         int money = getPlayerByName(player)->getMoney();
         int new_money = money + std::stoi(give);
         getPlayerByName(player)->setMoney(new_money);
-        //getPlayerByName(player)->removeProperty(getPropertyByName(receive));
         getPlayerByName(player)->auction(getPropertyByName(receive), players[currentPlayerIndex]);
-        //players[currentPlayerIndex]->addProperty(getPropertyByName(receive));
         players[currentPlayerIndex]->setMoney(players[currentPlayerIndex]->getMoney() - std::stoi(give)); 
     
     } else if (!giveIsInt && receiveIsInt) {
         int money = getPlayerByName(player)->getMoney();
         int new_money = money - std::stoi(receive);
         getPlayerByName(player)->setMoney(new_money);
-        //getPlayerByName(player)->addProperty(getPropertyByName(give));
         players[currentPlayerIndex]->auction(getPropertyByName(give), getPlayerByName(player));
-        //players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
         players[currentPlayerIndex]->setMoney(players[currentPlayerIndex]->getMoney() + std::stoi(receive));
     } else if (!giveIsInt && !receiveIsInt) {
-        //getPlayerByName(player)->removeProperty(getPropertyByName(receive));
-        //players[currentPlayerIndex]->addProperty(getPropertyByName(receive));
         players[currentPlayerIndex]->auction(getPropertyByName(give), getPlayerByName(player));
         getPlayerByName(player)->auction(getPropertyByName(receive), players[currentPlayerIndex]);
-        //getPlayerByName(player)->addProperty(getPropertyByName(give));
-        //players[currentPlayerIndex]->removeProperty(getPropertyByName(give));
     } else {
         std::cout << "reject" << std::endl;
     }
 }
 
+// Get the current player
 std::shared_ptr<Player> Board::getCurrentPlayer() const {
-    // Get the current player
     return players[currentPlayerIndex];
 }
 
+// Get a player by index
 std::shared_ptr<Player> Board::getPlayer(int i) const {
-    // Get a player by index
     return players[i];
 }
+
+// Get a square by index
 std::shared_ptr<Square> Board::getSquare(int i) const {
-    // Get a square by index
     return squares[i];
 }

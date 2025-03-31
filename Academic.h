@@ -6,20 +6,16 @@
 #include "Player.h"
 using std::vector; 
 
-// static int numImprovements;               // Number of improvements on the property
-// static bool isMonopoly;                   // Is the property part of a monopoly?
-// static bool isImprovable;                 // Is the property improvable?
-// static bool isSellable;                   // Is the property sellable?
 
 // Academic class
 class Academic: public Property {
-    const std::string block;                  // Block of the property
-    const int improvementCost;                // Cost of improvements
-    const vector <int> tuition{};             // Tuition fees for the property
-     int numImprovements;               // Number of improvements on the property
-     bool isMonopoly;                   // Is the property part of a monopoly?
-     bool isImprovable;                 // Is the property improvable?
-     bool isSellable;                   // Is the property sellable?
+    const std::string block;           // Block of the property
+    const int improvementCost;         // Cost of improvements
+    const vector <int> tuition{};      // Tuition fees for the property
+    int numImprovements;               // Number of improvements on the property
+    bool isMonopoly;                   // Is the property part of a monopoly?
+    bool isImprovable;                 // Is the property improvable?
+    bool isSellable;                   // Is the property sellable?
 
     public:
         // Constructor for Academic
@@ -51,7 +47,7 @@ class Academic: public Property {
         // Sets whether the property is sellable
         void setIsSellable(bool isSellable);
         
-        // Implement the improvement method
+        // Improvement methods
         // Make Improvements
         void addimprove();
         // Sell Improvements
