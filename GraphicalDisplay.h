@@ -1,69 +1,36 @@
-#ifndef GRAPHICAL_DISPLAY_H
-#define GRAPHICAL_DISPLAY_H
-#include "Observer.h"
-#include "Game.h"
-#include "Board.h"
-#include "XWindow.h"
+#ifndef GRAPHICALDISPLAY_H
+#define GRAPHICALDISPLAY_H
 
 #include <memory>
-#include <string>
+#include "Game.h"
 #include <vector>
-#include <map>
-#include <thread>
-#include <atomic>
+#include "Board.h"
+#include "Player.h"
+#include "Subject.h"
 
+#include "Observer.h"
+#include "XWindow.h"
+
+class Game;
+
+// Assuming that Observer is defined (as it is for TextDisplay).
 class GraphicalDisplay : public Observer {
-    // Order these to match constructor initialization list
-    std::shared_ptr<Game> game;
+    std::shared_ptr<Board> board;
     int width, height;
-    std::unique_ptr<XWindow> window;
-    
-    // Board layout constants
-    int boardSize;
-    int squareSize;
-    int boardX, boardY;
-    
-    // Property colors by block
-    std::map<std::string, unsigned long> blockColors;
-    
-    // UI state
-    bool needsRedraw;
-    
-    // Colors for players and UI elements
-    unsigned long playerColors[8];
-    unsigned long backgroundColor;
-    unsigned long textColor;
-    unsigned long borderColor;
-    
-public:
-    // Constructor and destructor
-    GraphicalDisplay(std::shared_ptr<Game> game, int width = 800, int height = 800);
-    ~GraphicalDisplay();
-    
-    // Observer interface
-    void notify() override;
-    
-    // Display methods
+    std::shared_ptr<Xwindow> window;
+	
+        // Helper functions for coloring.
+    int getColorForPlayer(char c);
+    void drawColoredChar(int col, int row, char c, int bgColor);
+
+	public:
+    // Constructor: create the Xwindow and store the game pointer.
+    GraphicalDisplay(std::shared_ptr<Board> board, int width = 800, int height = 800);
     void display(std::shared_ptr<Board> board, const std::vector<std::shared_ptr<Player>>& players);
-    int getWidth() const;
-    int getHeight() const;
+    // The notify method is called whenever the game state changes.
+    virtual void notify() override;
     
-    // Drawing methods
-    void drawBoard();
-    void drawPlayers();
-    void drawImprovements();
-    void drawPropertyOwnership();
-    void drawPlayerInfo();
-    
-    // Helper methods for player data (temporary workarounds)
-    std::vector<std::shared_ptr<Player>> getGamePlayers();
-    int getCurrentPlayerIndex();
-    
-    // Utility methods
-    void setupColors();
-    void calculateSquarePosition(int position, int& x, int& y);
-    void drawCenteredText(Window win, const std::string& text, int x, int y);
-    void flushDisplay();
+    virtual ~GraphicalDisplay();
 };
 
 #endif
