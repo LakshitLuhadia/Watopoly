@@ -16,7 +16,7 @@ Property{name, index, isProperty, cost, isAcademic, isResidence, isGym}, block{b
     numImprovements = 0;            // No improvements initially
     isMonopoly = false;             // Not part of a monopoly initially
     isImprovable = true;            // Improvable initially
-    isSellable = true;              // Sellable initially
+    isSellable = false;             // Sellable initially
 } // Academic::Academic
 
 // Returns the block of the property
