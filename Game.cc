@@ -689,7 +689,7 @@ void Game::checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_p
     }
     
     if(hasMonopoly) {
-        std::cout << "Monopoly achieved on " << block << " block!\n";
+        std::cout << "Monopoly achieved on " << block << " block!" << std::endl;
     }
 }
 
@@ -744,6 +744,6 @@ void Game::checkGymforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Pr
 
     if(hasMonopoly) {
         std::cout << "Gym monopoly achieved with purchase of " 
-                  << boughtGym->getName() << "!\n";
+                  << boughtGym->getName() << "!" << std::endl;
     }
 }
