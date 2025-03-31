@@ -142,8 +142,12 @@ void Game::roll(int die1, int die2) {
                 }
             } else {
                 // Property is owned
-                std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You have to pay rent." << std::endl;
-                square->performAction(currentPlayer);
+                if (currentPlayer->getName() == property->getOwner()->getName()) {
+                    std::cout << "You landed on " << square->getName() << ". It is owned by you." << std::endl;
+                } else {
+                    std::cout << "You landed on " << square->getName() << ". It is owned by " << property->getOwner()->getName() << ". You have to pay rent." << std::endl;
+                    square->performAction(currentPlayer);
+                }
             }
         } else {
             // Non-property square actions
@@ -156,7 +160,7 @@ void Game::roll(int die1, int die2) {
 void Game::next() {
     // Move to the next player
     board->nextPlayer();
-    notifyObservers();
+    //notifyObservers();
 }
 
 void Game::trade(std::string player, std::string give, std::string receive) {
