@@ -1,0 +1,33 @@
+4
+Dolly D 1 890 3 
+Teddy T 2 1200 18 
+Sara S 0 900 10 0
+Liam L 0 500 10 0
+AL Dolly 1
+ML Dolly 1
+MKV BANK 0
+ECH Liam 0
+PAS Sara 0
+HH Liam 0
+RCH Teddy 2
+PAC Liam 0
+DWE Teddy 2
+CPH Teddy 2
+UWP Dolly 0
+LHI BANK 0
+BMH BANK 0
+OPT Liam 0
+EV1 Sara 0
+EV2 BANK 0
+EV3 Sara 0
+V1 Dolly 0
+PHYS Teddy 0
+B1 BANK 0
+CIF BANK 0
+B2 BANK 0
+EIT Dolly 0
+ESC Liam 0
+C2 Sara 0
+REV Sara 0
+MC Teddy 0
+DC Teddy 0

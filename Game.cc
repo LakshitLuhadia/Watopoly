@@ -421,11 +421,12 @@ void Game::save(std::string filename) {
                      << p->getMoney() << " " << p->getPosition() << " ";
             if (p->getPosition() == 10) {
                 if (p->getInTimsLine()) { // Check if the player is in Tims Line
-                    savefile << 1 << " " << p->getTurnsInTimsLine() << " " << std::endl;
+                    savefile << 1 << " " << p->getTurnsInTimsLine();
                 } else {
-                    savefile << 0 << std::endl;
+                    savefile << 0;
                 }
             }
+            savefile << std::endl;
         }
         for (int i = 0; i < 40; i++) {
             // This is following the format: name owner numImprovements
@@ -439,7 +440,7 @@ void Game::save(std::string filename) {
                     if (property->getOwner() == nullptr) {
                         savefile << "BANK" << " ";
                     } else {
-                        savefile << property->getOwner() << " ";
+                        savefile << property->getOwner()->getName() << " ";
                     }
 
                     if (property->getIsMortgaged()) {
