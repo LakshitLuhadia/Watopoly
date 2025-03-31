@@ -38,6 +38,7 @@ class Game: public Subject {
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
         void improve(const std::string& property, const std::string& action);
+        bool attempttoraise(std::shared_ptr<Player> player, int amountOwed);
         void mortgage(std::string property);
         void unmortgage(std::string property);
         void bankrupt();

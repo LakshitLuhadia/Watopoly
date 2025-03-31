@@ -319,6 +319,49 @@ void Game::unmortgage(std::string property) {
     std::cout << "Property " << property << " has been unmortgaged." << std::endl;
 }
 
+bool Game::attempttoraise(std::shared_ptr<Player> player, int amountOwed) {
+    // First try to sell all improvements on academic buildings
+    for (auto& property : player->getProperties()) {
+        if (auto academic = std::dynamic_pointer_cast<Academic>(property)) {
+            while (academic->getNumImprovements() > 0) {
+                academic->sellimprove();
+                if (player->getMoney() >= amountOwed) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // Then try to mortgage properties
+    for (auto& property : player->getProperties()) {
+        if (!property->getIsMortgaged()) {
+            if (auto academic = std::dynamic_pointer_cast<Academic>(property)) {
+                if (academic->getNumImprovements() == 0) {  // Only mortgage if no improvements
+                    player->addMoney(property->getMortgageValue());
+                    property->setIsMortgaged(true);
+                    if (player->getMoney() >= amountOwed) {
+                        return true;
+                    }
+                }
+            } else if (auto residence = std::dynamic_pointer_cast<Residence>(property)) {
+                player->addMoney(property->getMortgageValue());
+                property->setIsMortgaged(true);
+                if (player->getMoney() >= amountOwed) {
+                    return true;
+                }
+            } else if (auto gym = std::dynamic_pointer_cast<Gym>(property)) {
+                player->addMoney(property->getMortgageValue());
+                property->setIsMortgaged(true);
+                if (player->getMoney() >= amountOwed) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    // If we get here, we couldn't raise enough money
+    return false;
+}
 
 void Game::bankrupt() {
     // Declare bankruptcy
