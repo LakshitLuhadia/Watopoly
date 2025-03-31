@@ -161,8 +161,8 @@ void processInGameCommands(Game& g) {
             auto winner = b->getCurrentPlayer();
             std::cout << winner->getName() << " wins the game!" << std::endl;
             break;
-        }
-    }
+        }
+    }
 }
 
 
