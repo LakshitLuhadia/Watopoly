@@ -93,26 +93,31 @@ void Game::roll(int die1, int die2) {
             if (property->getOwner() == nullptr) {
                 // Property is unowned
                 int cost = property->getCost();
-                std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
-                std::string response;
-                std::cin >> response;
-                if (response == "y" || response == "Y") {
-                    currentPlayer->addProperty(property);
-                    currentPlayer->subtractMoney(cost);
-                    property->setOwner(currentPlayer);
-                    std::cout << square->getName() << " bought " << "by " << currentPlayer->getName() << "." << std::endl;
-                } else if (response == "n" || response == "N") {
-                    std::cout << "Property not bought." << std::endl;
-                    std::cout << "Starting Auction" << std::endl;
-                    auction(property);
-                }
-                std::shared_ptr<Player> owner = property->getOwner();
-                if (property->getIsAcademic()) {
-                    checkAcademicforMonopoly(owner, property);
-                } else if (property->getIsResidence()) {
-                    checkResidenceforMonopoly(owner, property);
-                } else if (property->getIsGym()) {
-                    checkGymforMonopoly(owner, property);
+                if (currentPlayer->getIsBankrupt()) {
+                    std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". You cannot buy it because you have insufficent money" << std::endl;
+                    std::cout << "Either declare bankruptcy or try to raise money" << std::endl;
+                } else {
+                    std::cout << "You landed on " << square->getName() << ". It is unowned and it costs " << cost <<". Do you want to buy it? (y/n): ";
+                    std::string response;
+                    std::cin >> response;
+                    if (response == "y" || response == "Y") {
+                        currentPlayer->addProperty(property);
+                        currentPlayer->subtractMoney(cost);
+                        property->setOwner(currentPlayer);
+                        std::cout << square->getName() << " bought " << "by " << currentPlayer->getName() << "." << std::endl;
+                    } else if (response == "n" || response == "N") {
+                        std::cout << "Property not bought." << std::endl;
+                        std::cout << "Starting Auction" << std::endl;
+                        auction(property);
+                    }
+                    std::shared_ptr<Player> owner = property->getOwner();
+                    if (property->getIsAcademic()) {
+                        checkAcademicforMonopoly(owner, property);
+                    } else if (property->getIsResidence()) {
+                        checkResidenceforMonopoly(owner, property);
+                    } else if (property->getIsGym()) {
+                        checkGymforMonopoly(owner, property);
+                    }
                 }
             } else {
                 // Property is owned
