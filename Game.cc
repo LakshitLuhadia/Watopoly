@@ -432,6 +432,7 @@ void Game::save(std::string filename) {
             savefile << std::endl;
         }
         for (int i = 0; i < 40; i++) {
+            int mortgageImprovements = -1;
             // This is following the format: name owner numImprovements
             if (board->getSquare(i)->getIsProperty() == false) {
                 // Do not save the non-property square
@@ -447,7 +448,7 @@ void Game::save(std::string filename) {
                     }
 
                     if (property->getIsMortgaged()) {
-                        savefile << -1 << std::endl; // -1 for mortgaged
+                        savefile << mortgageImprovements << std::endl; // -1 for mortgaged
                     } else if (property->getIsResidence() || property->getIsGym()) {
                         savefile << 0 << std::endl; // No improvements for Residence and Gym
                     } else {
