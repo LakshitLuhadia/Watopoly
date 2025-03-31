@@ -37,15 +37,23 @@ class Game: public Subject {
         void notifyObservers(); // notify all observers
         void roll(int die1 = -1, int die2 = -1); // rolls the dice
         void next(); // moves to the next player
+        // trade function
         void trade(std::string player, std::string give, std::string receive);
+        // improve academic properties function
         void improve(const std::string& property, const std::string& action);
-        bool attempttoraise(std::shared_ptr<Player> player, int amountOwed);
+        // mortage property function
         void mortgage(std::string property);
+        // unmortgage property function
         void unmortgage(std::string property);
+        // bankrupt function
         void bankrupt();
+        // print a players assets function
         void assets();
+        // print all players assets function
         void all();
+        // save the game in filename 
         void save(std::string filename);
+        // load the game from filename
         void setNumPlayers(int numPlayers);
         void setNumRollsInTimsLine(int numRollsInTimsLine);
         void setPlayerTimCups(int pos, int TimCups);
@@ -54,12 +62,15 @@ class Game: public Subject {
         void addPlayer(std::string name, int money);
         void removePlayer(std::string name);
         void setPlayerCharacter(int pos, char character);
-        void setupBoard();
         void setBuildingOwner(std::string buildingName, std::string owner);
         void setBuildingImprovements(std::string buildingName, int numImprovements);
+        // set testing mode
         void setTestingMode(bool testingMode);
+        // get testing mode
         bool getTestingMode() const;
+        // get the number of players
         int getNumPlayers() const;
+        // get the board
         std::shared_ptr<Board> getBoard() const;
 };
 

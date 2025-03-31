@@ -17,11 +17,13 @@
 #include "Game.h"
 #include "Textdisplay.h"
 
+// Game class constructor
 Game::Game(int numPlayers): testingMode{false}, board{std::make_shared<Board>(numPlayers)}, numPlayers{numPlayers} {
     auto td = std::make_shared<TextDisplay>(); // Create a TextDisplay object
     attach(td); // Attach TextDisplay as an observer
 }
 
+// Notify all observers
 void Game::notifyObservers() {
     // Prepare the data needed by observers
     std::vector<std::shared_ptr<Player>> players;
@@ -37,6 +39,7 @@ void Game::notifyObservers() {
     }
 }
 
+// Roll the dice
 void Game::roll(int die1, int die2) {
     Dice dice(testingMode);
     auto currentPlayer = board->getCurrentPlayer();
@@ -240,16 +243,16 @@ void Game::roll(int die1, int die2) {
     notifyObservers();
 }
 
+// Move to next player
 void Game::next() {
-    // Move to the next player
     board->nextPlayer();
-    //notifyObservers();
 }
 
+// Trade properties between players
+// This function will use addProperty and removeProperty functions from Player class
+// It will also use setOwner function from Property class
 void Game::trade(std::string player, std::string give, std::string receive) {
-    // Trade properties between players
-    // This function will use addProperty and removeProperty functions from Player class
-    // It will also use setOwner function from Property class
+
     bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);
     bool receiveIsInt = std::all_of(receive.begin(), receive.end(), ::isdigit);
 
@@ -261,6 +264,7 @@ void Game::trade(std::string player, std::string give, std::string receive) {
     notifyObservers();
 }
 
+// improve academic properties
 void Game::improve(const std::string& property, const std::string& action) {
     std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
 
@@ -335,10 +339,11 @@ void Game::improve(const std::string& property, const std::string& action) {
     notifyObservers();
 }
 
+// Mortgage a property
+// This function will use setMortgaged and the related functions from Property class
+// Validate property exists
 void Game::mortgage(std::string property) {
-    // Mortgage a property
-    // This function will use setMortgaged and the related functions from Property class
-    // Validate property exists
+
     std::shared_ptr<Square> square = nullptr;
     for (int i = 0; i < 40; ++i) {
         if (board->getSquare(i)->getName() == property) {
@@ -382,10 +387,11 @@ void Game::mortgage(std::string property) {
     std::cout << "Property " << property << " has been mortgaged." << std::endl;
 
 }
-    
+
+// Unmortgage a property
+// This function will use setMortgaged and the related functions from Property class
 void Game::unmortgage(std::string property) {
-    // Unmortgage a property
-    // This function will use setMortgaged and the related functions from Property class
+    
     std::shared_ptr<Square> square = nullptr;
     for (int i = 0; i < 40; ++i) {
         if (board->getSquare(i)->getName() == property) {
@@ -429,6 +435,7 @@ void Game::unmortgage(std::string property) {
     std::cout << "Property " << property << " has been unmortgaged." << std::endl;
 }
 
+// Get rent of property
 int Game::getPropertyRent(std::shared_ptr<Property> property) {
     // Get the rent of a property
     if (property->getIsAcademic()) {
@@ -458,8 +465,9 @@ int Game::getPropertyRent(std::shared_ptr<Property> property) {
     }
 }
 
+// Declare bankruptcy
 void Game::bankrupt() {
-    // Declare bankruptcy
+    
     std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
 
     bool bankrupt = currentPlayer->getIsBankrupt();
@@ -513,9 +521,9 @@ void Game::bankrupt() {
     }
 }
 
-void Game::assets() {
-    // Display assets
-    // This function will use getProperties function from Player class
+// Display assets
+// This function will use getProperties function from Player class
+void Game::assets() {  
     std::vector<std::shared_ptr<Property>> properties = board->getCurrentPlayer()->getProperties();
     std::cout << "You have the following properties: " << std::endl;
     for (auto property : properties) {
@@ -526,8 +534,8 @@ void Game::assets() {
     //notifyObservers();
 }
 
+// Display asssets of all players
 void Game::all() {
-    // Display asssets of all players
     for (int i = 0; i < numPlayers; i++) {
         std::cout << board->getPlayer(i)->getName() << " has: " << std::endl;
         std::vector<std::shared_ptr<Property>> properties = board->getPlayer(i)->getProperties();
@@ -542,8 +550,8 @@ void Game::all() {
     //notifyObservers();
 }
 
+// Save the game
 void Game::save(std::string filename) {
-    // Save the game
     std::ofstream savefile{filename};
     if (savefile.fail()) {
         std::cerr << "Cannot open the save file" << std::endl;
@@ -600,38 +608,47 @@ void Game::save(std::string filename) {
     }
 }
 
+// Load the game
+
+// Sets the number of players
 void Game::setNumPlayers(int numPlayers) {
     this->numPlayers = numPlayers;
 }
 
+// Sets the number of rolls in Tims Line
 void Game::setNumRollsInTimsLine(int numRollsInTimsLine) {
     // Set the number of rolls in Tims Line
     // This function will use setNumRollsInTimsLine function from Player class
     board->getCurrentPlayer()->setTurnsInTimsLine(numRollsInTimsLine);
 }
 
+// Sets the number of Tim Cups
 void Game::setPlayerTimCups(int i, int TimCups) {
     // Set the number of Tim Cups
     // This function will use setTimCups function from Player class
     board->getPlayer(i)->setNumRimCups(TimCups);
 }
 
+// Sets the players money
 void Game::setPlayerMoney(int i, int money) {
     // Set the money of the player
     // This function will use setMoney function from Player class
     board->getPlayer(i)->setMoney(money);
 }
 
+// Sets the players position
 void Game::setPlayerPosition(int i, int position) {
     // Set the position of the player
     // This function will use setPosition function from Player class
     board->getPlayer(i)->setPosition(position);
 }
 
+// Adds a player to the game
 void Game::addPlayer(std::string name, int money) {
     board->addPlayer(name, money);
 } // Game::addPlayer
 
+// Removes a player from the game
 void Game::removePlayer(std::string name) {
     // Remove a player from the game
     // This function will use removePlayer function from Board class
@@ -639,22 +656,18 @@ void Game::removePlayer(std::string name) {
     numPlayers--;
 } // Game::removePlayer
 
+// Sets the character of the player
 void Game::setPlayerCharacter(int i, char character) {
     // Set the character of the player
     // This function will use setCharacter function from Player class
     board->getPlayer(i)->setCharacter(character);
 }
 
-void Game::setupBoard() {
-    // Set up the board
-    // This function will use setupBoard function from Board class
-}
 
-/*
- * This function iterates through the squares on the game board to find
- * the building with the specified name. If the building is a property,
- * it updates the owner of the property to the specified owner.
- */
+
+// This function iterates through the squares on the game board to find
+// the building with the specified name. If the building is a property,
+// it updates the owner of the property to the specified owner.
 void Game::setBuildingOwner(std::string buildingName, std::string owner) {
     for (int i = 0; i < 40; i++) {
         if (board->getSquare(i)->getName() == buildingName) {
@@ -689,9 +702,9 @@ void Game::setBuildingOwner(std::string buildingName, std::string owner) {
     }
 } // Game::setBuildingOwner
 
+// Set the number of improvements of a building
+// This function will use setNumImprovements function from Property class
 void Game::setBuildingImprovements(std::string buildingName, int numImprovements) {
-    // Set the number of improvements of a building
-    // This function will use setNumImprovements function from Property class
     for (int i = 0; i < 40; i++) {
         if (board->getSquare(i)->getName() == buildingName) {
             if (board->getSquare(i)->getIsProperty()) {
@@ -710,22 +723,27 @@ void Game::setBuildingImprovements(std::string buildingName, int numImprovements
     }
 }
 
+// Set the testing mode
 void Game::setTestingMode(bool testingMode) {
     this->testingMode = testingMode;
 } // Game::setTestingMode
 
+// Get the testing mode
 bool Game::getTestingMode() const {
     return testingMode;
 } // Game::getTestingMode
 
+// Get the number of players
 int Game::getNumPlayers() const {
     return numPlayers;
 } // Game::getNumPlayers
 
+// Get the board
 std::shared_ptr<Board> Game::getBoard() const {
     return board;
 } // Game::getBoard
 
+// Action for auctioning a property
 void Game::auction(std::shared_ptr<Property> property) {
     auto currentPlayer = board->getCurrentPlayer();
     std::cout << "Starting auction for " << property->getName() << "." << std::endl;
@@ -837,6 +855,7 @@ void Game::auction(std::shared_ptr<Property> property) {
     }
 }
 
+// Monopoly check for academic properties
 void Game::checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> prop) {
     std::string block;
     if (auto academic = std::dynamic_pointer_cast<Academic>(prop)) {
@@ -873,6 +892,7 @@ void Game::checkAcademicforMonopoly(std::shared_ptr<Player> owner, std::shared_p
     }
 }
 
+// Monopoly check for residence properties
 void Game::checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> boughtResidence) {
     const int RENT_VALUES[] = {25, 50, 100, 200};
     
@@ -894,7 +914,7 @@ void Game::checkResidenceforMonopoly(std::shared_ptr<Player> owner, std::shared_
     }
 }
 
-
+// Monopoly check for gym properties
 void Game::checkGymforMonopoly(std::shared_ptr<Player> owner, std::shared_ptr<Property> boughtGym) {
     int gymCount = 0;
     bool ownsAllGyms = true;
