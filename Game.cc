@@ -782,10 +782,8 @@ void Game::auction(std::shared_ptr<Property> property) {
     for (int i = 0; i < numPlayers; ++i) {
         int idx = (startIndex + i) % numPlayers;
         auto player = board->getPlayer(idx);
-        if (!player->getIsBankrupt()) {
-            participants.push_back(player);
-            std::cout << "Participant: " << player->getName() << std::endl;
-        }
+        participants.push_back(player);
+        std::cout << "Participant: " << player->getName() << std::endl;
     }
 
     if (participants.empty()) {
