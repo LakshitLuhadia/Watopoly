@@ -5,10 +5,10 @@
 using namespace std;
 using std::vector;
 
-int Academic::numImprovements = 0;
-bool Academic::isMonopoly = false;
-bool Academic::isImprovable = true;
-bool Academic::isSellable = false;
+// int Academic::numImprovements = 0;
+// bool Academic::isMonopoly = false;
+// bool Academic::isImprovable = true;
+// bool Academic::isSellable = false;
 
 // Constructor for Academic
 Academic::Academic(const std::string name, const int index, const bool isProperty, const int cost, const bool isAcademic, const bool isResidence, const bool isGym, const std::string block, const int improvementCost, const vector <int> tuition) :
@@ -16,7 +16,7 @@ Property{name, index, isProperty, cost, isAcademic, isResidence, isGym}, block{b
     numImprovements = 0;            // No improvements initially
     isMonopoly = false;             // Not part of a monopoly initially
     isImprovable = true;            // Improvable initially
-    isSellable = false;             // Sellable initially
+    isSellable = false;             // Not Sellable initially
 } // Academic::Academic
 
 // Returns the block of the property

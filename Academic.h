@@ -16,10 +16,10 @@ class Academic: public Property {
     const std::string block;                  // Block of the property
     const int improvementCost;                // Cost of improvements
     const vector <int> tuition{};             // Tuition fees for the property
-    static int numImprovements;               // Number of improvements on the property
-    static bool isMonopoly;                   // Is the property part of a monopoly?
-    static bool isImprovable;                 // Is the property improvable?
-    static bool isSellable;                   // Is the property sellable?
+     int numImprovements;               // Number of improvements on the property
+     bool isMonopoly;                   // Is the property part of a monopoly?
+     bool isImprovable;                 // Is the property improvable?
+     bool isSellable;                   // Is the property sellable?
 
     public:
         // Constructor for Academic
