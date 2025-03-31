@@ -31,7 +31,7 @@ class Game: public Subject {
         // Ctor for Game
         Game(int numPlayers = 0);
         void notifyObservers(); // notify all observers
-        void roll(int die1 = 0, int die2 = 0); // rolls the dice
+        void roll(int die1 = -1, int die2 = -1); // rolls the dice
         void next(); // moves to the next player
         void trade(std::string player, std::string give, std::string receive);
         void improve(const std::string& property, const std::string& action);
