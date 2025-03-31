@@ -26,7 +26,7 @@ void processInGameCommands(Game& g) {
             if (hasRolled) {
                 std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
                 std::cin.clear();
-                std::cin.ignore();
+                while (std::cin.get() != '\n');
                 continue;
             }
             
@@ -38,7 +38,7 @@ void processInGameCommands(Game& g) {
                     if (die1 < 0 || die2 < 0) {
                         std::cerr << "Invalid dice roll. Please enter a non-negative number." << std::endl;
                         std::cin.clear();
-                        std::cin.ignore();
+                        while (std::cin.get() != '\n');
                     } else {
                         g.roll(die1, die2);
                     }
@@ -96,7 +96,7 @@ void processInGameCommands(Game& g) {
                 } else {
                     std::cerr << "Invalid response. Please enter a valid response." << std::endl;
                     std::cin.clear();
-                    std::cin.ignore();
+                    while (std::cin.get() != '\n');
                 }
             }
         } else if (command == "improve") {
@@ -107,13 +107,13 @@ void processInGameCommands(Game& g) {
             if ((b->getSquare(currentPlayer->getPosition()))->getName() != property) {
                 std::cerr << "You are not on the property." << std::endl;
                 std::cin.clear();
-                std::cin.ignore();
+                while (std::cin.get() != '\n');
                 continue;
             }
             if (action != "buy" && action != "sell") {
                 std::cerr << "Invalid action. Please enter 'buy' or 'sell'." << std::endl;
                 std::cin.clear();
-                std::cin.ignore();
+                while (std::cin.get() != '\n');
             } else {
                 g.improve(property, action);
             }
@@ -141,7 +141,7 @@ void processInGameCommands(Game& g) {
         } else {
             std::cerr << "Invalid command. Please enter a valid command." << std::endl;
             std::cin.clear();
-            std::cin.ignore();
+            while (std::cin.get() != '\n');
         }
         if (g.getNumPlayers() == 1) {
             auto winner = b->getCurrentPlayer();
@@ -219,7 +219,7 @@ Game setupGame() {
         if (!(std::cin >> numPlayers) || numPlayers < 2 || numPlayers > 6) { // if the number of players is not between 2 and 6, print an appropriate error message
             std::cerr << "Invalid number of players. Please enter an integer value between 2 and 6" << std::endl;
             std::cin.clear();
-            std::cin.ignore();
+            while (std::cin.get() != '\n');
             continue;
         }
         Game g(numPlayers); // create a new game
@@ -233,7 +233,7 @@ Game setupGame() {
                 if (name.empty() || name == "BANK" || name == "bank") { // if the name is empty or "BANK", print an appropriate error message
                     std::cerr << "Invalid name. Please enter a valid name." << std::endl;
                     std::cin.clear();
-                    std::cin.ignore();
+                    while (std::cin.get() != '\n');
                     continue;
                 } else {
                     break; // break the loop if the name is valid
@@ -253,7 +253,7 @@ Game setupGame() {
                     std::cerr << "Invalid character. Please enter a valid character." << std::endl;
                     std::cerr << "Valid characters are: G, B, D, P, S, $, L, T" << std::endl;
                     std::cin.clear();
-                    std::cin.ignore();
+                    while (std::cin.get() != '\n');
                     continue;
                 }
             }
