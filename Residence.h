@@ -7,7 +7,7 @@
 
 // Residence class
 class Residence : public Property {
-    const int rent = 25;                   // Rent of the residence
+    int rent = 25;                   // Rent of the residence
 
     public: 
         // Constructor for Residence
@@ -16,6 +16,10 @@ class Residence : public Property {
         // Getters
         // Returns the rent of the residence
         int getRent() const;
+        
+        // Setters
+        // Sets the rent of the residence
+        void setRent(int rent) const;
 
         // Performs the action of the residence
         void performAction(std::shared_ptr<Player>& player) const override;

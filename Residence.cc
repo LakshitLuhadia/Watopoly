@@ -14,6 +14,11 @@ int Residence::getRent() const {
     return rent;
 } // Residence::getRent
 
+// Sets the rent of the residence
+void Residence::setRent(int rent) {
+    this->rent = rent;
+} // Residence::setRent
+
 // Performs the action of the residence
 void Residence::performAction(std::shared_ptr<Player>& player) const {
     if (getOwner()) {
