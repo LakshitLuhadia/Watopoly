@@ -98,11 +98,11 @@ void Player::move(int distance) {
     bool giveOSAP = false;
     int tempPos = position;
     position += distance;
-    if (position > 40) {
+    if (position > 39) {
         giveOSAP = true;
     }
     position = position%40;
-    if (!((tempPos == 31 || tempPos == 33) && position == 11) && giveOSAP) {
+    if (!((tempPos == 30 || tempPos == 32) && position == 10) && giveOSAP) {
         money += 200; // for OSAP fee
     }
 }
