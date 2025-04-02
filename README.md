@@ -1006,7 +1006,6 @@ if (highestBidder) {
     }
 ```
 
-5. After the auction, the property’s owner is updated, and the winning player’s properties list is modified to include the newly acquired property.
 ---
 ## 8. Saving and Loading
 
