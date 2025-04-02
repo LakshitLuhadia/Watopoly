@@ -63,3 +63,7 @@ void Property::setMortgageValue(int newMortgageValue) {
 void Property::setIsMortgaged(bool newIsMortgaged) {
     isMortgaged = newIsMortgaged;
 } // Property::setIsMortgaged
+
+void Property::performAction(std::shared_ptr<Player>& player) const {
+    return; // No action for non-property squares
+} // Property::performAction
