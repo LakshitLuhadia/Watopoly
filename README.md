@@ -105,43 +105,16 @@ classDiagram
         + virtual ~Subject() = 0
     }
 
-    class Game {
-        - board: unique_ptr<Board>
-        - numPlayers: Integer
-        - testingMode: Boolean
-        + roll()
-        + next()
-        + trade(string player, string give, string receive)
-        + improve(string property, string action)
-        + mortgage(string property)
-        + unmortgage(string property)
-        + bankrupt()
-        + assets()
-        + all()
-        + save(string filename)
-        + setNumPlayers(int numPlayers)
-        + setNumRollsInTimsLine(int numRollsInTimsLine)
-        + setPlayerTimCups(int pos, int TimCups)
-        + setPlayerMoney(int pos, int money)
-        + setPlayerPosition(int pos, int position)
-        + setPlayerCharacter(int pos, char character)
-        + setupBoard()
-        + setBuildingOwner(string buildingName, string owner)
-        + setBuildingImprovements(string buildingName, int numImprovements)
-        + setTestingMode()
-        + end()
-        + getState()
-    }
-
     class Observer {
         <<abstract>>
         + virtual notify() = 0
     }
 
     class TextDisplay {
-       - game: unique_ptr<Game>
        + notify()
-       + display()
+       + sideImprovements(line: String, arr[]: Integer, shared_ptr<Board> board)
+       + sidePlayers(line: String, arr[]: Integer, vector<shared_ptr<Player>> players)
+       + display(shared_ptr<Board> board, vector<shared_ptr<Player>> players)
     }
 
     class GraphicalDisplay {
@@ -159,18 +132,65 @@ classDiagram
        + drawImprovements()
     }
 
+    class XWindow {
+        + Xwindow(int width, int height)
+        + ~Xwindow()
+        + getWidth(): Integer 
+        + getHeight(): Integer
+        + fillRectangle(int x, int y, int width, int height, int colour=Black): void
+        + drawString(int x, int y, string msg): void
+    }
+
     class Board {
        - squares: vector<shared_ptr<Square>>
        - players: vector<unique_ptr<Player>>
        - currentPlayerIndex: Integer
+       - numPlayers: Integer
        + addSquare(square: shared_ptr<Square>)
-       + addPlayer(player: unique_ptr<Player>)
-       + removePlayer(player: unique_ptr<Player>)
-       + getSquare(int index): shared_ptr<Square>
-       + getPlayer(int index): unique_ptr<Player>
-       + getCurrentPlayer(): unique_ptr<Player>
+       + addPlayer(name: String, money: Integer)
+       + removePlayer(name: String)
+       + trade(player: String, give: String, receive String)
+       + getSquare(index: Integer): shared_ptr<Square>
+       + getPlayer(index: Integer): shared_ptr<Player>
+       + getCurrentPlayer(): shared_ptr<Player>
+       + getPropertyByName(name: String): shared_ptr<Property>
+       + getPlayerByName(name: String): shared_ptr<Player>
        + nextPlayer()
     }
+
+    class Game {
+        - board: shared_ptr<Board>
+        - testingMode: Boolean
+        - numPlayers: Integer
+        - td: shared_ptr<TextDisplay>
+        - gd: shared_ptr<GraphicalDisplay>
+        + notifyObservers()
+        + roll()
+        + next()
+        + trade(player: String, give: String, receive String)
+        + improve(property: String, action: String)
+        + mortgage(property: String)
+        + unmortgage(property: String)
+        + bankrupt()
+        + assets()
+        + all()
+        + save(filename: String)
+        + setNumPlayers(numPlayers: Integer)
+        + setNumRollsInTimsLine(numRollsInTimsLine: Integer)
+        + setPlayerTimCups(pos: Integer, TimCups: Integer)
+        + setPlayerMoney(pos: Integer, money: Integer)
+        + setPlayerPosition(pos: Integer, position: Integer)
+        + setPlayerCharacter(pos: Integer, character: Character)
+        + addPlayer(name: String, money: Integer)
+        + removePlayer(name: String)
+        + setBuildingOwner(buildingName: String, owner: String)
+        + setBuildingImprovements(buildingName: String, numImprovements: Integer)
+        + setTestingMode(testingMode: Boolean)
+        + getTestingMode(): Boolean
+        + getNumPlayers(): Integer
+        + getBoard()
+    }
+
 
     class Player {
        - name: String
@@ -234,11 +254,6 @@ classDiagram
     class NonProperty {
        <<abstract>>
        + virtual performAction(player: unique_ptr<Player>) = 0
-    }
-
-    class TimsLineSquare {
-       - bailCost: Integer
-       + performAction(player: unique_ptr<Player>)
     }
 
     class GoToTimsSquare {
@@ -328,8 +343,11 @@ classDiagram
     Subject o-- Observer
     Observer <|-- TextDisplay
     Observer <|-- GraphicalDisplay
-    TextDisplay o-- Game
-    GraphicalDisplay o-- Game
+    TextDisplay o-- Board
+    GraphicalDisplay o-- XWindow 
+    GraphicalDisplay o-- Board
+    Game o-- GraphicalDisplay
+    Game o-- TextDisplay
     Game *-- Board
     Game o-- Player
     Game o-- Dice
@@ -341,7 +359,6 @@ classDiagram
     Property <|-- Residence
     Property <|-- Gym
     Square <|-- NonProperty
-    NonProperty <|-- TimsLineSquare
     NonProperty <|-- OSAPSquare
     NonProperty <|-- FeesSquare
     NonProperty <|-- ChanceSquare
@@ -349,90 +366,8 @@ classDiagram
 ```
 
 ### 2.2 Design Patterns Utilized
-#### Obsever Pattern
-This pattern is used to define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
-
-**Components** of the **Observer Pattern** in Watopoly:
-
-• Subject: It maintains a list of observers and provides methods to attach, detach, and notify observers. The ```Game``` class is responsible for updating the state of the game, such as player positions, ownership of properties, and other game-related data.
-
-• Observers: The ```TextDisplay``` and ```GraphicalDisplay``` classes act as observers. They are notified whenever the state of the game changes, allowing them to update their displays accordingly. The ```TextDisplay``` class might update a text-based representation of the game board, while the ```GraphicalDisplay``` class updates a graphical representation.
-
-• Notification: When the game state changes (e.g., a player moves or buys a property), the ```Game``` class notifies its observers by calling their ```notify()``` methods. This ensures that both the text and graphical displays are updated to reflect the new state of the game.
-
-#### UML Class Diagram
-```mermaid
-classDiagram
-    class Subject {
-        <<abstract>>
-        - vector<Observer*> observers
-        + attach(Observer* observer)
-        + detach(Observer* observer)
-        + notifyObserver()
-        + virtual ~Subject() = 0
-    }
-
-    class Game {
-        - board: unique_ptr<Board>
-        - numPlayers: Integer
-        - testingMode: Boolean
-        + roll()
-        + next()
-        + trade(string player, string give, string receive)
-        + improve(string property, string action)
-        + mortgage(string property)
-        + unmortgage(string property)
-        + bankrupt()
-        + assets()
-        + all()
-        + save(string filename)
-        + setNumPlayers(int numPlayers)
-        + setNumRollsInTimsLine(int numRollsInTimsLine)
-        + setPlayerTimCups(int pos, int TimCups)
-        + setPlayerMoney(int pos, int money)
-        + setPlayerPosition(int pos, int position)
-        + setPlayerCharacter(int pos, char character)
-        + setupBoard()
-        + setBuildingOwner(string buildingName, string owner)
-        + setBuildingImprovements(string buildingName, int numImprovements)
-        + setTestingMode()
-        + end()
-        + getState()
-    }
-
-    class Observer {
-        <<abstract>>
-        + virtual notify() = 0
-    }
-
-    class TextDisplay {
-       - game: unique_ptr<Game>
-       + notify()
-       + display()
-    }
-
-    class GraphicalDisplay {
-       - Display: display
-       - Game* game
-       - width: Integer
-       - height: Integer
-       - window: Window
-       - gc: GC
-       + notify()
-       + getWidth(): Integer
-       + getHeight(): Integer
-       + drawBoard()
-       + drawPlayers()
-       + drawImprovements()
-    }
-
-    %% Relationships
-    Subject <|-- Game
-    Subject o-- Observer
-    Observer <|-- TextDisplay
-    Observer <|-- GraphicalDisplay
-    TextDisplay o-- Game
-    GraphicalDisplay o-- Game
+####
+```
     
 ```
 
