@@ -27,8 +27,7 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 - [8. Saving and Loading](#8-saving-and-loading)
 - [9. User Interface](#9-user-interface)
 - [10. Team Members](#10-team-members)
-- [11. Appendix](#11-appendix)
-  - [11.1 Code Snippets](#111-code-snippets)
+
 
 
 ---
@@ -252,8 +251,7 @@ classDiagram
     }
 
     class NonProperty {
-       <<abstract>>
-       + virtual performAction(player: unique_ptr<Player>) = 0
+       + performAction(player: unique_ptr<Player>)
     }
 
     class GoToTimsSquare {
@@ -366,10 +364,157 @@ classDiagram
 ```
 
 ### 2.2 Design Patterns Utilized
-####
+#### Template Method Design Pattern
+The Template Method Design Pattern is used in the codebase to define the skeleton of an algorithm in a base class while allowing subclasses to override specific steps of the algorithm without changing its structure. This pattern is particularly useful when you have a common algorithm that can be customized by subclasses.
+
+1. Base Class: The ```Square``` class serves as the base class for all squares on the game board. It defines a virtual method ```performAction```, which is the template method. This method outlines the general structure of what should happen when a player lands on a square.
+   
+2. Subclasses: Various subclasses of ```Square```, such as ```Property```, ```Academic```, ```Residence```, ```Gym```, and ```NonProperty```, inherit from ```Square``` and override the ```performAction``` method. Each subclass provides its own implementation of what should happen when a player lands on that specific type of square.
+ 
+3. Algorithm Structure: The ```performAction``` method in the base class ```Square``` is a placeholder that subclasses must implement. This ensures that all squares have a consistent interface for performing actions, but the specific behavior can vary based on the type of square.
+   
+```mermaid
+classDiagram
+    class Square {
+       <<abstract>>
+       - name: String
+       - index: Integer
+       - isProperty: Boolean
+       + getName(): String
+       + getIndex(): Integer 
+       + getIsProperty(): Boolean
+       + virtual performAction(player: unique_ptr<Player>) = 0
+    }
+
+    class NonProperty {
+       + performAction(player: unique_ptr<Player>)
+    }
+
+    class Property {
+       - cost: Integer
+       - mortgageValue: Integer
+       - owner: unique_ptr<Player>
+       - isMortgaged: Boolean
+       - isAcademic: Boolean
+       - isResidence: Boolean
+       - isGym: Boolean
+       + getCost(): Integer
+       + getMortgageValue(): Integer
+       + getOwner(): unique_ptr<Player>
+       + getIsMortgaged(): Boolean
+       + getIsMortgaged(): Boolean
+       + getIsAcademic: Boolean
+       + getIsResidence: Boolean
+       + getIsGym(): Boolean
+       + setOwner(player: unique_ptr<Player>)
+       + setMortgageValue(int mortgageValue)
+       + setIsMortgaged(bool isMortgaged)
+       + performAction(player: unique_ptr<Player>)
+    }
+
+    class Academic {
+       - block: String
+       - improvementCost: Integer
+       - tution: Vector <Integer>
+       - numImprovements: Integer
+       - isMonopoly: Boolean
+       - isImprovable: Boolean
+       - isSellable: Boolean
+       + getBlock(): String
+       + getImprovementCost(): Integer
+       + getTuition(int level): Integer
+       + getNumImprovements(): Integer
+       + getIsMonopoly(): Boolean
+       + getIsImprovable(): Boolean
+       + getIsSellable(): Boolean
+       + setNumImprovements(int numImprovements)
+       + setIsMonopoly(bool isMonopoly)
+       + setIsImprovable(bool isImprovable)
+       + setIsSellable(bool isSellable)
+       + addimprove()
+       + sellimprove()
+       + performAction(player: unique_ptr<Player>)
+    }
+
+    class Residence {
+       - rent: Integer
+       + getRent(): Integer
+       + performAction(player: unique_ptr<Player>)
+    }
+
+    class Gym {
+       - usageFee: Integer
+       - isMonopoly: Boolean
+       + getusageFee(): Integer
+       + getIsMonopoly(): Boolean
+       + setIsMonopoly(bool isMonopoly)
+       + performAction(player: unique_ptr<Player>)
+    }
+
+    Square <|-- Property
+    Property <|-- Academic
+    Property <|-- Residence
+    Property <|-- Gym
+    Square <|-- NonProperty
 ```
-    
+
+#### Command Design Pattern
+The Command Pattern is a behavioral design pattern that encapsulates a request as an object, thereby allowing for parameterization of clients with queues, requests, and operations. It also provides support for undoable operations.
+
+1. Encapsulation of Actions: The various actions that a player can perform in the game (like rolling dice, trading properties, mortgaging, improving properties, etc.) are encapsulated as methods within the ```Game``` class. Each of these methods represents a command that can be executed.
+
+2. Method Calls as Commands: The Game class contains methods that correspond to specific commands:
+   ```roll()```
+   ```trade(std::string player, std::string give, std::string receive)```
+   ```improve(const std::string& property, const std::string& action)```
+   ```mortgage(std::string property)```
+   ```unmortgage(std::string property)```
+   ```bankrupt()```
+   ```assets()```
+   ```all()```
+   ```save(std::string filename)```
+Each of these methods can be thought of as a command that modifies the state of the game.
+
+4. Processing Commands: In the ```processInGameCommands``` function, user input is read and matched to specific commands. Based on the command entered by the user, the corresponding method in the ```Game``` class is called. This effectively decouples the command execution from the user interface, allowing for a clean separation of concerns.
+
+#### Singleton Design Pattern
+The Singleton Design Pattern ensures that a class has only one instance and provides a global point of access to that instance.
+
+1. Private Constructor: The constructor of the ```Dice``` class is private, which prevents external instantiation of the class. This is a key characteristic of the Singleton pattern.
+   
+```cpp
+class Dice {
+    static int dice1; // Dice 1's roll (ranges from 1 - 6)
+    static int dice2; // Dice 2's roll (ranges from 1 - 6)
+    static bool testing; // Whether in testing mode or not
+
+    // Rest of the Implementation
+}
 ```
+
+2. Static Methods: The ```Dice``` class provides static methods to access and manipulate the dice values. This allows the class to maintain its state without needing to instantiate it multiple times.
+
+ ```cpp
+class Dice {
+  // ...
+
+  public:
+
+    // Rolls the dice (sets dice1 and dice2 to numbers from 1 - 6)
+       static void roll(int d1 = -1, int d2 = -1);
+
+    // Adds dice1 and dice2 values (ranges 1 - 12)
+       static int add();
+
+    // Returns true if dice1 and dice2 are equal else false
+       static bool isEqual();
+
+    // Rest of the Implementation
+
+}
+```
+
+In the game logic, the ```Dice``` class is used to roll the dice and determine the outcome of player actions. The static methods allow the game to access the dice functionality without needing to create an instance of the ```Dice``` class.
 
 ---
 
@@ -458,7 +603,4 @@ ________________________________________________________________________________
 2. Lakshit Luhadia
 3. Dhruv Kumar
 
----
-## 11. Appendix
 
-### 11.1 Code Snippets
