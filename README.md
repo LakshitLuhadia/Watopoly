@@ -464,15 +464,160 @@ The Command Pattern is a behavioral design pattern that encapsulates a request a
 1. Encapsulation of Actions: The various actions that a player can perform in the game (like rolling dice, trading properties, mortgaging, improving properties, etc.) are encapsulated as methods within the ```Game``` class. Each of these methods represents a command that can be executed.
 
 2. Method Calls as Commands: The Game class contains methods that correspond to specific commands:
-   ```roll()```
-   ```trade(std::string player, std::string give, std::string receive)```
-   ```improve(const std::string& property, const std::string& action)```
-   ```mortgage(std::string property)```
-   ```unmortgage(std::string property)```
-   ```bankrupt()```
-   ```assets()```
-   ```all()```
-   ```save(std::string filename)```
+   1. ```roll``` method:
+   2. ```trade``` method:
+   3. ```improve``` method:
+   4. ```mortgage``` method:
+   5. ```unmortgage``` method:
+   6. ```bankrupt``` method:
+```cpp
+void Game::bankrupt() {
+    // Declare bankruptcy
+    std::shared_ptr<Player> currentPlayer = board->getCurrentPlayer();
+
+    bool bankrupt = currentPlayer->getIsBankrupt();
+
+    if (bankrupt) {
+        int numplayers = getNumPlayers();
+        if (numplayers == 2) {
+            std::cout << "Game Over! " << currentPlayer->getName() << " is bankrupt!" << std::endl;
+            removePlayer(currentPlayer->getName());
+        } else {
+            int index = currentPlayer->getPosition();
+            std::shared_ptr<Square> square = board->getSquare(index);
+            if (std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(square)) {
+                std::shared_ptr<Player> owner = property->getOwner();
+                if (owner != currentPlayer) {
+                    std::vector<std::shared_ptr<Property>> properties = currentPlayer->getProperties();
+                    for (auto& property : properties) {
+                        property->setOwner(owner);
+                        owner->addProperty(property);
+                        if (std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property)) {
+                            while (academicBuilding->getNumImprovements() > 0) {
+                                academicBuilding->sellimprove();
+                            }
+                        }
+                        currentPlayer->removeProperty(properties.back());
+                        properties.pop_back();
+                    }
+                    int numCups = currentPlayer->getNumRimCups();
+                    int ownerRimCups = owner->getNumRimCups();
+                    owner->setNumRimCups(numCups + ownerRimCups);
+                }
+            } else {                
+                std::vector<std::shared_ptr<Property>> properties = currentPlayer->getProperties();
+                for (auto& property : properties) {
+                    std::string propertyName = property->getName();
+                    unmortgage(propertyName);
+                    property->setOwner(nullptr);
+                    auction(property);
+                }
+            }
+            
+            removePlayer(currentPlayer->getName());
+            std::cout << currentPlayer->getName() << " is bankrupt!" << std::endl;
+            std::cout << "You have been removed from the game." << std::endl;
+            next();
+        }
+    } else {
+        std::cout << "You are not bankrupt. You can not declare bankruptcy." << std::endl;
+    }
+}      
+```
+   7. ```assets``` method:
+```cpp
+void Game::assets() {
+    // Display assets
+    // This function will use getProperties function from Player class
+    std::vector<std::shared_ptr<Property>> properties = board->getCurrentPlayer()->getProperties();
+    std::cout << "You have the following properties: " << std::endl;
+    for (auto property : properties) {
+        std::cout << property->getName() << std::endl;
+    }
+    std::cout << "You have $" << board->getCurrentPlayer()->getMoney() << "." << std::endl;
+    std::cout << "You have " << board->getCurrentPlayer()->getNumRimCups() << " Tim Cups." << std::endl;
+    //notifyObservers();
+}
+```
+   8. ```all``` method:
+```cpp
+void Game::all() {
+    // Display asssets of all players
+    for (int i = 0; i < numPlayers; i++) {
+        std::cout << board->getPlayer(i)->getName() << " has: " << std::endl;
+        std::vector<std::shared_ptr<Property>> properties = board->getPlayer(i)->getProperties();
+        std::cout << "Properties: ";
+        for (auto property : properties) {
+            std::cout << property->getName() << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "Money: " << board->getPlayer(i)->getMoney() << std::endl;
+        std::cout << "Tim Cups: " << board->getPlayer(i)->getNumRimCups() << std::endl;
+    }
+    //notifyObservers();
+}
+```
+   9. ```save``` method:
+```cpp
+void Game::save(std::string filename) {
+    // Save the game
+    std::ofstream savefile{filename};
+    if (savefile.fail()) {
+        std::cerr << "Cannot open the save file" << std::endl;
+    } else {
+        // Save the game state
+        // Save the number of players first
+        savefile << numPlayers << std::endl;
+        for (int i = 0; i < numPlayers; i++) {
+            std::shared_ptr<Player> p = board->getPlayer(i);
+            // This is following the format: name character numRimCups money position
+            savefile << p->getName() << " " << p->getCharacter() << " " << p->getNumRimCups() << " " 
+                     << p->getMoney() << " " << p->getPosition() << " ";
+            if (p->getPosition() == 10) {
+                if (p->getInTimsLine()) { // Check if the player is in Tims Line
+                    savefile << 1 << " " << p->getTurnsInTimsLine();
+                } else {
+                    savefile << 0;
+                }
+            }
+            savefile << std::endl;
+        }
+        for (int i = 0; i < 40; i++) {
+            int mortgageImprovements = -1;
+            // This is following the format: name owner numImprovements
+            if (board->getSquare(i)->getIsProperty() == false) {
+                // Do not save the non-property square
+                continue;
+            } else {
+                std::shared_ptr<Property> property = std::dynamic_pointer_cast<Property>(board->getSquare(i));
+                if (property) {
+                    savefile << property->getName() << " ";
+                    if (property->getOwner() == nullptr) {
+                        savefile << "BANK" << " ";
+                    } else {
+                        savefile << property->getOwner()->getName() << " ";
+                    }
+
+                    if (property->getIsMortgaged()) {
+                        savefile << mortgageImprovements << std::endl; // -1 for mortgaged
+                    } else if (property->getIsResidence() || property->getIsGym()) {
+                        savefile << 0 << std::endl; // No improvements for Residence and Gym
+                    } else {
+                        std::shared_ptr<Academic> academicBuilding = std::dynamic_pointer_cast<Academic>(property); // Downcast to Academic
+                        if (!academicBuilding->getIsMonopoly()) {
+                            savefile << 0 << std::endl; // No improvements for non-monopoly
+                        } else {
+                            // Save the number of improvements for Academic buildings
+                            savefile << academicBuilding->getNumImprovements() << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
 Each of these methods can be thought of as a command that modifies the state of the game.
 
 4. Processing Commands: In the ```processInGameCommands``` function, user input is read and matched to specific commands. Based on the command entered by the user, the corresponding method in the ```Game``` class is called. This effectively decouples the command execution from the user interface, allowing for a clean separation of concerns.
