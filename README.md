@@ -620,7 +620,159 @@ void Game::save(std::string filename) {
 
 Each of these methods can be thought of as a command that modifies the state of the game.
 
-4. Processing Commands: In the ```processInGameCommands``` function, user input is read and matched to specific commands. Based on the command entered by the user, the corresponding method in the ```Game``` class is called. This effectively decouples the command execution from the user interface, allowing for a clean separation of concerns.
+3. Processing Commands: In the ```processInGameCommands``` function, user input is read and matched to specific commands. Based on the command entered by the user, the corresponding method in the ```Game``` class is called. This effectively decouples the command execution from the user interface, allowing for a clean separation of concerns.
+```cpp
+void processInGameCommands(Game& g) {
+    auto b = g.getBoard(); // Get the board from the game
+    bool hasRolled = false;
+    bool hasTakenActionInTimsLine = false;
+
+    while (true) {
+        auto currentPlayer = b->getCurrentPlayer();
+        std::cout << currentPlayer->getName() << "'s turn." << std::endl;
+
+        // NEW: Handle first turn in Tims Line
+        if (currentPlayer->getInTimsLine() && currentPlayer->getTurnsInTimsLine() == 0) {
+            hasTakenActionInTimsLine = true; // Block prompt this turn
+        }
+
+        // Check if player is in Tims Line and needs to act
+        if (currentPlayer->getInTimsLine() 
+            && !hasTakenActionInTimsLine 
+            && currentPlayer->getTurnsInTimsLine() > 0) {
+            std::cout << "You are in Tims Line. Do you want to use a Tim Cup, Roll for doubles, or Pay $50? (tim/roll/pay): ";
+            std::string timsCommand;
+            std::cin >> timsCommand;
+
+            if (timsCommand == "pay") {
+                int cost = 50; // Cost to get out of Tims Line
+                if (currentPlayer->getMoney() >= cost) {
+                    currentPlayer->subtractMoney(cost);
+                    currentPlayer->setInTimsLine(false);
+                    currentPlayer->setTurnsInTimsLine(0);
+                    std::cout << "You paid $50 to get out of Tims Line." << std::endl;
+                    hasTakenActionInTimsLine = true; // Mark action as taken
+                } else {
+                    std::cout << "Insufficient funds to pay $50!" << std::endl;
+                }
+            } else if (timsCommand == "tim") {
+                if (currentPlayer->getNumRimCups() > 0) {
+                    currentPlayer->setInTimsLine(false);
+                    currentPlayer->setTurnsInTimsLine(0);
+                    currentPlayer->setNumRimCups(currentPlayer->getNumRimCups() - 1);
+                    std::cout << "Used Tim Cup to exit Tims Line." << std::endl;
+                    hasTakenActionInTimsLine = true; // Mark action as taken
+                } else {
+                    std::cout << "No Tim Cups available!" << std::endl;
+                }
+            } else if (timsCommand == "roll") {
+                if (hasRolled) {
+                    std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
+                } else {
+                    g.roll();
+                    hasRolled = true;
+                    hasTakenActionInTimsLine = true; // Mark action as taken
+                }
+            } else {
+                std::cerr << "Invalid command. Please enter 'tim', 'roll', or 'pay'." << std::endl;
+            }
+
+            continue; // Skip other commands after taking action in Tims Line
+        }
+
+        // Handle other commands outside of Tims Line actions
+        std::string command;
+        std::cin >> command;
+
+        if (command == "roll") {
+            if (hasRolled) {
+                std::cerr << "Invalid Command. You have already rolled this turn." << std::endl;
+                continue;
+            }
+
+            if (g.getTestingMode()) {
+                std::string input;
+                std::getline(std::cin, input); // Read the entire line after "roll"
+
+                // Check if input contains two integers
+                std::istringstream iss(input);
+                int die1, die2;
+
+                if (iss >> die1 >> die2) {
+                    if (die1 < 0 || die2 < 0) {
+                        std::cerr << "Invalid dice roll. Please enter non-negative numbers." << std::endl;
+                        continue;
+                    }
+                    g.roll(die1, die2); // Call roll with specified dice
+                } else {
+                    g.roll(-1, -1); // Call usual roll function
+                }
+            } else {
+                g.roll(-1, -1); // Call usual roll function in non-testing mode
+            }
+
+            hasRolled = true; // Mark as rolled for this turn
+        
+        } else if (command == "next") {
+            g.next();
+            hasRolled = false;
+            hasTakenActionInTimsLine = false; // Reset Tims Line action flag for next turn
+        } else if (command == "trade") {
+            std::string player, give, receive;
+            std::cin >> player >> give >> receive;
+
+            bool giveIsInt = std::all_of(give.begin(), give.end(), ::isdigit);
+            bool receiveIsInt = std::all_of(receive.begin(), receive.end(), ::isdigit);
+
+            if (!giveIsInt || !receiveIsInt) { 
+                g.trade(player, give, receive);
+            } else {
+                std::cout << "reject" << std::endl;
+            }
+        
+        } else if (command == "improve") {
+            std::string property, action;
+            std::cin >> property >> action;
+
+            g.improve(property, action);
+
+        } else if (command == "mortgage") {
+            std::string property;
+            std::cin >> property;
+            g.mortgage(property);
+
+        } else if (command == "unmortgage") {
+            std::string property;
+            std::cin >> property;
+            g.unmortgage(property);
+
+        } else if (command == "bankrupt") {
+            g.bankrupt();
+
+        } else if (command == "assets") {
+            g.assets();
+
+        } else if (command == "all") {
+            g.all();
+
+        } else if (command == "save") {
+            std::string filename;
+            std::cin >> filename;
+            g.save(filename);
+            
+        } else {
+            std::cerr << "Invalid command. Please enter a valid command." << std::endl;
+        }
+
+        // Check for game end condition
+        if (g.getNumPlayers() == 1) {
+            auto winner = b->getCurrentPlayer();
+            std::cout << winner->getName() << " wins the game!" << std::endl;
+            break;
+        }
+    }
+}
+```
 
 #### Singleton Design Pattern
 The Singleton Design Pattern ensures that a class has only one instance and provides a global point of access to that instance.
