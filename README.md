@@ -887,7 +887,126 @@ ________________________________________________________________________________
 
 ---
 ## 7. Auctions
+In the Watopoly game, the auction process is conducted through a series of steps that allow players to bid on properties that are available for auction. The auction mechanism is implemented within the ```Game``` class and is triggered when a player chooses not to purchase a property they landed on. Here’s a detailed explanation of how the auction is conducted:
+1. Triggering the Auction: The auction is initiated when a player lands on an unowned property and chooses not to buy it. This is typically handled in the ```processInGameCommands``` function, where the player is prompted to buy the property or start an auction.
 
+```cpp
+   if (response == "n" || response == "N") {
+       std::cout << "Property not bought." << std::endl;
+       std::cout << "Starting Auction" << std::endl;
+       auction(property); // Call the auction method
+   }
+```
+
+2. Auction Method: The auction method in the Game class is responsible for managing the auction process. It takes the property to be auctioned as a parameter.
+
+```cpp
+   void Game::auction(std::shared_ptr<Property> property) {
+       auto currentPlayer = board->getCurrentPlayer();
+       std::cout << "Starting auction for " << property->getName() << "." << std::endl;
+
+       // Find the starting index of the current player
+       int startIndex = 0;
+       for (int i = 0; i < numPlayers; ++i) {
+           if (board->getPlayer(i) == currentPlayer) {
+               startIndex = i;
+               break;
+           }
+       }
+       // Auction logic continues...
+   }
+```
+
+3. Bidding Process: The auction typically involves a bidding process where players can place bids on the property. The auction logic would iterate through the players, allowing them to place bids until a final bid is accepted. The auction can be conducted in a simple manner where players can either raise their bids or pass. The auction continues until no player wants to increase their bid.
+   
+```cpp
+int currentBid = 0; // Start bidding at $0
+    std::shared_ptr<Player> highestBidder = nullptr;
+
+    // Track players who have passed
+    std::vector<bool> passed(participants.size(), false);
+    int activeBidders = participants.size();
+
+    size_t currentIndex = 0; // Index of the current bidder
+
+    while (activeBidders > 1) {
+        auto player = participants[currentIndex];
+        if (passed[currentIndex]) { // Skip passed players
+            currentIndex = (currentIndex + 1) % participants.size();
+            continue;
+        }
+
+        int minBid = currentBid + 1; // Minimum allowed bid
+
+        std::cout << player->getName() << "'s turn. Current bid: $" 
+                  << currentBid << "\n"
+                  << "Enter bid (minimum $" << minBid << ") or 'pass': ";
+
+        std::string input;
+        std::cin >> input;
+
+        if (input == "pass") {
+            passed[currentIndex] = true;
+            activeBidders--;
+            std::cout << player->getName() << " passes." << std::endl;
+
+            // Move to next player
+            currentIndex = (currentIndex + 1) % participants.size();
+            continue;
+        }
+
+        // Validate numeric input
+        bool validNumber = !input.empty() && 
+            std::all_of(input.begin(), input.end(), ::isdigit);
+
+        if (!validNumber) {
+            std::cerr << "Invalid input! Numbers only." << std::endl;
+            continue; // Retry same player
+        }
+
+        int bid = std::stoi(input);
+
+        if (bid < minBid) {
+            std::cerr << "Bid must be at least $" << minBid << "!" << std::endl;
+            continue; // Retry same player
+        }
+
+        if (bid > player->getMoney()) {
+            std::cerr << player->getName() << " can't afford this bid!" << std::endl;
+            continue; // Retry same player
+        }
+
+        // Accept valid bid
+        currentBid = bid;
+        highestBidder = player;
+
+        std::cout << "New highest bid: $" << bid 
+                  << " by " << player->getName() << "." << std::endl;
+
+        // Move to next player
+        currentIndex = (currentIndex + 1) % participants.size();
+    }
+```
+
+4. Determining the Winner: Once the bidding concludes, the player with the highest bid wins the property. The winning player’s money is deducted by the bid amount, and the property’s owner is updated to reflect the new owner.
+
+```cpp
+if (highestBidder) {
+        highestBidder->subtractMoney(currentBid);
+        property->setOwner(highestBidder);
+        highestBidder->addProperty(property);
+        std::cout << highestBidder->getName() 
+                  << " wins " << property->getName() 
+                  << " for $" << currentBid << "." << std::endl;
+    } else {
+        std::cout << "Auction ended with no bids." 
+                  << property->getName() 
+                  << " remains unowned." 
+                  << std::endl;
+    }
+```
+
+5. After the auction, the property’s owner is updated, and the winning player’s properties list is modified to include the newly acquired property.
 ---
 ## 8. Saving and Loading
 
