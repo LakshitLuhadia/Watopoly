@@ -25,6 +25,8 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
 - [6. Player Management](#6-player-management)
 - [7. Auctions](#7-auctions)
 - [8. Saving and Loading](#8-saving-and-loading)
+   - [8.1 Saving the Game](#81-saving-the-game)
+   - [8.2 Loading the Game](#82-loading-the-game)
 - [9. User Interface](#9-user-interface)
 - [10. Team Members](#10-team-members)
 
@@ -1008,6 +1010,88 @@ if (highestBidder) {
 
 ---
 ## 8. Saving and Loading
+
+In the Watopoly codebase, the saving and loading of a game is implemented through file I/O operations that allow the game state to be preserved and restored. This functionality is primarily handled in the ```Game``` class and is facilitated by the ```processLoadedFile``` function. Here’s a detailed breakdown of how saving and loading are implemented:
+
+### 8.1 Saving the Game
+1. Save Method: The Game class includes a method to save the current state of the game to a file. This method typically writes the necessary game data, such as player information, property ownership, and game settings, to a specified file.
+```cpp
+   void Game::save(std::string filename) {
+       std::ofstream savefile{filename};
+       if (savefile.fail()) {
+           std::cerr << "Cannot open the save file" << std::endl;
+           return;
+       }
+       // Save number of players
+       savefile << numPlayers << std::endl;
+
+       // Save player data
+       for (const auto& player : players) {
+           savefile << player->getName() << " " 
+                     << player->getCharacter() << " "
+                     << player->getNumRimCups() << " "
+                     << player->getMoney() << " "
+                     << player->getPosition() << std::endl;
+       }
+
+       // Save property data
+       for (const auto& property : properties) {
+           savefile << property->getName() << " "
+                     << property->getOwner()->getName() << " "
+                     << property->getNumImprovements() << std::endl;
+       }
+   }
+```
+2. Data Written to File:
+The data written to the file typically includes:
+•  The number of players.
+•  Each player's name, character, number of Rim Cups, money, and position.
+•  Each property’s name, its owner, and the number of improvements made on it.
+
+### 8.2 Loading the Game
+
+1. Load Method:The loading of a game is handled by the ```processLoadedFile``` function, which reads the game state from a specified file and reconstructs the game.
+```cpp
+   Game processLoadedFile(const std::string& filename) {
+       std::ifstream loadfile{filename};
+       if (loadfile.fail()) {
+           std::cerr << "Cannot open the loaded file" << std::endl;
+           return Game(); // Return a new game instance
+       }
+       Game g;
+       std::shared_ptr<Board> board = g.getBoard();    
+       int numPlayers;
+       loadfile >> numPlayers;
+       g.setNumPlayers(numPlayers);
+       for (int i = 0; i < numPlayers; ++i) {
+           std::string name;
+           char character;
+           int TimCups;
+           int money;
+           int position;
+           loadfile >> name >> character >> TimCups >> money >> position;
+           board->addPlayer(name, money);
+           g.setPlayerCharacter(i, character);
+           g.setPlayerTimCups(i, TimCups);
+           g.setPlayerPosition(i, position);
+       }
+       // Load property data
+       std::string buildingName;
+       while (loadfile >> buildingName) {
+           std::string owner;
+           int numImprovements;
+           loadfile >> owner >> numImprovements;
+           g.setBuildingOwner(buildingName, owner);
+           g.setBuildingImprovements(buildingName, numImprovements);
+       }
+       return g;
+   }
+```
+2. Data Read from File:
+The loading function reads the following data from the file:
+• The number of players.
+• Each player's name, character, number of Rim Cups, money, and position.
+• Each property’s name, its owner, and the number of improvements made on it.
 
 ---
 ## 9. User Interface
