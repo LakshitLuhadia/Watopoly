@@ -1044,8 +1044,11 @@ In the Watopoly codebase, the saving and loading of a game is implemented throug
 ```
 2. Data Written to File:
 The data written to the file typically includes:
+
 •  The number of players.
+
 •  Each player's name, character, number of Rim Cups, money, and position.
+
 •  Each property’s name, its owner, and the number of improvements made on it.
 
 ### 8.2 Loading the Game
@@ -1089,8 +1092,11 @@ The data written to the file typically includes:
 ```
 2. Data Read from File:
 The loading function reads the following data from the file:
+
 • The number of players.
+
 • Each player's name, character, number of Rim Cups, money, and position.
+
 • Each property’s name, its owner, and the number of improvements made on it.
 
 ---
