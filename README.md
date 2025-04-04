@@ -21,14 +21,25 @@ Watopoly is a video game project for CS246, which is a variant of the classic bo
   - [2.2 Design Patterns Utilized](#22-design-patterns-utilized)
 - [3. Board Layout](#3-board-layout)
 - [4. Game Logic](#4-game-logic)
+  - [4.1 Game Initialization](#41-game-initialization)
+  - [4.2 Player Turns](#42-player-turns)
+  - [4.3 Rolling the Dice](#43-rolling-the-dice)
+  - [4.4 Landing on Squares](#44-landing-on-squares)
+  - [4.5 Property Actions](#45-property-actions)
+  - [4.6 Auction Logic](#46-auction-logic)
+  - [4.7 Game End Conditions](#47-game-end-conditions)
 - [5. Command Interpreter](#5-command-interpreter)
 - [6. Player Management](#6-player-management)
+  - [6.1 Player Class](#61-player-class)
+  - [6.2 Player Actions](#62-player-actions)
+  - [6.3 Board Class](#63-board-class)
+  - [6.4 Game Class](#64-game-class)
+  - [6.5 Player Interaction](#65-player-interaction)
 - [7. Auctions](#7-auctions)
 - [8. Saving and Loading](#8-saving-and-loading)
    - [8.1 Saving the Game](#81-saving-the-game)
    - [8.2 Loading the Game](#82-loading-the-game)
-- [9. User Interface](#9-user-interface)
-- [10. Team Members](#10-team-members)
+- [9. Team Members](#9-team-members)
 
 
 
@@ -880,12 +891,258 @@ ________________________________________________________________________________
 
 ---
 ## 4. Game Logic
+### 4.1 Game Initialization
+The game starts with the initialization of players and the game board. The ```Game``` class constructor sets up the initial state, including the number of players and their starting conditions.
+
+```cpp
+Game::Game(int numPlayers) : numPlayers(numPlayers) {
+    // Initialize the board and players
+    board = std::make_shared<Board>(numPlayers);
+    // Additional setup if needed
+}
+```
+
+### 4.2 Player Turns
+The game logic includes a loop that allows players to take turns. The processInGameCommands function manages this loop, prompting the current player for input and executing commands based on their actions.
+
+```cpp
+void processInGameCommands(Game& g) {
+    auto b = g.getBoard(); // Get the board from the game
+    while (true) {
+        auto currentPlayer = b->getCurrentPlayer();
+        std::cout << currentPlayer->getName() << "'s turn." << std::endl;
+
+        // Prompt for command
+        std::string command;
+        std::cin >> command;
+
+        // Process commands
+        if (command == "roll") {
+            g.roll(); // Execute the roll command
+        } else if (command == "next") {
+            g.next(); // Move to the next player
+        }
+        // Additional commands...
+    }
+}
+```
+
+### 4.3 Rolling the Dice
+When a player rolls the dice, the ```roll``` method in the ```Game``` class is called. This method simulates the dice roll and updates the player's position on the board.
+
+```cpp
+void Game::roll(int die1, int die2) {
+    Dice::roll(die1, die2); // Roll the dice
+    int totalRoll = Dice::add(); // Get the sum of the dice
+    auto currentPlayer = board->getCurrentPlayer();
+    currentPlayer->move(totalRoll); // Move the player based on the roll
+    // Additional logic for landing on squares
+}
+```
+
+### 4.4 Landing on Squares
+When a player lands on a square, the game logic determines the type of square and executes the corresponding action. This is typically handled in the move method of the ```Player``` class, which updates the player's position and triggers the square's action.
+
+```cpp
+void Player::move(int distance) {
+    position += distance;
+    position = position % 40; // Wrap around the board
+    // Get the square the player landed on
+    auto square = board->getSquare(position);
+    square->performAction(shared_from_this()); // Perform the action of the square
+}
+```
+
+### 4.5 Property Actions
+If a player lands on a property, the game logic checks if the property is owned. If it is unowned, the player has the option to buy it. If they choose not to buy, an auction is initiated.
+
+```cpp
+void Square::performAction(std::shared_ptr<Player>& player) {
+    if (isProperty) {
+        auto property = std::dynamic_pointer_cast<Property>(this);
+        if (!property->getOwner()) {
+            // Prompt player to buy or start auction
+            std::cout << "You landed on " << property->getName() << ". Do you want to buy it? (y/n): ";
+            std::string response;
+            std::cin >> response;
+            if (response == "n") {
+                // Start auction
+                auction(property);
+            } else {
+                // Player buys the property
+                player->subtractMoney(property->getCost());
+                property->setOwner(player);
+            }
+        } else {
+            // Handle rent payment if owned
+            player->subtractMoney(property->getRent());
+            property->getOwner()->addMoney(property->getRent());
+        }
+    }
+}
+```
+
+### 4.6 Auction Logic
+If a property is not purchased, the auction logic is executed. The ```auction``` method allows players to bid on the property, and the highest bidder wins.
+
+```cpp
+void Game::auction(std::shared_ptr<Property> property) {
+    int highestBid = 0;
+    std::shared_ptr<Player> highestBidder = nullptr;
+
+    for (int i = 0; i < numPlayers; ++i) {
+        auto player = board->getPlayer(i);
+        // Prompt for bid
+        std::cout << player->getName() << ", enter your bid for " << property->getName() << ": ";
+        int bid;
+        std::cin >> bid;
+
+        if (bid > highestBid) {
+            highestBid = bid;
+            highestBidder = player; // Update highest bidder
+        }
+    }
+
+    // Finalize auction
+    if (highestBidder) {
+        highestBidder->subtractMoney(highestBid);
+        property->setOwner(highestBidder);
+        std::cout << highestBidder->getName() << " wins the auction for " << property->getName() << " with a bid of " << highestBid << "!" << std::endl;
+    }
+}
+```
+
+### 4.7 Game End Conditions
+The game checks for end conditions, such as when only one player remains (i.e., all others have gone bankrupt). This is typically checked after each turn.
+
+```cpp
+if (g.getNumPlayers() == 1) {
+    auto winner = b->getCurrentPlayer();
+    std::cout << winner->getName() << " wins the game!" << std::endl;
+    break; // Exit the game loop
+}
+```
 
 ---
 ## 5. Command Interpreter
+The interpreter recognizes specific commands and maps them to corresponding methods in the ```Game``` class. Once a command is recognized, the interpreter calls the corresponding method in the ```Game``` class. 
+
+```cpp
+if (command == "roll") {
+    g.roll(); // Calls the roll method in the Game class
+} else if (command == "next") {
+    g.next(); // Calls the next method to switch to the next player
+} else if (command == "trade") {
+    std::string player, give, receive;
+    std::cin >> player >> give >> receive;
+    g.trade(player, give, receive); // Executes the trade command
+}
+```
 
 ---
 ## 6. Player Management
+### 6.1 Player Class
+
+The ```Player``` class is central to player management. It encapsulates all relevant attributes and behaviors associated with a player in the game.
+Key Attributes:
+1. Name: The name of the player.
+2. Character: A character representation for the player (e.g., a letter or symbol).
+3. Money: The amount of money the player has.
+4. Position: The current position of the player on the game board.
+5. In Tims Line: A boolean indicating whether the player is in Tims Line.
+6. Turns in Tims Line: The number of turns the player has been in Tims Line.
+7. Bankruptcy Status: A boolean indicating if the player is bankrupt.
+8. Number of Rim Cups: A count of special items the player has.
+9. Number of Residences: A count of residences owned by the player.
+10. Properties: A vector that holds the properties owned by the player.
+
+```cpp
+class Player {
+private:
+    std::string name;
+    char character;
+    int money;
+    int position;
+    bool inTimsLine;
+    int turnsInTimsLine;
+    bool isBankrupt;
+    int numDoubleRolls;
+    int numRimCups;
+    int numResidences;
+    std::vector<std::shared_ptr<Property>> properties;
+
+public:
+    Player(std::string name, int money);
+    // Getters and setters for attributes
+    // Methods for player actions (e.g., move, addMoney, subtractMoney, etc.)
+};
+```
+
+### 6.2 Player Actions
+
+The ```Player``` class includes methods that define the actions a player can take during the game. These methods manage the player's state and interactions with properties and other players.
+Key Methods:
+1. Move: Updates the player's position based on the dice roll.
+2. Add/Subtract Money: Adjusts the player's money and checks for bankruptcy.
+3. Add/Remove Property: Manages the properties owned by the player, including updating ownership and handling improvements.
+
+```cpp
+void Player::move(int distance) {
+    position += distance;
+    // Logic to handle passing "Go" or other game rules
+}
+
+void Player::addMoney(int amount) {
+    money += amount;
+}
+
+void Player::subtractMoney(int amount) {
+    if (money < amount) {
+        isBankrupt = true; // Set bankruptcy if insufficient funds
+    } else {
+        money -= amount;
+    }
+}
+
+void Player::addProperty(std::shared_ptr<Property> property) {
+    properties.push_back(property);
+    // Additional logic for updating property ownership
+}
+```
+
+### 6.3 Board Class
+
+The ```Board``` class manages the collection of players and their interactions with the game board. It keeps track of the current player and facilitates player actions.
+Key Responsibilities:
+1. Player Management: The ```Board``` class maintains a vector of players and provides methods to add, remove, and retrieve players.
+2 Current Player Tracking: It keeps track of the current player whose turn it is to act.
+
+```cpp
+
+class Board {
+private:
+    std::vector<std::shared_ptr<Player>> players;
+    int currentPlayerIndex;
+
+public:
+    void addPlayer(std::string name, int money);
+    void removePlayer(std::string name);
+    std::shared_ptr<Player> getCurrentPlayer() const;
+    // Other methods for managing the game board
+};
+
+```
+
+### 6.4 Game Class
+
+The ```Game``` class orchestrates the overall game flow, including player turns, actions, and interactions. It manages the state of the game and coordinates between the ```Board```, ```Player```, and other components.
+Key Responsibilities:
+1. Turn Management: The ```Game``` class controls the flow of turns, allowing players to take actions in sequence.
+2. Auction and Trading: It handles player interactions such as auctions and trades, ensuring that player actions are processed correctly.
+
+### 6.5 Player Interaction
+
+The game allows players to interact with each other and the game state through various commands. The ```processInGameCommands``` function in the ```Game``` class processes user input and directs actions to the appropriate player methods.
 
 ---
 ## 7. Auctions
@@ -1014,7 +1271,7 @@ if (highestBidder) {
 In the Watopoly codebase, the saving and loading of a game is implemented through file I/O operations that allow the game state to be preserved and restored. This functionality is primarily handled in the ```Game``` class and is facilitated by the ```processLoadedFile``` function. Here’s a detailed breakdown of how saving and loading are implemented:
 
 ### 8.1 Saving the Game
-1. Save Method: The Game class includes a method to save the current state of the game to a file. This method typically writes the necessary game data, such as player information, property ownership, and game settings, to a specified file.
+1. Save Method: The ```Game``` class includes a method to save the current state of the game to a file. This method typically writes the necessary game data, such as player information, property ownership, and game settings, to a specified file.
 ```cpp
    void Game::save(std::string filename) {
        std::ofstream savefile{filename};
@@ -1099,11 +1356,9 @@ The loading function reads the following data from the file:
 
 • Each property’s name, its owner, and the number of improvements made on it.
 
----
-## 9. User Interface
 
 ---
-## 10. Team Members
+## 9. Team Members
 1. Yashila Barnwal
 2. Lakshit Luhadia
 3. Dhruv Kumar
